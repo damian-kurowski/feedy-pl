@@ -1,0 +1,64 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: feedy
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-feedy_prod}
+      POSTGRES_DB: feedy
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://feedy:${DB_PASSWORD:-feedy_prod}@db:5432/feedy
+      DATABASE_URL_SYNC: postgresql://feedy:${DB_PASSWORD:-feedy_prod}@db:5432/feedy
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost}
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+
+  celery:
+    build: ./backend
+    command: celery -A app.celery_app worker --loglevel=info
+    environment:
+      DATABASE_URL: postgresql+asyncpg://feedy:${DB_PASSWORD:-feedy_prod}@db:5432/feedy
+      DATABASE_URL_SYNC: postgresql://feedy:${DB_PASSWORD:-feedy_prod}@db:5432/feedy
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+
+  celery-beat:
+    build: ./backend
+    command: celery -A app.celery_app beat --loglevel=info
+    environment:
+      DATABASE_URL: postgresql+asyncpg://feedy:${DB_PASSWORD:-feedy_prod}@db:5432/feedy
+      DATABASE_URL_SYNC: postgresql://feedy:${DB_PASSWORD:-feedy_prod}@db:5432/feedy
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  pgdata:

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<offers>
+  <o id="101" url="https://shop.example.com/p/101" price="15.00" avail="1">
+    <cat><![CDATA[Dom > Chemia]]></cat>
+    <name><![CDATA[Środek czyszczący]]></name>
+    <desc><![CDATA[Opis środka]]></desc>
+    <imgs><main url="https://shop.example.com/img/101.jpg"/></imgs>
+  </o>
+  <o id="102" url="https://shop.example.com/p/102" price="45.00" avail="0">
+    <cat><![CDATA[Dom > Folie]]></cat>
+    <name><![CDATA[Folia dekoracyjna]]></name>
+    <desc><![CDATA[Opis folii]]></desc>
+    <imgs><main url="https://shop.example.com/img/102.jpg"/></imgs>
+  </o>
+</offers>

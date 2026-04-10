@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:g="http://base.google.com/ns/1.0">
+  <title>Test Shop</title>
+  <link>https://shop.example.com</link>
+  <entry>
+    <g:id>1</g:id>
+    <title>Płyn do montażu folii</title>
+    <description>Opis produktu testowego</description>
+    <g:product_type>Akcesoria</g:product_type>
+    <link>https://shop.example.com/product/1</link>
+    <g:image_link>https://shop.example.com/img/1.jpg</g:image_link>
+    <g:condition>new</g:condition>
+    <g:availability>in stock</g:availability>
+    <g:price>9.5 PLN</g:price>
+    <g:brand>EU</g:brand>
+    <g:gtin/>
+    <g:mpn>ADF01</g:mpn>
+    <g:shipping>
+      <g:price>25 PLN</g:price>
+      <g:country>PL</g:country>
+    </g:shipping>
+  </entry>
+  <entry>
+    <g:id>2</g:id>
+    <title>Folia okienna przyciemniająca</title>
+    <description>Folia na okno</description>
+    <g:product_type>Folie</g:product_type>
+    <link>https://shop.example.com/product/2</link>
+    <g:image_link>https://shop.example.com/img/2.jpg</g:image_link>
+    <g:condition>new</g:condition>
+    <g:availability>out of stock</g:availability>
+    <g:price>29.99 PLN</g:price>
+    <g:brand>LiteSolar</g:brand>
+    <g:gtin>5901234567890</g:gtin>
+    <g:mpn>FOL02</g:mpn>
+    <g:shipping>
+      <g:price>25 PLN</g:price>
+      <g:country>PL</g:country>
+    </g:shipping>
+  </entry>
+</feed>

@@ -1,0 +1,57 @@
+# Google_Product_Taxonomy_Version: 2021-09-21
+1 - Zwierzęta i artykuły dla zwierząt
+3237 - Zwierzęta i artykuły dla zwierząt > Artykuły dla zwierząt
+2 - Sztuka i rozrywka
+5710 - Sztuka i rozrywka > Hobby i sztuka
+8 - Dom i ogród
+536 - Dom i ogród > Artykuły domowe
+6 - Elektronika
+222 - Elektronika > Komputery
+3580 - Elektronika > Komputery > Laptopy
+231 - Elektronika > Telefony
+267 - Elektronika > Telefony > Smartfony
+5181 - Elektronika > Audio
+469 - Elektronika > Telewizory
+166 - Odzież i akcesoria
+1604 - Odzież i akcesoria > Odzież
+5322 - Odzież i akcesoria > Odzież > Sukienki
+2271 - Odzież i akcesoria > Odzież > Koszulki i topy
+5388 - Odzież i akcesoria > Odzież > Spodnie
+3455 - Odzież i akcesoria > Odzież > Bluzy
+5549 - Odzież i akcesoria > Buty
+632 - Odzież i akcesoria > Akcesoria
+1933 - Odzież i akcesoria > Akcesoria > Torebki
+111 - Zdrowie i uroda
+473 - Zdrowie i uroda > Pielęgnacja ciała
+4057 - Zdrowie i uroda > Makijaż
+4562 - Zdrowie i uroda > Pielęgnacja włosów
+988 - Sport i rekreacja
+499 - Sport i rekreacja > Fitness
+1011 - Sport i rekreacja > Sporty wodne
+784 - Jedzenie, napoje i tytoń
+7127 - Jedzenie, napoje i tytoń > Żywność
+5827 - Zabawki i gry
+1249 - Zabawki i gry > Gry planszowe
+2847 - Motoryzacja
+8526 - Motoryzacja > Części samochodowe
+1167 - Artykuły biurowe
+922 - Artykuły biurowe > Papier
+2092 - Meble
+443 - Meble > Meble do salonu > Sofy
+6433 - Narzędzia
+630 - Narzędzia > Narzędzia ręczne
+4179 - Oświetlenie
+3006 - Oświetlenie > Lampy
+2082 - Ogród i taras
+503 - Ogród i taras > Narzędzia ogrodowe
+1814 - Budownictwo
+5094 - Budownictwo > Materiały budowlane
+5093 - Budownictwo > Materiały budowlane > Okna i drzwi
+5095 - Budownictwo > Materiały budowlane > Izolacja
+7344 - Budownictwo > Materiały budowlane > Folie budowlane
+543 - Dom i ogród > Dekoracje
+574 - Dom i ogród > Kuchnia i jadalnia
+698 - Dom i ogród > Łazienka
+2956 - Dom i ogród > Ogrodzenia
+3798 - Przemysł i nauka
+3031 - Przemysł i nauka > Etykiety i taśmy
