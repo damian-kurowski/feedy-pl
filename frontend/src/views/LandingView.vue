@@ -29,7 +29,7 @@ async function selectPlan(planId: number) {
   <section class="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
       <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1]">
-        Zarządzaj feedami produktowymi<br class="hidden sm:inline" /> z jednego miejsca
+        Zarządzaj feedami produktówymi<br class="hidden sm:inline" /> z jednego miejsca
       </h1>
       <p class="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-indigo-100/90 leading-relaxed">
         Pobieraj XML z dowolnego sklepu, transformuj i generuj feedy dla Ceneo, Google Merchant Center, Allegro i innych porównywarek.
@@ -121,7 +121,7 @@ async function selectPlan(planId: number) {
   <!-- HOW IT WORKS — 3 steps, big numbers -->
   <section class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4">
-      <p class="text-center text-sm font-bold text-indigo-600 uppercase tracking-wider mb-3">Jak to dziala</p>
+      <p class="text-center text-sm font-bold text-indigo-600 uppercase tracking-wider mb-3">Jak to działa</p>
       <h2 class="font-heading text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-4">Trzy kroki do gotowego feeda</h2>
       <p class="text-center text-gray-500 text-lg mb-16 max-w-2xl mx-auto">Konfiguracja zajmuje mniej niż 5 minut. Bez kodowania, bez pomocy programisty.</p>
 
@@ -143,8 +143,8 @@ async function selectPlan(planId: number) {
             <div class="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mb-5">
               <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Wybierz porownywark</h3>
-            <p class="text-gray-500">Ceneo, Google Merchant, Allegro — kliknij szablon i pola zmapuja sie automatycznie. Zero konfiguracji.</p>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Wybierz porównywarkę</h3>
+            <p class="text-gray-500">Ceneo, Google Merchant, Allegro — kliknij szablon i pola zmapują się automatycznie. Zero konfiguracji.</p>
           </div>
         </div>
 
@@ -175,7 +175,7 @@ async function selectPlan(planId: number) {
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
           </div>
           <h3 class="text-lg font-bold text-gray-900 mb-2">Parsowanie dowolnego XML</h3>
-          <p class="text-gray-500 text-sm">Wklej URL — system rozpozna strukture i wyciagnie produkty automatycznie.</p>
+          <p class="text-gray-500 text-sm">Wklej URL — system rozpozna strukturę i wyciągnie produkty automatycznie.</p>
         </div>
 
         <div class="group p-8 rounded-2xl border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/50 transition-all duration-300">
@@ -183,7 +183,7 @@ async function selectPlan(planId: number) {
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" /></svg>
           </div>
           <h3 class="text-lg font-bold text-gray-900 mb-2">Szablony Ceneo, GMC, Allegro</h3>
-          <p class="text-gray-500 text-sm">Gotowe mapowania pol. Kliknij szablon — feed generuje sie w sekundzie.</p>
+          <p class="text-gray-500 text-sm">Gotowe mapowania pól. Kliknij szablon — feed generuje się w sekundzie.</p>
         </div>
 
         <div class="group p-8 rounded-2xl border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/50 transition-all duration-300">
@@ -191,15 +191,15 @@ async function selectPlan(planId: number) {
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182M2.985 19.644l3.181-3.182" /></svg>
           </div>
           <h3 class="text-lg font-bold text-gray-900 mb-2">Auto-refresh co 1h / 6h / 24h</h3>
-          <p class="text-gray-500 text-sm">Feedy same sie odswiezaja. Ceny i dostepnosc zawsze aktualne.</p>
+          <p class="text-gray-500 text-sm">Feedy same się odświeżają. Ceny i dostępność zawsze aktualne.</p>
         </div>
 
         <div class="group p-8 rounded-2xl border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/50 transition-all duration-300">
           <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" /></svg>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 mb-2">Reguly filtrowania i modyfikacji</h3>
-          <p class="text-gray-500 text-sm">Ukryj produkty bez zdjec, zmien tytuly, filtruj kategorie. If/then rules.</p>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Reguły filtrowania i modyfikacji</h3>
+          <p class="text-gray-500 text-sm">Ukryj produkty bez zdjęć, zmień tytuły, filtruj kategorie. If/then rules.</p>
         </div>
 
         <div class="group p-8 rounded-2xl border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/50 transition-all duration-300">
@@ -207,15 +207,15 @@ async function selectPlan(planId: number) {
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" /></svg>
           </div>
           <h3 class="text-lg font-bold text-gray-900 mb-2">Walidacja przed wyslaniem</h3>
-          <p class="text-gray-500 text-sm">Sprawdz czy feed przejdzie w Ceneo/GMC zanim wyślesz. Zero odrzucen.</p>
+          <p class="text-gray-500 text-sm">Sprawdź czy feed przejdzie w Ceneo/GMC zanim wyślesz. Zero odrzuceń.</p>
         </div>
 
         <div class="group p-8 rounded-2xl border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/50 transition-all duration-300">
           <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456Z" /></svg>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 mb-2">AI optymalizacja tytulow</h3>
-          <p class="text-gray-500 text-sm">Automatycznie ulepsz tytuly produktow — dodaj marke, wyczysc formatowanie.</p>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">AI optymalizacja tytułów</h3>
+          <p class="text-gray-500 text-sm">Automatycznie ulepsz tytuły produktów — dodaj markę, wyczyść formatowanie.</p>
         </div>
       </div>
     </div>
@@ -224,8 +224,8 @@ async function selectPlan(planId: number) {
   <!-- COMPARISON TABLE — us vs competitors -->
   <section class="py-24 bg-gray-50">
     <div class="max-w-4xl mx-auto px-4">
-      <p class="text-center text-sm font-bold text-indigo-600 uppercase tracking-wider mb-3">Porownanie</p>
-      <h2 class="font-heading text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-12">Dlaczego Feedy, a nie inne narzedzia?</h2>
+      <p class="text-center text-sm font-bold text-indigo-600 uppercase tracking-wider mb-3">Porównanie</p>
+      <h2 class="font-heading text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-12">Dlaczego Feedy, a nie inne narzędzia?</h2>
 
       <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
         <table class="w-full text-sm">
@@ -239,7 +239,7 @@ async function selectPlan(planId: number) {
           </thead>
           <tbody class="divide-y">
             <tr>
-              <td class="p-4 text-gray-700">Cena (1000 produktow)</td>
+              <td class="p-4 text-gray-700">Cena (1000 produktów)</td>
               <td class="p-4 text-center font-bold text-indigo-600 bg-indigo-50/50">29 zl/mies.</td>
               <td class="p-4 text-center text-gray-500">~280 zl/mies.</td>
               <td class="p-4 text-center text-gray-500">~260 zl/mies.</td>
@@ -247,14 +247,14 @@ async function selectPlan(planId: number) {
             <tr>
               <td class="p-4 text-gray-700">Liczba porównywarek w cenie</td>
               <td class="p-4 text-center font-bold text-indigo-600 bg-indigo-50/50">Bez limitu</td>
-              <td class="p-4 text-center text-gray-500">1 kanal</td>
-              <td class="p-4 text-center text-gray-500">1 kanal</td>
+              <td class="p-4 text-center text-gray-500">1 kanał</td>
+              <td class="p-4 text-center text-gray-500">1 kanał</td>
             </tr>
             <tr>
               <td class="p-4 text-gray-700">Ceneo + Skapiec + Allegro</td>
               <td class="p-4 text-center bg-indigo-50/50"><svg class="w-5 h-5 mx-auto text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg></td>
               <td class="p-4 text-center"><svg class="w-5 h-5 mx-auto text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg></td>
-              <td class="p-4 text-center text-gray-400">Czesciowo</td>
+              <td class="p-4 text-center text-gray-400">Częściowo</td>
             </tr>
             <tr>
               <td class="p-4 text-gray-700">Interfejs po polsku</td>
@@ -278,19 +278,19 @@ async function selectPlan(planId: number) {
   <section class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4">
       <p class="text-center text-sm font-bold text-indigo-600 uppercase tracking-wider mb-3">Opinie</p>
-      <h2 class="font-heading text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-12">Zaufali nam wlasciciele sklepow</h2>
+      <h2 class="font-heading text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-12">Zaufali nam właściciele sklepów</h2>
 
       <div class="grid md:grid-cols-3 gap-8">
         <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 border border-gray-100 shadow-sm">
           <div class="flex gap-1 mb-4">
             <svg v-for="i in 5" :key="i" class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
           </div>
-          <p class="text-gray-600 leading-relaxed">"Wreszcie moge zarzadzac feedami bez recznej edycji XML. Konfiguracja trwala 5 minut, a wczesniej poswiecalem na to pol dnia."</p>
+          <p class="text-gray-600 leading-relaxed">"Wreszcie mogę zarządzać feedami bez ręcznej edycji XML. Konfiguracja trwała 5 minut, a wcześniej poświęcałem na to pół dnia."</p>
           <div class="mt-6 flex items-center gap-3">
             <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold text-lg">M</div>
             <div>
               <p class="font-semibold text-gray-900">Marek K.</p>
-              <p class="text-sm text-gray-500">Wlasciciel sklepu na Shoperze</p>
+              <p class="text-sm text-gray-500">Właściciel sklepu na Shoperze</p>
             </div>
           </div>
         </div>
@@ -299,7 +299,7 @@ async function selectPlan(planId: number) {
           <div class="flex gap-1 mb-4">
             <svg v-for="i in 5" :key="i" class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
           </div>
-          <p class="text-gray-600 leading-relaxed">"Automatyczne odswiezanie feedow oszczedza mi godziny tygodniowo. Zarzadzam 3 sklepami i 8 feedami z jednego panelu."</p>
+          <p class="text-gray-600 leading-relaxed">"Automatyczne odświeżanie feedów oszczędza mi godziny tygodniowo. Zarządzam 3 sklepami i 8 feedami z jednego panelu."</p>
           <div class="mt-6 flex items-center gap-3">
             <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold text-lg">A</div>
             <div>
@@ -313,12 +313,12 @@ async function selectPlan(planId: number) {
           <div class="flex gap-1 mb-4">
             <svg v-for="i in 5" :key="i" class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
           </div>
-          <p class="text-gray-600 leading-relaxed">"Jedno narzedzie do Ceneo, Google i Allegro. Wczesniej placilem 200 zl za DataFeedWatch — teraz mam lepsze narzedzie za 59 zl."</p>
+          <p class="text-gray-600 leading-relaxed">"Jedno narzędzie do Ceneo, Google i Allegro. Wcześniej płaciłem 200 zl za DataFeedWatch — teraz mam lepsze narzędzie za 59 zl."</p>
           <div class="mt-6 flex items-center gap-3">
             <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold text-lg">P</div>
             <div>
-              <p class="font-semibold text-gray-900">Pawel D.</p>
-              <p class="text-sm text-gray-500">Agencja e-commerce, 12 klientow</p>
+              <p class="font-semibold text-gray-900">Paweł D.</p>
+              <p class="text-sm text-gray-500">Agencja e-commerce, 12 klientów</p>
             </div>
           </div>
         </div>
@@ -330,8 +330,8 @@ async function selectPlan(planId: number) {
   <section id="pricing" class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4">
       <p class="text-center text-sm font-bold text-indigo-600 uppercase tracking-wider mb-3">Cennik</p>
-      <h2 class="font-heading text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-4">Prosty cennik, bez ukrytych kosztow</h2>
-      <p class="text-center text-gray-500 text-lg mb-16 max-w-2xl mx-auto">Wszystkie porównywarki w cenie. Bez limitu kanalow. Bez dodatkowych oplat.</p>
+      <h2 class="font-heading text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-4">Prosty cennik, bez ukrytych kosztów</h2>
+      <p class="text-center text-gray-500 text-lg mb-16 max-w-2xl mx-auto">Wszystkie porównywarki w cenie. Bez limitu kanałów. Bez dodatkowych opłat.</p>
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Free -->
@@ -345,11 +345,11 @@ async function selectPlan(planId: number) {
           <ul class="mt-8 space-y-3 text-sm text-gray-600 flex-1">
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              200 produktow
+              200 produktów
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              1 feed wyjsciowy
+              1 feed wyjściowy
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
@@ -368,11 +368,11 @@ async function selectPlan(planId: number) {
             <span class="text-5xl font-extrabold text-gray-900">29 zl</span>
             <span class="text-gray-500">/mies.</span>
           </p>
-          <p class="mt-2 text-sm text-gray-500">Dla malych sklepow</p>
+          <p class="mt-2 text-sm text-gray-500">Dla małych sklepów</p>
           <ul class="mt-8 space-y-3 text-sm text-gray-600 flex-1">
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              1 000 produktow
+              1 000 produktów
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
@@ -398,15 +398,15 @@ async function selectPlan(planId: number) {
             <span class="text-5xl font-extrabold text-gray-900">59 zl</span>
             <span class="text-gray-500">/mies.</span>
           </p>
-          <p class="mt-2 text-sm text-gray-500">Dla rozwijajacych sie sklepow</p>
+          <p class="mt-2 text-sm text-gray-500">Dla rozwijających się sklepow</p>
           <ul class="mt-8 space-y-3 text-sm text-gray-600 flex-1">
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              5 000 produktow
+              5 000 produktów
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              10 feedow wyjsciowych
+              10 feedów wyjściowych
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
@@ -414,7 +414,7 @@ async function selectPlan(planId: number) {
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              Walidacja feedow
+              Walidacja feedów
             </li>
           </ul>
           <button @click="selectPlan(3)" class="mt-8 w-full py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition cursor-pointer">
@@ -429,15 +429,15 @@ async function selectPlan(planId: number) {
             <span class="text-5xl font-extrabold text-gray-900">99 zl</span>
             <span class="text-gray-500">/mies.</span>
           </p>
-          <p class="mt-2 text-sm text-gray-500">Dla agencji i duzych sklepow</p>
+          <p class="mt-2 text-sm text-gray-500">Dla agencji i dużych sklepów</p>
           <ul class="mt-8 space-y-3 text-sm text-gray-600 flex-1">
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              20 000 produktow
+              20 000 produktów
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              Bez limitu feedow
+              Bez limitu feedów
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
@@ -460,7 +460,7 @@ async function selectPlan(planId: number) {
   <section class="py-24 bg-gradient-to-br from-indigo-600 to-indigo-800 text-white">
     <div class="max-w-4xl mx-auto px-4 text-center">
       <h2 class="font-heading text-3xl sm:text-4xl font-extrabold mb-6">Gotowy na lepsze feedy?</h2>
-      <p class="text-xl text-indigo-100 mb-10 max-w-2xl mx-auto">Dolacz do setek sklepow, ktore juz oszczedzaja czas i pieniadze dzieki Feedy.</p>
+      <p class="text-xl text-indigo-100 mb-10 max-w-2xl mx-auto">Dolacz do setek sklepów, ktore juz oszczędzają czas i pieniądze dzięki Feedy.</p>
       <router-link
         to="/register"
         class="inline-flex items-center gap-2 px-10 py-4 text-lg font-bold rounded-xl bg-white text-indigo-700 hover:bg-indigo-50 shadow-xl shadow-indigo-900/30 transition-all hover:-translate-y-0.5"
@@ -478,31 +478,31 @@ async function selectPlan(planId: number) {
       <div class="space-y-4">
         <details class="group bg-gray-50 rounded-xl border border-gray-200 transition-all open:bg-white open:shadow-md">
           <summary class="p-5 font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
-            Czy Feedy dziala z moim sklepem?
+            Czy Feedy działa z moim sklepem?
             <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
           </summary>
-          <p class="px-5 pb-5 text-gray-600">Feedy dziala z kazdym sklepem, ktory generuje XML z produktami — Shoper, WooCommerce, PrestaShop, Magento, Shopify i inne. Wystarczy wkleic link do XML.</p>
+          <p class="px-5 pb-5 text-gray-600">Feedy działa z kazdym sklepem, który generuje XML z produktami — Shoper, WooCommerce, PrestaShop, Magento, Shopify i inne. Wystarczy wkleić link do XML.</p>
         </details>
         <details class="group bg-gray-50 rounded-xl border border-gray-200 transition-all open:bg-white open:shadow-md">
           <summary class="p-5 font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
-            Jak szybko feed sie odswieza?
+            Jak szybko feed się odświeża?
             <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
           </summary>
-          <p class="px-5 pb-5 text-gray-600">Mozesz ustawic automatyczne odswiezanie co 1, 6 lub 24 godziny. Feed jest zawsze aktualny — ceny i dostepnosc synchronizuja sie automatycznie.</p>
+          <p class="px-5 pb-5 text-gray-600">Możesz ustawić automatyczne odświeżanie co 1, 6 lub 24 godziny. Feed jest zawsze aktualny — ceny i dostępność synchronizują się automatycznie.</p>
         </details>
         <details class="group bg-gray-50 rounded-xl border border-gray-200 transition-all open:bg-white open:shadow-md">
           <summary class="p-5 font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
-            Czy moge przetestowac za darmo?
+            Czy mogę przetestować za darmo?
             <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
           </summary>
-          <p class="px-5 pb-5 text-gray-600">Tak! Plan Free pozwala na 200 produktow i 1 feed wyjsciowy — bez karty kredytowej, bez limitu czasowego. Mozesz uzywac tak dlugo jak chcesz.</p>
+          <p class="px-5 pb-5 text-gray-600">Tak! Plan Free pozwala na 200 produktów i 1 feed wyjściowy — bez karty kredytowej, bez limitu czasowego. Możesz używać tak długo jak chcesz.</p>
         </details>
         <details class="group bg-gray-50 rounded-xl border border-gray-200 transition-all open:bg-white open:shadow-md">
           <summary class="p-5 font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
             Ile kosztuje obsluga wielu porównywarek?
             <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
           </summary>
-          <p class="px-5 pb-5 text-gray-600">Nic dodatkowego! W przeciwienstwie do konkurencji, u nas wszystkie porównywarki sa w cenie planu. Nie doliczamy za dodatkowe kanaly.</p>
+          <p class="px-5 pb-5 text-gray-600">Nic dodatkowego! W przeciwieństwie do konkurencji, u nas wszystkie porównywarki są w cenie planu. Nie doliczamy za dodatkowe kanały.</p>
         </details>
       </div>
     </div>
@@ -514,7 +514,7 @@ async function selectPlan(planId: number) {
       <div class="grid sm:grid-cols-3 gap-8 mb-12">
         <div>
           <span class="font-heading text-xl font-extrabold text-white tracking-tight">Feedy</span>
-          <p class="mt-3 text-sm text-gray-500">Platforma do zarzadzania feedami produktowymi dla e-commerce.</p>
+          <p class="mt-3 text-sm text-gray-500">Platforma do zarządzania feedami produktówymi dla e-commerce.</p>
         </div>
         <div>
           <p class="font-semibold text-gray-300 mb-3">Produkt</p>
