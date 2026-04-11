@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from app.services.recommendations import generate_recommendations
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -84,6 +85,14 @@ async def feeds_analytics(
         "feeds_pending": feeds_pending,
         "feeds": feed_details,
     }
+
+
+@router.get("/recommendations")
+async def get_recommendations(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    return await generate_recommendations(db, current_user.id)
 
 
 async def _get_user_feed(db: AsyncSession, feed_id: int, user_id: int) -> FeedIn:

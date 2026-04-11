@@ -5,6 +5,7 @@ import { useAuthStore } from '../stores/auth'
 import { useFeedsInStore } from '../stores/feedsIn'
 import { useFeedsOutStore, type FeedOut } from '../stores/feedsOut'
 import OnboardingWizard from '../components/OnboardingWizard.vue'
+import SmartDashboard from '../components/SmartDashboard.vue'
 import api from '../api/client'
 
 const route = useRoute()
@@ -150,6 +151,11 @@ function closeOnboarding() {
       </div>
       <button v-if="auth.user.plan.name === 'Free'" @click="$router.push('/#pricing')" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">Zmień plan →</button>
       <button v-else @click="openPortal" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">Zarządzaj subskrypcją</button>
+    </div>
+
+    <!-- Smart Dashboard — recommendations & alerts -->
+    <div class="mb-8">
+      <SmartDashboard />
     </div>
 
     <div class="flex items-center justify-between mb-8">

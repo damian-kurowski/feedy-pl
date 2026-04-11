@@ -85,6 +85,93 @@ async def platform_info_endpoint(platform: str, user: User = Depends(get_current
     return info
 
 
+@router.get("/compare-product/{product_id}")
+async def compare_product(
+    product_id: int,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Compare how a product appears across all output feeds."""
+    # Get the product
+    product_result = await db.execute(select(ProductIn).where(ProductIn.id == product_id))
+    product = product_result.scalar_one_or_none()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    # Verify user owns the feed
+    feed_in_result = await db.execute(
+        select(FeedIn).where(FeedIn.id == product.feed_in_id, FeedIn.user_id == user.id)
+    )
+    if not feed_in_result.scalar_one_or_none():
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    # Get all output feeds linked to this feed_in
+    feeds_out_result = await db.execute(
+        select(FeedOut).where(FeedOut.feed_in_id == product.feed_in_id, FeedOut.user_id == user.id)
+    )
+    feeds_out = feeds_out_result.scalars().all()
+
+    comparisons = []
+    for fo in feeds_out:
+        # Check for overrides
+        override_result = await db.execute(
+            select(ProductOverride).where(
+                ProductOverride.feed_out_id == fo.id,
+                ProductOverride.product_in_id == product_id,
+            )
+        )
+        override = override_result.scalar_one_or_none()
+
+        # Merge product value with override
+        pv = dict(product.product_value)
+        if override and override.field_overrides:
+            pv = {**pv, **override.field_overrides}
+
+        excluded = override.excluded if override else False
+
+        # Validate this single product for this platform
+        result = validate_feed(fo.type, [{"id": product_id, "product_value": pv}])
+
+        errors = [i for i in result.issues if i.level == "error"]
+        warnings = [i for i in result.issues if i.level == "warning"]
+
+        # Build field comparison
+        fields = {}
+        for fc in result.field_coverage:
+            val = None
+            # Try to get value from product
+            for key in [fc.field]:
+                if key in pv:
+                    v = pv[key]
+                    val = str(v)[:100] if not isinstance(v, dict) else "[obiekt]"
+                    break
+            field_issues = [i for i in result.issues if i.field == fc.field]
+            fields[fc.field] = {
+                "value": val,
+                "required": fc.required,
+                "filled": val is not None and val != "",
+                "issues": [{"level": i.level, "message": i.message} for i in field_issues],
+            }
+
+        comparisons.append({
+            "feed_out_id": fo.id,
+            "feed_name": fo.name,
+            "feed_type": fo.type,
+            "excluded": excluded,
+            "quality_score": result.quality_score,
+            "errors": len(errors),
+            "warnings": len(warnings),
+            "fields": fields,
+        })
+
+    return {
+        "product_id": product_id,
+        "product_name": product.product_name,
+        "product_value": product.product_value,
+        "comparisons": comparisons,
+    }
+
+
 @router.post("", response_model=FeedOutResponse, status_code=status.HTTP_201_CREATED)
 async def create_feed_out(
     data: FeedOutCreate,
