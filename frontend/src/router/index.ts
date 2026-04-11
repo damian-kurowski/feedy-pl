@@ -65,6 +65,36 @@ const router = createRouter({
       meta: { auth: true },
     },
     {
+      path: '/feed-ceneo',
+      name: 'feed-ceneo',
+      component: () => import('../views/seo/FeedCeneoPage.vue'),
+    },
+    {
+      path: '/feed-google-shopping',
+      name: 'feed-google-shopping',
+      component: () => import('../views/seo/FeedGoogleShoppingPage.vue'),
+    },
+    {
+      path: '/feed-allegro',
+      name: 'feed-allegro',
+      component: () => import('../views/seo/FeedAllegroPage.vue'),
+    },
+    {
+      path: '/integracja-shoper',
+      name: 'integracja-shoper',
+      component: () => import('../views/seo/IntegracjaShoperPage.vue'),
+    },
+    {
+      path: '/integracja-woocommerce',
+      name: 'integracja-woocommerce',
+      component: () => import('../views/seo/IntegracjaWooCommercePage.vue'),
+    },
+    {
+      path: '/porownanie/feedy-vs-datafeedwatch',
+      name: 'feedy-vs-datafeedwatch',
+      component: () => import('../views/seo/PorownanieDataFeedWatchPage.vue'),
+    },
+    {
       path: '/polityka-prywatnosci',
       name: 'privacy-policy',
       component: () => import('../views/PrivacyPolicyView.vue'),
