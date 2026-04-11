@@ -123,7 +123,7 @@ function timeAgo(dateStr: string | null): string {
 
 function statusDotColor(status: string): string {
   switch (status) {
-    case 'success': return 'bg-emerald-400'
+    case 'success': return 'bg-green-400'
     case 'fetching': return 'bg-yellow-400 animate-pulse'
     case 'error': return 'bg-red-400'
     default: return 'bg-gray-300'
@@ -141,7 +141,7 @@ function statusLabel(status: string): string {
 }
 
 function qualityScoreColor(score: number): string {
-  if (score >= 90) return 'text-emerald-600 bg-emerald-50 ring-emerald-200'
+  if (score >= 90) return 'text-green-600 bg-green-50 ring-green-200'
   if (score >= 70) return 'text-yellow-600 bg-yellow-50 ring-yellow-200'
   if (score >= 50) return 'text-orange-600 bg-orange-50 ring-orange-200'
   return 'text-red-600 bg-red-50 ring-red-200'
@@ -154,8 +154,8 @@ function qualityScoreColor(score: number): string {
 
     <!-- Billing notification -->
     <Transition enter-active-class="transition duration-300 ease-out" enter-from-class="opacity-0 -translate-y-2" enter-to-class="opacity-100 translate-y-0" leave-active-class="transition duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0">
-      <div v-if="billingMsg" :class="[billingType === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-gray-50 border-gray-200 text-gray-700', 'mb-6 p-4 border rounded-2xl text-sm flex items-center gap-3']">
-        <svg v-if="billingType === 'success'" class="w-5 h-5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <div v-if="billingMsg" :class="[billingType === 'success' ? 'bg-green-50 border-green-200 text-green-800' : 'bg-gray-50 border-gray-200 text-gray-700', 'mb-6 p-4 border rounded-2xl text-sm flex items-center gap-3']">
+        <svg v-if="billingType === 'success'" class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
         {{ billingMsg }}
       </div>
     </Transition>
@@ -186,35 +186,35 @@ function qualityScoreColor(score: number): string {
         <p class="text-xs text-gray-500 mt-1 font-medium">Produktów</p>
       </div>
       <!-- Source feeds -->
-      <div class="relative overflow-hidden bg-gradient-to-br from-violet-50 to-white rounded-2xl border border-violet-100/50 p-6 hover:shadow-md hover:shadow-violet-100/50 transition-all duration-300">
-        <div class="absolute top-3 right-3 w-10 h-10 rounded-xl bg-violet-100/80 flex items-center justify-center">
-          <svg class="w-5 h-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>
+      <div class="relative overflow-hidden bg-gradient-to-br from-indigo-50 to-white rounded-2xl border border-indigo-100/50 p-6 hover:shadow-md hover:shadow-indigo-100/50 transition-all duration-300">
+        <div class="absolute top-3 right-3 w-10 h-10 rounded-xl bg-indigo-100/80 flex items-center justify-center">
+          <svg class="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>
         </div>
         <p class="font-heading text-3xl font-extrabold text-gray-900 tabular-nums animate-fade-in">{{ analytics.total_feeds_in }}</p>
         <p class="text-xs text-gray-500 mt-1 font-medium">Feedów źródłowych</p>
       </div>
       <!-- Active feeds -->
-      <div class="relative overflow-hidden bg-gradient-to-br from-purple-50 to-white rounded-2xl border border-purple-100/50 p-6 hover:shadow-md hover:shadow-purple-100/50 transition-all duration-300">
-        <div class="absolute top-3 right-3 w-10 h-10 rounded-xl bg-purple-100/80 flex items-center justify-center">
-          <svg class="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
+      <div class="relative overflow-hidden bg-gradient-to-br from-indigo-50 to-white rounded-2xl border border-indigo-100/50 p-6 hover:shadow-md hover:shadow-indigo-100/50 transition-all duration-300">
+        <div class="absolute top-3 right-3 w-10 h-10 rounded-xl bg-indigo-100/80 flex items-center justify-center">
+          <svg class="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
         </div>
         <p class="font-heading text-3xl font-extrabold text-gray-900 tabular-nums animate-fade-in">{{ analytics.active_feeds_out }}</p>
         <p class="text-xs text-gray-500 mt-1 font-medium">Feedów aktywnych</p>
       </div>
       <!-- OK -->
-      <div class="relative overflow-hidden bg-gradient-to-br from-emerald-50 to-white rounded-2xl border border-emerald-100/50 p-6 hover:shadow-md hover:shadow-emerald-100/50 transition-all duration-300">
-        <div class="absolute top-3 right-3 w-10 h-10 rounded-xl bg-emerald-100/80 flex items-center justify-center">
-          <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <div class="relative overflow-hidden bg-gradient-to-br from-green-50 to-white rounded-2xl border border-green-100/50 p-6 hover:shadow-md hover:shadow-green-100/50 transition-all duration-300">
+        <div class="absolute top-3 right-3 w-10 h-10 rounded-xl bg-green-100/80 flex items-center justify-center">
+          <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
         </div>
         <p class="font-heading text-3xl font-extrabold text-gray-900 tabular-nums animate-fade-in">{{ analytics.feeds_ok }}</p>
         <p class="text-xs text-gray-500 mt-1 font-medium">OK</p>
       </div>
       <!-- Errors -->
-      <div class="relative overflow-hidden rounded-2xl p-6 transition-all duration-300" :class="analytics.feeds_error > 0 ? 'bg-gradient-to-br from-rose-50 to-white border border-rose-100/50 hover:shadow-md hover:shadow-rose-100/50' : 'bg-gradient-to-br from-gray-50 to-white border border-gray-100/50 hover:shadow-md'">
-        <div class="absolute top-3 right-3 w-10 h-10 rounded-xl flex items-center justify-center" :class="analytics.feeds_error > 0 ? 'bg-rose-100/80' : 'bg-gray-100/80'">
-          <svg class="w-5 h-5" :class="analytics.feeds_error > 0 ? 'text-rose-600' : 'text-gray-400'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+      <div class="relative overflow-hidden rounded-2xl p-6 transition-all duration-300" :class="analytics.feeds_error > 0 ? 'bg-gradient-to-br from-red-50 to-white border border-red-100/50 hover:shadow-md hover:shadow-red-100/50' : 'bg-gradient-to-br from-gray-50 to-white border border-gray-100/50 hover:shadow-md'">
+        <div class="absolute top-3 right-3 w-10 h-10 rounded-xl flex items-center justify-center" :class="analytics.feeds_error > 0 ? 'bg-red-100/80' : 'bg-gray-100/80'">
+          <svg class="w-5 h-5" :class="analytics.feeds_error > 0 ? 'text-red-600' : 'text-gray-400'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
         </div>
-        <p class="font-heading text-3xl font-extrabold tabular-nums animate-fade-in" :class="analytics.feeds_error > 0 ? 'text-rose-600' : 'text-gray-300'">{{ analytics.feeds_error }}</p>
+        <p class="font-heading text-3xl font-extrabold tabular-nums animate-fade-in" :class="analytics.feeds_error > 0 ? 'text-red-600' : 'text-gray-300'">{{ analytics.feeds_error }}</p>
         <p class="text-xs text-gray-500 mt-1 font-medium">Błędów</p>
       </div>
     </div>
@@ -311,12 +311,12 @@ function qualityScoreColor(score: number): string {
     <!-- Output Feeds Section -->
     <div class="flex items-center gap-3 mb-4 mt-12">
       <h2 class="font-heading text-lg font-bold text-gray-900">Feedy wyjściowe</h2>
-      <span class="bg-purple-100 text-purple-700 text-xs font-bold px-2.5 py-0.5 rounded-full">{{ feedsOutStore.feeds.length }}</span>
+      <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-0.5 rounded-full">{{ feedsOutStore.feeds.length }}</span>
     </div>
 
     <!-- Empty state: output feeds -->
-    <div v-if="feedsOutStore.feeds.length === 0" class="text-center py-16 bg-gradient-to-b from-purple-50/50 to-white rounded-2xl border border-dashed border-purple-200">
-      <div class="w-14 h-14 mx-auto bg-purple-100 rounded-2xl flex items-center justify-center mb-4">
+    <div v-if="feedsOutStore.feeds.length === 0" class="text-center py-16 bg-gradient-to-b from-indigo-50/50 to-white rounded-2xl border border-dashed border-purple-200">
+      <div class="w-14 h-14 mx-auto bg-indigo-100 rounded-2xl flex items-center justify-center mb-4">
         <svg class="w-7 h-7 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>
       </div>
       <h3 class="font-heading text-base font-bold text-gray-900">Brak feedów wyjściowych</h3>
@@ -335,7 +335,7 @@ function qualityScoreColor(score: number): string {
             <div class="flex items-center gap-2.5 flex-wrap">
               <router-link
                 :to="`/feeds-out/${feed.id}`"
-                class="font-heading text-base font-bold text-gray-900 group-hover:text-purple-600 transition-colors truncate"
+                class="font-heading text-base font-bold text-gray-900 group-hover:text-indigo-600 transition-colors truncate"
               >
                 {{ feed.name }}
               </router-link>
@@ -348,9 +348,9 @@ function qualityScoreColor(score: number): string {
               <button
                 @click="toggleActive(feed)"
                 class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold cursor-pointer transition-colors"
-                :class="feed.active ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'"
+                :class="feed.active ? 'bg-green-100 text-emerald-700 hover:bg-emerald-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'"
               >
-                <span class="w-1.5 h-1.5 rounded-full" :class="feed.active ? 'bg-emerald-500' : 'bg-gray-400'"></span>
+                <span class="w-1.5 h-1.5 rounded-full" :class="feed.active ? 'bg-green-500' : 'bg-gray-400'"></span>
                 {{ feed.active ? 'Aktywny' : 'Nieaktywny' }}
               </button>
             </div>
