@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useFeedsOutStore } from '../stores/feedsOut'
 import { extractImageUrls } from '../utils/imageExtractor'
 import ProductOverrideModal from './ProductOverrideModal.vue'
+import api from '../api/client'
 
 const props = defineProps<{ feedOutId: number }>()
 const store = useFeedsOutStore()
@@ -70,6 +71,57 @@ async function handleRestore() {
   showModal.value = false; await loadProducts()
 }
 
+const selected = ref<Set<number>>(new Set())
+const showBulkField = ref(false)
+const bulkFieldName = ref('')
+const bulkFieldValue = ref('')
+
+function toggleSelectAll() {
+  if (selected.value.size === paged.value.length) {
+    selected.value.clear()
+  } else {
+    selected.value = new Set(paged.value.map((p: any) => p.id))
+  }
+}
+
+function toggleSelect(id: number) {
+  if (selected.value.has(id)) selected.value.delete(id)
+  else selected.value.add(id)
+}
+
+async function bulkExclude() {
+  await api.post(`/feeds-out/${props.feedOutId}/bulk`, {
+    product_ids: Array.from(selected.value),
+    action: 'exclude',
+  })
+  selected.value.clear()
+  await loadProducts()
+}
+
+async function bulkInclude() {
+  await api.post(`/feeds-out/${props.feedOutId}/bulk`, {
+    product_ids: Array.from(selected.value),
+    action: 'include',
+  })
+  selected.value.clear()
+  await loadProducts()
+}
+
+async function bulkSetField() {
+  if (!bulkFieldName.value || bulkFieldValue.value === '') return
+  await api.post(`/feeds-out/${props.feedOutId}/bulk`, {
+    product_ids: Array.from(selected.value),
+    action: 'set_field',
+    field: bulkFieldName.value,
+    value: bulkFieldValue.value,
+  })
+  selected.value.clear()
+  showBulkField.value = false
+  bulkFieldName.value = ''
+  bulkFieldValue.value = ''
+  await loadProducts()
+}
+
 let searchTimeout: ReturnType<typeof setTimeout>
 function onSearch() { clearTimeout(searchTimeout); searchTimeout = setTimeout(loadProducts, 300) }
 onMounted(loadProducts)
@@ -104,13 +156,28 @@ onMounted(loadProducts)
       </select>
     </div>
 
+    <!-- Bulk action bar -->
+    <div v-if="selected.size > 0" class="flex items-center gap-2 mb-3 p-3 bg-indigo-50 border border-indigo-200 rounded-xl">
+      <span class="text-sm font-medium text-indigo-700">{{ selected.size }} zaznaczonych</span>
+      <button @click="bulkExclude" class="px-3 py-1 text-xs font-medium bg-red-100 text-red-700 hover:bg-red-200 rounded-lg cursor-pointer transition">Wyklucz</button>
+      <button @click="bulkInclude" class="px-3 py-1 text-xs font-medium bg-green-100 text-green-700 hover:bg-green-200 rounded-lg cursor-pointer transition">Przywróć</button>
+      <button @click="showBulkField = !showBulkField" class="px-3 py-1 text-xs font-medium bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg cursor-pointer transition">Ustaw pole</button>
+      <button @click="selected.clear()" class="px-3 py-1 text-xs text-gray-500 hover:text-gray-700 cursor-pointer">Odznacz</button>
+
+      <div v-if="showBulkField" class="flex items-center gap-2 ml-2">
+        <input v-model="bulkFieldName" type="text" placeholder="Pole (np. brand)" class="px-2 py-1 border border-gray-300 rounded-lg text-xs w-28" />
+        <input v-model="bulkFieldValue" type="text" placeholder="Wartość" class="px-2 py-1 border border-gray-300 rounded-lg text-xs w-40" />
+        <button @click="bulkSetField" class="px-3 py-1 text-xs font-medium bg-indigo-600 text-white rounded-lg cursor-pointer">Zastosuj</button>
+      </div>
+    </div>
+
     <!-- Product table -->
     <div class="border rounded-xl overflow-hidden">
       <table class="w-full text-sm">
         <thead class="bg-gray-50">
           <tr>
             <th class="px-3 py-3 w-10">
-              <span class="text-[11px] text-gray-400">Wkl.</span>
+              <input type="checkbox" :checked="selected.size === paged.length && paged.length > 0" @change="toggleSelectAll" class="rounded border-gray-300 text-indigo-600 cursor-pointer" />
             </th>
             <th class="text-left px-3 py-3 font-medium text-gray-700 w-14"></th>
             <th class="text-left px-3 py-3 font-medium text-gray-700">Nazwa</th>
@@ -126,15 +193,9 @@ onMounted(loadProducts)
             class="border-t hover:bg-gray-50 transition-colors"
             :class="product.status === 'excluded' ? 'opacity-40' : ''"
           >
-            <!-- Exclude checkbox -->
+            <!-- Selection checkbox -->
             <td class="px-3 py-2 text-center">
-              <input
-                type="checkbox"
-                :checked="product.status === 'excluded'"
-                class="rounded border-gray-300 text-red-500 focus:ring-red-500/20 cursor-pointer"
-                title="Wyklucz z feedu"
-                @change="toggleExclude(product)"
-              />
+              <input type="checkbox" :checked="selected.has(product.id)" @change="toggleSelect(product.id)" class="rounded border-gray-300 text-indigo-600 cursor-pointer" />
             </td>
             <!-- Image -->
             <td class="px-3 py-2">

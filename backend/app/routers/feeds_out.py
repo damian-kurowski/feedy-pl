@@ -1,6 +1,7 @@
 import uuid as _uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel as PydanticBaseModel
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -375,6 +376,65 @@ async def delete_override(
     if override:
         await db.delete(override)
         await db.commit()
+
+
+class BulkAction(PydanticBaseModel):
+    product_ids: list[int]
+    action: str  # "exclude", "include", "set_field"
+    field: str | None = None
+    value: str | None = None
+
+
+@router.post("/{feed_out_id}/bulk")
+async def bulk_action(
+    feed_out_id: int,
+    data: BulkAction,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    feed_out = await _get_user_feed_out(db, feed_out_id, user.id)
+    applied = 0
+
+    for pid in data.product_ids:
+        # Verify product belongs to feed
+        product_result = await db.execute(
+            select(ProductIn).where(ProductIn.id == pid, ProductIn.feed_in_id == feed_out.feed_in_id)
+        )
+        if not product_result.scalar_one_or_none():
+            continue
+
+        # Get or create override
+        existing = await db.execute(
+            select(ProductOverride).where(
+                ProductOverride.feed_out_id == feed_out_id,
+                ProductOverride.product_in_id == pid,
+            )
+        )
+        override = existing.scalar_one_or_none()
+
+        if data.action == "exclude":
+            if override:
+                override.excluded = True
+            else:
+                db.add(ProductOverride(feed_out_id=feed_out_id, product_in_id=pid, field_overrides={}, excluded=True))
+            applied += 1
+
+        elif data.action == "include":
+            if override:
+                override.excluded = False
+            applied += 1
+
+        elif data.action == "set_field" and data.field and data.value is not None:
+            if override:
+                overrides = dict(override.field_overrides or {})
+                overrides[data.field] = data.value
+                override.field_overrides = overrides
+            else:
+                db.add(ProductOverride(feed_out_id=feed_out_id, product_in_id=pid, field_overrides={data.field: data.value}, excluded=False))
+            applied += 1
+
+    await db.commit()
+    return {"applied": applied, "action": data.action}
 
 
 @router.get("/{feed_out_id}/validate")
