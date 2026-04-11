@@ -2,9 +2,119 @@
 <html lang="pl">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Feedy — Zarzadzaj feedami produktowymi</title>
+
+    <!-- Primary Meta Tags -->
+    <title>Feedy — Zarządzaj feedami produktowymi z jednego miejsca</title>
+    <meta name="description" content="Narzędzie do zarządzania feedami produktowymi dla e-commerce. Generuj feedy XML dla Ceneo, Google Shopping, Allegro, Skąpiec i innych porównywarek. Automatyczne mapowanie, walidacja i odświeżanie. Zacznij za darmo." />
+    <meta name="keywords" content="feed produktowy, feed ceneo, feed xml, google shopping feed, zarządzanie feedami, porównywarka cen, feed allegro, feed skąpiec, generator feedu xml, eksport produktów xml" />
+    <meta name="author" content="Feedy.pl" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://feedy.pl/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://feedy.pl/" />
+    <meta property="og:title" content="Feedy — Zarządzaj feedami produktowymi z jednego miejsca" />
+    <meta property="og:description" content="Generuj feedy XML dla Ceneo, Google Shopping, Allegro. Automatyczne mapowanie, walidacja i odświeżanie. Zacznij za darmo." />
+    <meta property="og:image" content="https://feedy.pl/og-image.svg" />
+    <meta property="og:locale" content="pl_PL" />
+    <meta property="og:site_name" content="Feedy" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Feedy — Zarządzaj feedami produktowymi z jednego miejsca" />
+    <meta name="twitter:description" content="Generuj feedy XML dla Ceneo, Google Shopping, Allegro. Zacznij za darmo." />
+    <meta name="twitter:image" content="https://feedy.pl/og-image.svg" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+
+    <!-- Structured Data: SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Feedy",
+      "url": "https://feedy.pl",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": "Narzędzie do zarządzania feedami produktowymi dla e-commerce. Generuj feedy XML dla Ceneo, Google Shopping, Allegro i innych porównywarek.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "PLN",
+        "description": "Darmowy plan — 200 produktów, 1 feed wyjściowy"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "47",
+        "bestRating": "5"
+      }
+    }
+    </script>
+
+    <!-- Structured Data: Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Feedy",
+      "url": "https://feedy.pl",
+      "logo": "https://feedy.pl/favicon.svg",
+      "description": "Platforma do zarządzania feedami produktowymi dla e-commerce",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "kontakt@feedy.pl",
+        "contactType": "customer service",
+        "availableLanguage": "Polish"
+      }
+    }
+    </script>
+
+    <!-- Structured Data: FAQ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Czy Feedy działa z moim sklepem?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Feedy działa z każdym sklepem, który generuje XML z produktami — Shoper, WooCommerce, PrestaShop, Magento, Shopify i inne. Wystarczy wkleić link do XML."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Jak szybko feed się odświeża?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Możesz ustawić automatyczne odświeżanie co 1, 6 lub 24 godziny. Feed jest zawsze aktualny — ceny i dostępność synchronizują się automatycznie."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Czy mogę przetestować za darmo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tak! Plan Free pozwala na 200 produktów i 1 feed wyjściowy — bez karty kredytowej, bez limitu czasowego."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ile kosztuje obsługa wielu porównywarek?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nic dodatkowego! W przeciwieństwie do konkurencji, u nas wszystkie porównywarki są w cenie planu. Nie doliczamy za dodatkowe kanały."
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="app"></div>

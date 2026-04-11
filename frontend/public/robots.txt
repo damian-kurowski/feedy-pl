@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /feeds-in/
+Disallow: /feeds-out/
+Disallow: /organization
+Disallow: /api/
+
+Sitemap: https://feedy.pl/sitemap.xml
