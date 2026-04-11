@@ -1,4 +1,6 @@
 """Value mapping CRUD endpoints."""
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy import select
@@ -26,7 +28,7 @@ class ValueMapResponse(BaseModel):
     id: int
     name: str
     mappings: dict
-    created_at: str | None = None
+    created_at: datetime | None = None
 
     class Config:
         from_attributes = True
