@@ -423,12 +423,14 @@ async def replace_structure(
             sort_key=elem.sort_key,
             custom_element=elem.custom_element,
             path_in=elem.path_in,
+            constant_value=elem.constant_value,
             level_out=elem.level_out,
             path_out=elem.path_out,
             parent_path_out=elem.parent_path_out,
             element_name_out=elem.element_name_out,
             is_leaf=elem.is_leaf,
             attribute=elem.attribute,
+            condition=elem.condition,
         )
         db.add(structure)
         new_elements.append(structure)

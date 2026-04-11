@@ -29,5 +29,7 @@ class XmlStructureOut(Base):
     element_name_out: Mapped[str] = mapped_column(String(255), nullable=False)
     is_leaf: Mapped[bool] = mapped_column(Boolean, nullable=False)
     attribute: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    condition: Mapped[str | None] = mapped_column(String(20), nullable=True, default="always")
+    constant_value: Mapped[str | None] = mapped_column(String(2048), nullable=True)
 
     feed_out: Mapped["FeedOut"] = relationship("FeedOut", back_populates="xml_structures")

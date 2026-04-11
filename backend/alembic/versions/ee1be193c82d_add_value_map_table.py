@@ -30,8 +30,13 @@ def upgrade() -> None:
     )
     # Add field_maps column to feed_out for linking maps to fields
     op.add_column('feed_out', sa.Column('field_maps', postgresql.JSONB()), schema='config')
+    # Add condition and constant_value to xml_structure_out
+    op.add_column('xml_structure_out', sa.Column('condition', sa.String(20), server_default='always'), schema='data')
+    op.add_column('xml_structure_out', sa.Column('constant_value', sa.String(2048)), schema='data')
 
 
 def downgrade() -> None:
+    op.drop_column('xml_structure_out', 'constant_value', schema='data')
+    op.drop_column('xml_structure_out', 'condition', schema='data')
     op.drop_column('feed_out', 'field_maps', schema='config')
     op.drop_table('value_map', schema='config')

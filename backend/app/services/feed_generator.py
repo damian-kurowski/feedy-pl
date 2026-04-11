@@ -372,7 +372,8 @@ def generate_custom_xml(products: list[dict], structure: list[dict]) -> bytes:
 
     *structure* is a list of dicts with keys matching XmlStructureOut columns,
     sorted by ``sort_key``.  Each leaf element maps a ``path_in`` source field
-    to an ``element_name_out`` output element.
+    or ``constant_value`` to an ``element_name_out`` output element.
+    Supports ``condition``: "always" or "if_not_empty".
     """
     root = etree.Element("products")
 
@@ -385,18 +386,26 @@ def generate_custom_xml(products: list[dict], structure: list[dict]) -> bytes:
             if not row.get("is_leaf", True):
                 continue
 
+            # Get value: constant_value takes priority, then source field
+            constant = row.get("constant_value")
             source = row.get("path_in")
-            if source is None:
+            if constant:
+                value = constant
+            elif source:
+                value = _get_value(pv, source)
+            else:
                 continue
 
-            value = _get_value(pv, source)
+            # Apply condition
+            condition = row.get("condition", "always")
+            if condition == "if_not_empty" and (value is None or value == ""):
+                continue
             if value is None:
                 continue
 
-            el_name = row.get("element_name_out", source)
+            el_name = row.get("element_name_out", source or "field")
 
             if row.get("attribute", False):
-                # Strip leading @ for attribute names
                 attr_name = el_name.lstrip("@")
                 item.set(attr_name, value)
             else:
