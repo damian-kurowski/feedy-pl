@@ -19,6 +19,7 @@ router = APIRouter(tags=["public"])
 @router.get("/feed/{feed_uuid}.xml")
 async def public_feed(
     feed_uuid: str,
+    download: bool = False,
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
@@ -97,4 +98,8 @@ async def public_feed(
         ]
         xml_bytes = generate_custom_xml(product_dicts, structure)
 
-    return Response(content=xml_bytes, media_type="application/xml")
+    headers = {}
+    if download:
+        filename = f"feed-{feed_out.name.replace(' ', '-').lower()}.xml"
+        headers["Content-Disposition"] = f'attachment; filename="{filename}"'
+    return Response(content=xml_bytes, media_type="application/xml", headers=headers)
