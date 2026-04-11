@@ -331,25 +331,30 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto py-10 px-4">
+  <div class="max-w-5xl mx-auto py-10 px-4">
     <div v-if="!feedOut" class="text-gray-500">Ładowanie...</div>
 
     <template v-else>
       <!-- Header -->
       <div class="mb-8">
-        <div class="flex items-center gap-3 mb-1">
+        <router-link to="/dashboard" class="text-xs text-gray-400 hover:text-indigo-600 transition-colors mb-3 inline-flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+          Dashboard
+        </router-link>
+        <div class="flex items-center gap-3 mt-2">
           <h1 class="font-heading text-2xl font-bold text-gray-900">{{ feedOut.name }}</h1>
-          <span class="px-2 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-700 rounded-full uppercase">
+          <span class="px-2.5 py-1 text-xs font-semibold bg-indigo-100 text-indigo-700 rounded-full uppercase tracking-wide">
             {{ feedOut.type }}
           </span>
         </div>
-        <router-link to="/dashboard" class="text-sm text-gray-500 hover:text-gray-700">&larr; Powrót do dashboardu</router-link>
       </div>
 
       <!-- Feed URL — always visible at top -->
-      <div class="mb-6 p-4 bg-indigo-50 border border-indigo-200 rounded-xl flex items-center gap-3">
-        <span class="text-sm font-medium text-indigo-700 shrink-0">Link XML:</span>
-        <code class="flex-1 text-sm text-indigo-900 break-all truncate">{{ feedUrl }}</code>
+      <div class="mb-8 p-5 bg-gradient-to-r from-indigo-50 to-white rounded-2xl border border-indigo-100 flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-2.54a4.5 4.5 0 00-1.242-7.244l-4.5-4.5a4.5 4.5 0 00-6.364 6.364L4.343 8.05" /></svg>
+        </div>
+        <code class="flex-1 text-sm text-gray-700 break-all truncate">{{ feedUrl }}</code>
         <button
           type="button"
           class="shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
@@ -362,14 +367,20 @@ onMounted(async () => {
           target="_blank"
           class="shrink-0 border border-gray-200 hover:border-gray-300 text-gray-600 text-sm font-medium rounded-xl px-4 py-2 transition cursor-pointer"
         >
-          Podgląd
+          Podgląd XML
         </a>
       </div>
 
       <!-- Quality Score section -->
-      <section class="mb-10">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="font-heading text-lg font-bold text-gray-900">Jakość feedu</h2>
+      <section class="mb-8">
+        <div class="bg-white border border-gray-200 rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
+              <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
+            </div>
+            <h2 class="font-heading text-lg font-bold text-gray-900">Jakość feedu</h2>
+          </div>
           <button
             type="button"
             :disabled="validating"
@@ -424,12 +435,23 @@ onMounted(async () => {
         <div v-else-if="!validating" class="text-sm text-gray-400 bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center">
           Kliknij "Sprawdź jakość feedu" aby zobaczyć wynik walidacji.
         </div>
+        </div>
       </section>
 
       <!-- Mapping section -->
-      <section class="mb-10">
-        <h2 class="font-heading text-lg font-bold text-gray-900 mb-1">Mapowanie pól</h2>
-        <p class="text-sm text-gray-500 mb-4">Przypisz pola z XML źródłowego do pól wymaganych przez porównywarkę</p>
+      <section class="mb-8">
+        <div class="bg-white border border-gray-200 rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
+              <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M10.875 12c-.621 0-1.125.504-1.125 1.125M12 10.875c-.621 0-1.125.504-1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 1.5c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125" /></svg>
+            </div>
+            <div>
+              <h2 class="font-heading text-lg font-bold text-gray-900">Mapowanie pól</h2>
+              <p class="text-sm text-gray-500">Przypisz pola z XML źródłowego do pól wymaganych przez porównywarkę</p>
+            </div>
+          </div>
+        </div>
 
         <div v-if="saveError" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
           {{ saveError }}
@@ -453,14 +475,23 @@ onMounted(async () => {
         >
           {{ saving ? 'Zapisywanie...' : 'Zapisz mapowanie' }}
         </button>
+        </div>
       </section>
 
       <!-- Rules section -->
-      <section class="mb-10">
-        <h2 class="font-heading text-lg font-bold text-gray-900 mb-4">
-          Reguły filtrowania
-          <span v-if="rules.length" class="text-sm font-normal text-gray-500">({{ rules.length }})</span>
-        </h2>
+      <section class="mb-8">
+        <div class="bg-white border border-gray-200 rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
+              <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" /></svg>
+            </div>
+            <h2 class="font-heading text-lg font-bold text-gray-900">
+              Reguły filtrowania
+              <span v-if="rules.length" class="text-sm font-normal text-gray-500">({{ rules.length }})</span>
+            </h2>
+          </div>
+        </div>
 
         <div v-if="rulesError" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
           {{ rulesError }}
@@ -599,12 +630,21 @@ onMounted(async () => {
         >
           {{ savingRules ? 'Zapisywanie...' : 'Zapisz reguły' }}
         </button>
+        </div>
       </section>
 
       <!-- Title Optimization section -->
-      <section class="mb-10 bg-white rounded-2xl border border-gray-200 p-6">
-        <h2 class="font-heading text-lg font-bold text-gray-900 mb-4">Optymalizacja tytułów</h2>
-        <p class="text-sm text-gray-500 mb-4">Automatycznie ulepsz tytuły produktów — dodaj markę, wyczyść formatowanie.</p>
+      <section class="mb-8">
+        <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
+            <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" /></svg>
+          </div>
+          <div>
+            <h2 class="font-heading text-lg font-bold text-gray-900">Optymalizacja tytułów</h2>
+            <p class="text-sm text-gray-500">Automatycznie ulepsz tytuły produktów -- dodaj marke, wyczysc formatowanie.</p>
+          </div>
+        </div>
 
         <button @click="previewOptimization" :disabled="optimizing" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 disabled:opacity-50 cursor-pointer">
           {{ optimizing ? 'Analizuję...' : 'Podgląd optymalizacji' }}
@@ -623,18 +663,34 @@ onMounted(async () => {
             Zastosuj optymalizację do feedu
           </button>
         </div>
+        </div>
       </section>
 
       <!-- AI Rewrite section -->
-      <section class="mb-10 bg-white rounded-2xl border border-gray-200 p-6">
-        <h2 class="font-heading text-lg font-bold text-gray-900 mb-4">AI Opisy</h2>
+      <section class="mb-8">
+        <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
+            <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
+          </div>
+          <h2 class="font-heading text-lg font-bold text-gray-900">AI Opisy</h2>
+        </div>
         <AiRewriteSection :feed-out-id="feedId" />
+        </div>
       </section>
 
       <!-- Category Mapping section -->
-      <section class="mb-10">
-        <h2 class="font-heading text-lg font-bold text-gray-900 mb-1">Mapowanie kategorii</h2>
-        <p class="text-sm text-gray-500 mb-4">Przypisz kategorie ze swojego sklepu do kategorii platformy docelowej</p>
+      <section class="mb-8">
+        <div class="bg-white border border-gray-200 rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
+            <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" /></svg>
+          </div>
+          <div>
+            <h2 class="font-heading text-lg font-bold text-gray-900">Mapowanie kategorii</h2>
+            <p class="text-sm text-gray-500">Przypisz kategorie ze swojego sklepu do kategorii platformy docelowej</p>
+          </div>
+        </div>
 
         <div v-if="mappingError" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
           {{ mappingError }}
@@ -728,53 +784,73 @@ onMounted(async () => {
         >
           {{ savingMapping ? 'Zapisywanie...' : 'Zapisz mapowanie kategorii' }}
         </button>
+        </div>
       </section>
 
       <!-- Products section -->
-      <section class="mb-10">
-        <h2 class="font-heading text-lg font-bold text-gray-900 mb-4">Produkty</h2>
+      <section class="mb-8">
+        <div class="bg-white border border-gray-200 rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
+            <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+          </div>
+          <h2 class="font-heading text-lg font-bold text-gray-900">Produkty</h2>
+        </div>
         <FeedOutProducts :feed-out-id="feedId" />
+        </div>
       </section>
 
       <!-- Link section -->
-      <section>
-        <h2 class="font-heading text-lg font-bold text-gray-900 mb-4">Link do feeda</h2>
+      <section class="mb-8">
+        <div class="bg-white border border-gray-200 rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
+            <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-2.54a4.5 4.5 0 00-1.242-7.244l-4.5-4.5a4.5 4.5 0 00-6.364 6.364L4.343 8.05" /></svg>
+          </div>
+          <h2 class="font-heading text-lg font-bold text-gray-900">Link do feeda</h2>
+        </div>
 
-        <div class="mb-4 p-4 bg-indigo-50 border border-indigo-200 rounded-xl text-sm text-indigo-800">
+        <div class="mb-4 p-4 bg-gradient-to-r from-indigo-50 to-white border border-indigo-100 rounded-xl text-sm text-indigo-800">
           Wklej ten link w panelu porównywarki (Ceneo, Google Merchant Center) jako źródło feeda produktowego.
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-2xl p-6">
-          <div class="flex items-center gap-3">
-            <code class="flex-1 text-sm text-gray-800 break-all">{{ feedUrl }}</code>
-            <button
-              type="button"
-              class="shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
-              @click="copyLink"
-            >
-              {{ copied ? 'Skopiowano!' : 'Kopiuj' }}
-            </button>
-            <a
-              :href="feedUrl"
-              target="_blank"
-              class="shrink-0 border border-gray-200 hover:border-gray-300 text-gray-600 text-sm font-medium rounded-xl px-4 py-2 transition cursor-pointer"
-            >
-              Podgląd XML
-            </a>
-          </div>
+        <div class="flex items-center gap-3">
+          <code class="flex-1 text-sm text-gray-800 break-all">{{ feedUrl }}</code>
+          <button
+            type="button"
+            class="shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
+            @click="copyLink"
+          >
+            {{ copied ? 'Skopiowano!' : 'Kopiuj' }}
+          </button>
+          <a
+            :href="feedUrl"
+            target="_blank"
+            class="shrink-0 border border-gray-200 hover:border-gray-300 text-gray-600 text-sm font-medium rounded-xl px-4 py-2 transition cursor-pointer"
+          >
+            Podgląd XML
+          </a>
+        </div>
         </div>
       </section>
 
       <!-- XML Preview section -->
-      <div class="bg-white rounded-2xl border border-gray-200 p-6 mt-8">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="font-heading text-lg font-bold text-gray-900">Podgląd XML</h2>
-          <button @click="loadPreview" :disabled="loadingPreview" class="text-sm text-indigo-600 hover:text-indigo-800">
+      <section class="mb-8">
+        <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
+              <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>
+            </div>
+            <h2 class="font-heading text-lg font-bold text-gray-900">Podgląd XML</h2>
+          </div>
+          <button @click="loadPreview" :disabled="loadingPreview" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer">
             {{ loadingPreview ? 'Ładowanie...' : showPreview ? 'Odśwież' : 'Pokaż podgląd' }}
           </button>
         </div>
         <pre v-if="showPreview" class="bg-gray-50 p-4 rounded-lg text-xs font-mono overflow-x-auto max-h-96 overflow-y-auto whitespace-pre-wrap">{{ xmlPreview }}</pre>
-      </div>
+        </div>
+      </section>
     </template>
   </div>
 </template>
