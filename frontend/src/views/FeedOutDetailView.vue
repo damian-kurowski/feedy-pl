@@ -258,12 +258,14 @@ function addRow() {
     sort_key: structure.value.length,
     custom_element: true,
     path_in: null,
+    constant_value: null,
     level_out: 1,
     path_out: '',
     parent_path_out: null,
     element_name_out: '',
     is_leaf: true,
     attribute: false,
+    condition: 'always',
   })
 }
 
@@ -310,7 +312,11 @@ onMounted(async () => {
   categoryMapping.value = feedOut.value.category_mapping ? { ...feedOut.value.category_mapping } : {}
 
   // Load structure
-  structure.value = await feedsOutStore.getStructure(feedId)
+  structure.value = (await feedsOutStore.getStructure(feedId)).map((s) => ({
+    ...s,
+    condition: s.condition || 'always',
+    constant_value: s.constant_value ?? null,
+  }))
 
   // Load sample product from feed-in for preview
   try {

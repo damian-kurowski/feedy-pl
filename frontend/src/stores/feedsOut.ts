@@ -20,12 +20,14 @@ export interface StructureElement {
   sort_key: number
   custom_element: boolean
   path_in: string | null
+  constant_value?: string | null
   level_out: number
   path_out: string
   parent_path_out: string | null
   element_name_out: string
   is_leaf: boolean
   attribute: boolean
+  condition: 'always' | 'if_not_empty'
 }
 
 export const useFeedsOutStore = defineStore('feedsOut', () => {
