@@ -29,6 +29,7 @@ class FeedOut(Base):
     link_out: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     rules: Mapped[list | None] = mapped_column(JSONB, nullable=True, default=None)
     category_mapping: Mapped[dict | None] = mapped_column(JSONB, nullable=True, default=None)
+    field_maps: Mapped[dict | None] = mapped_column(JSONB, nullable=True, default=None)
 
     user: Mapped["User"] = relationship("User", back_populates="feeds_out")
     feed_in: Mapped["FeedIn"] = relationship("FeedIn", back_populates="feeds_out")

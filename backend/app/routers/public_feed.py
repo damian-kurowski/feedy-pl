@@ -55,6 +55,17 @@ async def public_feed(
     if feed_out.rules:
         product_dicts = apply_rules(product_dicts, feed_out.rules)
 
+    # Apply value maps
+    if feed_out.field_maps:
+        from app.services.value_mapper import apply_value_maps
+        from app.models.value_map import ValueMap
+        # field_maps = {"field_name": map_id, ...} — resolve map_ids to actual mappings
+        map_ids = set(feed_out.field_maps.values())
+        maps_result = await db.execute(select(ValueMap).where(ValueMap.id.in_(map_ids)))
+        maps_by_id = {m.id: m.mappings for m in maps_result.scalars().all()}
+        resolved = {field: maps_by_id[mid] for field, mid in feed_out.field_maps.items() if mid in maps_by_id}
+        product_dicts = apply_value_maps(product_dicts, resolved)
+
     if feed_out.type == "ceneo":
         xml_bytes = generate_ceneo_xml(product_dicts, category_mapping=feed_out.category_mapping)
     elif feed_out.type == "gmc":
