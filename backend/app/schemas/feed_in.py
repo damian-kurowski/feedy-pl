@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 class FeedInCreate(BaseModel):
     name: str
-    source_url: str
+    source_url: str | None = None
 
 
 class FeedInUpdate(BaseModel):
@@ -21,7 +21,7 @@ class FeedInUpdate(BaseModel):
 class FeedInResponse(BaseModel):
     id: int
     name: str
-    source_url: str
+    source_url: str | None = None
     record_path: Optional[str] = None
     product_name: Optional[str] = None
     active: bool

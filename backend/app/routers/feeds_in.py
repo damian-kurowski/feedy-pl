@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.services.recommendations import generate_recommendations
+from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -237,6 +238,77 @@ async def list_products(
         select(ProductIn).where(ProductIn.feed_in_id == feed_id)
     )
     return result.scalars().all()
+
+
+class ManualProductCreate(BaseModel):
+    product_name: str
+    product_value: dict
+
+class ManualProductUpdate(BaseModel):
+    product_name: str | None = None
+    product_value: dict | None = None
+
+
+@router.post("/{feed_id}/products")
+async def create_manual_product(
+    feed_id: int,
+    data: ManualProductCreate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    feed = await _get_user_feed(db, feed_id, current_user.id)
+    product = ProductIn(
+        feed_in_id=feed.id,
+        product_name=data.product_name,
+        product_value=data.product_value,
+        custom_product=True,
+    )
+    db.add(product)
+    await db.commit()
+    await db.refresh(product)
+    return {"id": product.id, "product_name": product.product_name, "product_value": product.product_value}
+
+
+@router.put("/{feed_id}/products/{product_id}")
+async def update_manual_product(
+    feed_id: int,
+    product_id: int,
+    data: ManualProductUpdate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    await _get_user_feed(db, feed_id, current_user.id)
+    result = await db.execute(
+        select(ProductIn).where(ProductIn.id == product_id, ProductIn.feed_in_id == feed_id)
+    )
+    product = result.scalar_one_or_none()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    if data.product_name is not None:
+        product.product_name = data.product_name
+    if data.product_value is not None:
+        product.product_value = data.product_value
+    await db.commit()
+    await db.refresh(product)
+    return {"id": product.id, "product_name": product.product_name, "product_value": product.product_value}
+
+
+@router.delete("/{feed_id}/products/{product_id}", status_code=204)
+async def delete_manual_product(
+    feed_id: int,
+    product_id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    await _get_user_feed(db, feed_id, current_user.id)
+    result = await db.execute(
+        select(ProductIn).where(ProductIn.id == product_id, ProductIn.feed_in_id == feed_id, ProductIn.custom_product == True)
+    )
+    product = result.scalar_one_or_none()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found or not a manual product")
+    await db.delete(product)
+    await db.commit()
 
 
 @router.get("/{feed_id}/changelog")

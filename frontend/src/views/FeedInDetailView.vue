@@ -6,6 +6,8 @@ import type { XmlElement, Product } from '../stores/feedsIn'
 import XmlTree from '../components/XmlTree.vue'
 import ProductPreview from '../components/ProductPreview.vue'
 import FeedChangelog from '../components/FeedChangelog.vue'
+import ManualProductForm from '../components/ManualProductForm.vue'
+import api from '../api/client'
 
 const route = useRoute()
 const store = useFeedsInStore()
@@ -21,6 +23,7 @@ const productName = ref('')
 const refreshInterval = ref<string>('')
 const saving = ref(false)
 const fetching = ref(false)
+const showAddProduct = ref(false)
 
 const refreshIntervalLabel = computed(() => {
   if (!feed.value?.refresh_interval) return null
@@ -78,6 +81,14 @@ async function saveConfig() {
   } finally {
     saving.value = false
   }
+}
+
+async function addManualProduct(name: string, value: Record<string, string>) {
+  try {
+    await api.post(`/feeds-in/${feedId.value}/products`, { product_name: name, product_value: value })
+    showAddProduct.value = false
+    await loadData()
+  } catch {}
 }
 
 async function refetchXml() {
@@ -237,7 +248,14 @@ async function refetchXml() {
 
         <!-- Products section -->
         <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
-          <h2 class="text-lg font-semibold text-gray-900 mb-4">Produkty ({{ products.length }})</h2>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-gray-900">Produkty ({{ products.length }})</h2>
+            <button @click="showAddProduct = !showAddProduct"
+              class="text-xs font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer">
+              {{ showAddProduct ? 'Anuluj' : '+ Dodaj ręcznie' }}
+            </button>
+          </div>
+          <ManualProductForm v-if="showAddProduct" @save="addManualProduct" @cancel="showAddProduct = false" class="mb-4" />
           <ProductPreview :products="products" />
         </div>
 
