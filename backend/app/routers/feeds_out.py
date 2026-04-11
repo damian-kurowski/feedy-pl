@@ -189,18 +189,18 @@ async def create_feed_out(
             detail="Feed in not found",
         )
 
-    # Plan limit check disabled for development
-    # plan = current_user.plan
-    # if plan and plan.max_feeds_out is not None:
-    #     count_result = await db.execute(
-    #         select(func.count()).select_from(FeedOut).where(FeedOut.user_id == current_user.id)
-    #     )
-    #     current_count = count_result.scalar()
-    #     if current_count >= plan.max_feeds_out:
-    #         raise HTTPException(
-    #             status_code=status.HTTP_403_FORBIDDEN,
-    #             detail=f"Plan '{plan.name}' allows max {plan.max_feeds_out} output feeds. Upgrade to add more.",
-    #         )
+    # Plan limit check
+    plan = current_user.plan
+    if plan and plan.max_feeds_out is not None:
+        count_result = await db.execute(
+            select(func.count()).select_from(FeedOut).where(FeedOut.user_id == current_user.id)
+        )
+        current_count = count_result.scalar()
+        if current_count >= plan.max_feeds_out:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Plan '{plan.name}' pozwala na max {plan.max_feeds_out} feedów wyjściowych. Zmień plan aby dodać więcej.",
+            )
 
     feed_out = FeedOut(
         user_id=current_user.id,
