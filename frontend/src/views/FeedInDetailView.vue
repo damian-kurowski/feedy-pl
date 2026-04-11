@@ -124,18 +124,18 @@ async function refetchXml() {
 <template>
   <div class="max-w-6xl mx-auto px-4 py-8">
     <div v-if="feed" class="mb-6 flex items-center justify-between flex-wrap gap-3">
-      <h1 class="text-2xl font-bold text-gray-900">{{ feed.name }}</h1>
+      <h1 class="font-heading text-2xl font-bold text-gray-900">{{ feed.name }}</h1>
       <div class="flex items-center gap-3">
         <button
           :disabled="fetching"
-          class="px-4 py-2 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 text-gray-700 text-sm font-medium rounded-md cursor-pointer"
+          class="bg-gray-100 hover:bg-gray-200 disabled:opacity-50 text-gray-700 text-sm font-medium rounded-xl px-4 py-2 transition cursor-pointer"
           @click="refetchXml"
         >
           {{ fetching ? 'Pobieranie...' : 'Pobierz XML ponownie' }}
         </button>
         <router-link
           :to="`/feeds-out/new?feed_in_id=${feedId}`"
-          class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
         >
           Utwórz feed wyjściowy
         </router-link>
@@ -143,36 +143,36 @@ async function refetchXml() {
     </div>
 
     <!-- Stats bar -->
-    <div v-if="feed" class="grid grid-cols-4 gap-4 mb-6">
-      <div class="bg-white rounded-lg border p-4 text-center">
-        <p class="text-2xl font-bold text-indigo-600">{{ products.length }}</p>
+    <div v-if="feed" class="grid grid-cols-4 gap-4 mb-8">
+      <div class="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:shadow-md transition-shadow">
+        <p class="font-heading text-2xl font-bold text-indigo-600">{{ products.length }}</p>
         <p class="text-xs text-gray-500 mt-1">Produktów</p>
       </div>
-      <div class="bg-white rounded-lg border p-4 text-center">
-        <p class="text-2xl font-bold text-indigo-600">{{ elements.length }}</p>
+      <div class="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:shadow-md transition-shadow">
+        <p class="font-heading text-2xl font-bold text-indigo-600">{{ elements.length }}</p>
         <p class="text-xs text-gray-500 mt-1">Elementów XML</p>
       </div>
-      <div class="bg-white rounded-lg border p-4 text-center">
-        <p class="text-2xl font-bold" :class="feed.fetch_status === 'success' ? 'text-green-600' : feed.fetch_status === 'error' ? 'text-red-600' : 'text-gray-600'">
+      <div class="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:shadow-md transition-shadow">
+        <p class="font-heading text-2xl font-bold" :class="feed.fetch_status === 'success' ? 'text-green-600' : feed.fetch_status === 'error' ? 'text-red-600' : 'text-gray-600'">
           {{ feed.fetch_status === 'success' ? 'OK' : feed.fetch_status === 'error' ? 'Błąd' : feed.fetch_status }}
         </p>
         <p class="text-xs text-gray-500 mt-1">Status</p>
       </div>
-      <div class="bg-white rounded-lg border p-4 text-center">
-        <p class="text-2xl font-bold text-indigo-600">{{ feed.last_fetched_at ? new Date(feed.last_fetched_at).toLocaleString('pl-PL') : '-' }}</p>
+      <div class="bg-white rounded-2xl border border-gray-200 p-6 text-center hover:shadow-md transition-shadow">
+        <p class="font-heading text-2xl font-bold text-indigo-600">{{ feed.last_fetched_at ? new Date(feed.last_fetched_at).toLocaleString('pl-PL') : '-' }}</p>
         <p class="text-xs text-gray-500 mt-1">Ostatni refresh</p>
       </div>
     </div>
 
     <!-- Refresh interval info -->
-    <div v-if="refreshIntervalLabel" class="mb-6 p-3 bg-blue-50 border border-blue-200 rounded-md text-sm text-blue-800">
+    <div v-if="refreshIntervalLabel" class="mb-8 p-4 bg-indigo-50 border border-indigo-200 rounded-xl text-sm text-indigo-800">
       Automatyczne odświeżanie: {{ refreshIntervalLabel }}
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Left column: XML Tree -->
-      <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Struktura XML</h2>
+      <div class="bg-white border border-gray-200 rounded-2xl p-6">
+        <h2 class="font-heading text-lg font-bold text-gray-900 mb-4">Struktura XML</h2>
         <div v-if="elements.length === 0" class="text-gray-500 text-sm py-4">
           Brak elementów XML. Pobierz XML, aby zobaczyć strukturę.
         </div>
@@ -184,10 +184,10 @@ async function refetchXml() {
       <!-- Right column: Config + Products -->
       <div class="space-y-6">
         <!-- Config section -->
-        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
-          <h2 class="text-lg font-semibold text-gray-900 mb-4">Konfiguracja</h2>
+        <div class="bg-white border border-gray-200 rounded-2xl p-6">
+          <h2 class="font-heading text-lg font-bold text-gray-900 mb-4">Konfiguracja</h2>
 
-          <div v-if="selectedPath" class="mb-4 p-3 bg-indigo-50 border border-indigo-200 rounded-md">
+          <div v-if="selectedPath" class="mb-4 p-4 bg-indigo-50 border border-indigo-200 rounded-xl">
             <p class="text-sm text-indigo-800 mb-2">Zaznaczono: <code class="font-mono">{{ selectedPath }}</code></p>
             <button
               class="text-sm text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer"
@@ -206,7 +206,7 @@ async function refetchXml() {
                 v-model="recordPath"
                 type="text"
                 placeholder="np. feed/entry"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
               />
             </div>
 
@@ -218,7 +218,7 @@ async function refetchXml() {
                 v-model="productName"
                 type="text"
                 placeholder="np. feed/entry/title"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
               />
             </div>
 
@@ -227,7 +227,7 @@ async function refetchXml() {
               <select
                 id="refresh_interval"
                 v-model="refreshInterval"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
               >
                 <option value="">Wyłączone</option>
                 <option value="60">Co 1 godzinę</option>
@@ -238,7 +238,7 @@ async function refetchXml() {
 
             <button
               :disabled="saving"
-              class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer"
+              class="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
               @click="saveConfig"
             >
               {{ saving ? 'Zapisywanie...' : 'Zapisz' }}
@@ -247,9 +247,9 @@ async function refetchXml() {
         </div>
 
         <!-- Products section -->
-        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
+        <div class="bg-white border border-gray-200 rounded-2xl p-6">
           <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-gray-900">Produkty ({{ products.length }})</h2>
+            <h2 class="font-heading text-lg font-bold text-gray-900">Produkty ({{ products.length }})</h2>
             <button @click="showAddProduct = !showAddProduct"
               class="text-xs font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer">
               {{ showAddProduct ? 'Anuluj' : '+ Dodaj ręcznie' }}
@@ -260,8 +260,8 @@ async function refetchXml() {
         </div>
 
         <!-- Changelog section -->
-        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
-          <h2 class="text-lg font-semibold text-gray-900 mb-4">Historia zmian</h2>
+        <div class="bg-white border border-gray-200 rounded-2xl p-6">
+          <h2 class="font-heading text-lg font-bold text-gray-900 mb-4">Historia zmian</h2>
           <FeedChangelog :feed-id="feedId" />
         </div>
       </div>

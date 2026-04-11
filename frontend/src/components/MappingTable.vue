@@ -289,7 +289,7 @@ const xmlPreview = computed(() => {
 
       <!-- Empty state -->
       <div v-if="rows.length === 0" class="px-4 py-8 text-center text-gray-400 border border-dashed border-gray-200 rounded-lg">
-        Brak pol. Dodaj pierwsze pole ponizej.
+        Brak pól. Dodaj pierwsze pole poniżej.
       </div>
     </div>
 

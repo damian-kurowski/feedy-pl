@@ -15,7 +15,7 @@ onMounted(async () => {
 function severityColor(severity: string) {
   switch (severity) {
     case 'critical': return 'bg-red-50 border-red-200 text-red-800'
-    case 'warning': return 'bg-amber-50 border-amber-200 text-amber-800'
+    case 'warning': return 'bg-yellow-50 border-yellow-200 text-yellow-800'
     case 'info': return 'bg-blue-50 border-blue-200 text-blue-800'
     default: return 'bg-gray-50 border-gray-200 text-gray-800'
   }
@@ -33,7 +33,7 @@ function severityIcon(severity: string) {
 function severityDot(severity: string) {
   switch (severity) {
     case 'critical': return 'bg-red-500'
-    case 'warning': return 'bg-amber-500'
+    case 'warning': return 'bg-yellow-500'
     case 'info': return 'bg-blue-500'
     default: return 'bg-gray-500'
   }
@@ -117,7 +117,7 @@ function severityDot(severity: string) {
 
     <!-- All good state -->
     <div v-if="data.alerts.length === 0 && data.recommendations.length === 0"
-      class="p-6 bg-green-50 border border-green-200 rounded-xl text-center"
+      class="p-6 bg-green-50 border border-green-200 rounded-2xl text-center"
     >
       <p class="text-green-800 font-semibold">Wszystko działa prawidłowo</p>
       <p class="text-green-600 text-sm mt-1">Brak alertów i problemów do naprawy.</p>

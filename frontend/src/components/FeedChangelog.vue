@@ -19,11 +19,11 @@ async function loadChanges() {
 
 function icon(type: string) {
   switch (type) {
-    case 'added': return { symbol: '+', color: 'text-green-600 bg-green-50' }
-    case 'removed': return { symbol: '-', color: 'text-red-600 bg-red-50' }
-    case 'price_changed': return { symbol: '$', color: 'text-blue-600 bg-blue-50' }
-    case 'modified': return { symbol: '~', color: 'text-yellow-600 bg-yellow-50' }
-    default: return { symbol: '?', color: 'text-gray-600 bg-gray-50' }
+    case 'added': return { symbol: '+', color: 'text-green-700 bg-green-100' }
+    case 'removed': return { symbol: '-', color: 'text-red-700 bg-red-100' }
+    case 'price_changed': return { symbol: '$', color: 'text-indigo-700 bg-indigo-100' }
+    case 'modified': return { symbol: '~', color: 'text-yellow-700 bg-yellow-100' }
+    default: return { symbol: '?', color: 'text-gray-700 bg-gray-100' }
   }
 }
 
@@ -63,7 +63,7 @@ onMounted(loadChanges)
       </div>
     </div>
     <button v-if="changes.length < total" class="mt-3 text-sm text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer" @click="loadMore">
-      Pokaz wiecej ({{ total - changes.length }} pozostalo)
+      Pokaż więcej ({{ total - changes.length }} pozostało)
     </button>
   </div>
 </template>

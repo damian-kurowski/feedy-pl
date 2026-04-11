@@ -132,12 +132,12 @@ onMounted(loadProducts)
     <!-- Search + filters bar -->
     <div class="flex flex-wrap items-center gap-3 mb-4">
       <input v-model="search" type="text" placeholder="Szukaj produktu..."
-        class="flex-1 min-w-[200px] px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+        class="flex-1 min-w-[200px] px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
         @input="onSearch" />
 
       <div class="flex gap-1">
         <button v-for="f in (['all', 'original', 'modified', 'excluded'] as const)" :key="f"
-          class="px-3 py-1.5 text-xs font-medium rounded-lg cursor-pointer transition-colors"
+          class="px-3 py-1.5 text-xs font-medium rounded-xl cursor-pointer transition-colors"
           :class="statusFilter === f
             ? 'bg-indigo-600 text-white'
             : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
@@ -148,7 +148,7 @@ onMounted(loadProducts)
         </button>
       </div>
 
-      <select v-model="perPage" class="px-2 py-1.5 border border-gray-300 rounded-lg text-xs bg-white" @change="currentPage = 1">
+      <select v-model="perPage" class="px-2 py-1.5 border border-gray-200 rounded-xl text-xs bg-gray-50" @change="currentPage = 1">
         <option :value="10">10</option>
         <option :value="20">20</option>
         <option :value="50">50</option>
@@ -159,20 +159,20 @@ onMounted(loadProducts)
     <!-- Bulk action bar -->
     <div v-if="selected.size > 0" class="flex items-center gap-2 mb-3 p-3 bg-indigo-50 border border-indigo-200 rounded-xl">
       <span class="text-sm font-medium text-indigo-700">{{ selected.size }} zaznaczonych</span>
-      <button @click="bulkExclude" class="px-3 py-1 text-xs font-medium bg-red-100 text-red-700 hover:bg-red-200 rounded-lg cursor-pointer transition">Wyklucz</button>
-      <button @click="bulkInclude" class="px-3 py-1 text-xs font-medium bg-green-100 text-green-700 hover:bg-green-200 rounded-lg cursor-pointer transition">Przywróć</button>
-      <button @click="showBulkField = !showBulkField" class="px-3 py-1 text-xs font-medium bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg cursor-pointer transition">Ustaw pole</button>
+      <button @click="bulkExclude" class="px-3 py-1 text-xs font-medium bg-red-100 text-red-700 hover:bg-red-200 rounded-xl cursor-pointer transition">Wyklucz</button>
+      <button @click="bulkInclude" class="px-3 py-1 text-xs font-medium bg-green-100 text-green-700 hover:bg-green-200 rounded-xl cursor-pointer transition">Przywróć</button>
+      <button @click="showBulkField = !showBulkField" class="px-3 py-1 text-xs font-medium bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-xl cursor-pointer transition">Ustaw pole</button>
       <button @click="selected.clear()" class="px-3 py-1 text-xs text-gray-500 hover:text-gray-700 cursor-pointer">Odznacz</button>
 
       <div v-if="showBulkField" class="flex items-center gap-2 ml-2">
-        <input v-model="bulkFieldName" type="text" placeholder="Pole (np. brand)" class="px-2 py-1 border border-gray-300 rounded-lg text-xs w-28" />
-        <input v-model="bulkFieldValue" type="text" placeholder="Wartość" class="px-2 py-1 border border-gray-300 rounded-lg text-xs w-40" />
-        <button @click="bulkSetField" class="px-3 py-1 text-xs font-medium bg-indigo-600 text-white rounded-lg cursor-pointer">Zastosuj</button>
+        <input v-model="bulkFieldName" type="text" placeholder="Pole (np. brand)" class="px-2 py-1 border border-gray-200 rounded-xl text-xs w-28" />
+        <input v-model="bulkFieldValue" type="text" placeholder="Wartość" class="px-2 py-1 border border-gray-200 rounded-xl text-xs w-40" />
+        <button @click="bulkSetField" class="px-3 py-1 text-xs font-medium bg-indigo-600 text-white rounded-xl cursor-pointer transition hover:bg-indigo-700">Zastosuj</button>
       </div>
     </div>
 
     <!-- Product table -->
-    <div class="border rounded-xl overflow-hidden">
+    <div class="border border-gray-200 rounded-2xl overflow-hidden">
       <table class="w-full text-sm">
         <thead class="bg-gray-50">
           <tr>
@@ -235,18 +235,18 @@ onMounted(loadProducts)
       <div class="flex gap-1">
         <button
           :disabled="currentPage <= 1"
-          class="px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-30 cursor-pointer text-xs"
+          class="px-3 py-1 rounded-xl border border-gray-200 hover:bg-gray-50 disabled:opacity-30 cursor-pointer text-xs transition"
           @click="currentPage--"
         >Poprzednia</button>
         <button
           v-for="p in Math.min(totalPages, 5)" :key="p"
-          class="px-3 py-1 rounded-lg border text-xs cursor-pointer"
+          class="px-3 py-1 rounded-xl border text-xs cursor-pointer transition"
           :class="currentPage === p ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-200 hover:bg-gray-50'"
           @click="currentPage = p"
         >{{ p }}</button>
         <button
           :disabled="currentPage >= totalPages"
-          class="px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-30 cursor-pointer text-xs"
+          class="px-3 py-1 rounded-xl border border-gray-200 hover:bg-gray-50 disabled:opacity-30 cursor-pointer text-xs transition"
           @click="currentPage++"
         >Następna</button>
       </div>

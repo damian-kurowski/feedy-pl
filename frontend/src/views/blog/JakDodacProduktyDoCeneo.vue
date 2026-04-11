@@ -121,7 +121,7 @@
           <li><strong>Edycja per produkt</strong> — zmień tytuł, cenę lub opis konkretnego produktu bez modyfikacji źródła</li>
           <li><strong>Mapowanie kategorii</strong> — zmapuj kategorie ze sklepu na kategorie Ceneo</li>
         </ul>
-        <p class="mt-6"><router-link to="/register" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition">Zacznij za darmo — 200 produktów, bez karty kredytowej</router-link></p>
+        <p class="mt-6"><router-link to="/register" class="inline-flex items-center bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer">Zacznij za darmo — 200 produktów, bez karty kredytowej</router-link></p>
 
         <h2 class="font-heading">Podsumowanie</h2>
         <p>Dodanie produktów do Ceneo wymaga poprawnego feedu XML z wymaganymi polami. Kluczowe elementy to: prawidłowy format ceny (bez waluty), kody EAN, aktualne zdjęcia i regularne odświeżanie feedu. Narzędzia takie jak Feedy automatyzują cały proces i pomagają uniknąć najczęstszych błędów.</p>

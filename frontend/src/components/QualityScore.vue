@@ -21,7 +21,7 @@ const colorClass = computed(() => {
 </script>
 
 <template>
-  <div :class="[colorClass.bg, colorClass.border]" class="border rounded-lg p-5">
+  <div :class="[colorClass.bg, colorClass.border]" class="border rounded-2xl p-6">
     <div class="flex items-center gap-6">
       <div class="w-20 h-20 rounded-full flex items-center justify-center border-4 shrink-0" :class="[colorClass.border]">
         <span class="text-2xl font-bold" :class="colorClass.text">{{ score }}%</span>
@@ -51,7 +51,7 @@ const colorClass = computed(() => {
             <span class="w-8 text-right">{{ breakdown.recommended_fields_score }}%</span>
           </div>
           <div class="flex items-center gap-2 text-xs text-gray-500">
-            <span class="w-32">Zgodnosc formatu</span>
+            <span class="w-32">Zgodność formatu</span>
             <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
               <div class="h-full bg-green-500 rounded-full" :style="{ width: breakdown.format_compliance_score + '%' }" />
             </div>

@@ -81,7 +81,7 @@ async function handleSubmit() {
       <div class="mt-6 text-center space-y-2">
         <p class="text-[12px] text-gray-400 flex items-center justify-center gap-1.5">
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-          Darmowy plan: 100 produktow, 1 feed wyjsciowy
+          Darmowy plan: 100 produktów, 1 feed wyjściowy
         </p>
         <p class="text-[13px] text-gray-400">
           Masz juz konto?

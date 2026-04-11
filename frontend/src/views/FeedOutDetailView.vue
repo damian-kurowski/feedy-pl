@@ -120,7 +120,7 @@ async function saveCategoryMapping() {
     mappingSuccess.value = true
     setTimeout(() => (mappingSuccess.value = false), 3000)
   } catch (e: any) {
-    mappingError.value = e.response?.data?.detail || 'Blad zapisu mapowania kategorii'
+    mappingError.value = e.response?.data?.detail || 'Błąd zapisu mapowania kategorii'
   } finally {
     savingMapping.value = false
   }
@@ -147,9 +147,9 @@ const ruleTypeLabels: Record<string, string> = {
   filter_no_image: 'Ukryj produkty bez zdjęcia',
   filter_no_price: 'Ukryj produkty bez ceny',
   filter_exclude: 'Ukryj produkty z kategorii',
-  filter_include: 'Pokaz tylko produkty z kategorii',
+  filter_include: 'Pokaż tylko produkty z kategorii',
   modify_prefix: 'Dodaj prefix do pola',
-  modify_replace: 'Zamien tekst w polu',
+  modify_replace: 'Zamień tekst w polu',
   description_template: 'Szablon opisu',
 }
 
@@ -158,9 +158,9 @@ function ruleDescription(rule: any): string {
     case 'filter_no_image': return 'Ukryj produkty bez zdjęcia'
     case 'filter_no_price': return 'Ukryj produkty bez ceny'
     case 'filter_exclude': return `Ukryj produkty gdzie ${rule.field} zawiera "${rule.value}"`
-    case 'filter_include': return `Pokaz tylko produkty gdzie ${rule.field} zawiera "${rule.value}"`
+    case 'filter_include': return `Pokaż tylko produkty gdzie ${rule.field} zawiera "${rule.value}"`
     case 'modify_prefix': return `Dodaj prefix "${rule.value}" do pola ${rule.field}`
-    case 'modify_replace': return `Zamien "${rule.value}" na "${rule.new_value}" w polu ${rule.field}`
+    case 'modify_replace': return `Zamień "${rule.value}" na "${rule.new_value}" w polu ${rule.field}`
     case 'optimize_titles': return 'Automatyczna optymalizacja tytułów'
     case 'description_template': return `Szablon opisu: "${(rule.template || '').substring(0, 50)}..." -> ${rule.field || 'desc'}`
     default: return JSON.stringify(rule)
@@ -216,7 +216,7 @@ async function saveRules() {
     rulesSuccess.value = true
     setTimeout(() => (rulesSuccess.value = false), 3000)
   } catch (e: any) {
-    rulesError.value = e.response?.data?.detail || 'Blad zapisu regul'
+    rulesError.value = e.response?.data?.detail || 'Błąd zapisu reguł'
   } finally {
     savingRules.value = false
   }
@@ -338,7 +338,7 @@ onMounted(async () => {
       <!-- Header -->
       <div class="mb-8">
         <div class="flex items-center gap-3 mb-1">
-          <h1 class="text-2xl font-bold text-gray-900">{{ feedOut.name }}</h1>
+          <h1 class="font-heading text-2xl font-bold text-gray-900">{{ feedOut.name }}</h1>
           <span class="px-2 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-700 rounded-full uppercase">
             {{ feedOut.type }}
           </span>
@@ -352,7 +352,7 @@ onMounted(async () => {
         <code class="flex-1 text-sm text-indigo-900 break-all truncate">{{ feedUrl }}</code>
         <button
           type="button"
-          class="shrink-0 py-1.5 px-4 text-sm bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg cursor-pointer transition-colors"
+          class="shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
           @click="copyLink"
         >
           {{ copied ? 'Skopiowano!' : 'Kopiuj link' }}
@@ -360,7 +360,7 @@ onMounted(async () => {
         <a
           :href="feedUrl"
           target="_blank"
-          class="shrink-0 py-1.5 px-4 text-sm bg-white border border-indigo-200 hover:bg-indigo-50 text-indigo-700 font-medium rounded-lg"
+          class="shrink-0 border border-gray-200 hover:border-gray-300 text-gray-600 text-sm font-medium rounded-xl px-4 py-2 transition cursor-pointer"
         >
           Podgląd
         </a>
@@ -369,11 +369,11 @@ onMounted(async () => {
       <!-- Quality Score section -->
       <section class="mb-10">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-lg font-semibold text-gray-800">Jakość feedu</h2>
+          <h2 class="font-heading text-lg font-bold text-gray-900">Jakość feedu</h2>
           <button
             type="button"
             :disabled="validating"
-            class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 disabled:opacity-50 text-white font-medium rounded-md text-sm cursor-pointer"
+            class="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
             @click="validateFeed"
           >
             {{ validating ? 'Sprawdzanie...' : validation ? 'Sprawdź ponownie' : 'Sprawdź jakość feedu' }}
@@ -388,7 +388,7 @@ onMounted(async () => {
             :summary="validation.summary"
           />
 
-          <div v-if="validation.field_coverage?.length" class="mt-4 bg-white border rounded-lg p-4">
+          <div v-if="validation.field_coverage?.length" class="mt-4 bg-white border border-gray-200 rounded-2xl p-6">
             <h3 class="text-sm font-medium text-gray-700 mb-3">Pokrycie pól</h3>
             <div class="space-y-1.5">
               <div v-for="field in validation.field_coverage" :key="field.field" class="flex items-center gap-2 text-xs">
@@ -415,26 +415,26 @@ onMounted(async () => {
             class="mt-4"
           />
 
-          <div v-if="validation.issues?.length" class="mt-4 bg-white border rounded-lg p-4">
+          <div v-if="validation.issues?.length" class="mt-4 bg-white border border-gray-200 rounded-2xl p-6">
             <h3 class="text-sm font-medium text-gray-700 mb-3">Problemy</h3>
             <ValidationIssues :issues="validation.issues" />
           </div>
         </div>
 
-        <div v-else-if="!validating" class="text-sm text-gray-400 bg-gray-50 border rounded-lg p-6 text-center">
+        <div v-else-if="!validating" class="text-sm text-gray-400 bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center">
           Kliknij "Sprawdź jakość feedu" aby zobaczyć wynik walidacji.
         </div>
       </section>
 
       <!-- Mapping section -->
       <section class="mb-10">
-        <h2 class="text-lg font-semibold text-gray-800 mb-1">Mapowanie pól</h2>
+        <h2 class="font-heading text-lg font-bold text-gray-900 mb-1">Mapowanie pól</h2>
         <p class="text-sm text-gray-500 mb-4">Przypisz pola z XML źródłowego do pól wymaganych przez porównywarkę</p>
 
-        <div v-if="saveError" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm">
+        <div v-if="saveError" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
           {{ saveError }}
         </div>
-        <div v-if="saveSuccess" class="mb-3 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm">
+        <div v-if="saveSuccess" class="mb-3 p-3 bg-green-50 border border-green-200 text-green-700 rounded-xl text-sm">
           Mapowanie zapisane pomyślnie.
         </div>
 
@@ -448,7 +448,7 @@ onMounted(async () => {
         <button
           type="button"
           :disabled="saving"
-          class="mt-4 py-2 px-6 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer"
+          class="mt-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
           @click="saveStructure"
         >
           {{ saving ? 'Zapisywanie...' : 'Zapisz mapowanie' }}
@@ -457,24 +457,24 @@ onMounted(async () => {
 
       <!-- Rules section -->
       <section class="mb-10">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">
+        <h2 class="font-heading text-lg font-bold text-gray-900 mb-4">
           Reguły filtrowania
           <span v-if="rules.length" class="text-sm font-normal text-gray-500">({{ rules.length }})</span>
         </h2>
 
-        <div v-if="rulesError" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm">
+        <div v-if="rulesError" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
           {{ rulesError }}
         </div>
-        <div v-if="rulesSuccess" class="mb-3 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm">
+        <div v-if="rulesSuccess" class="mb-3 p-3 bg-green-50 border border-green-200 text-green-700 rounded-xl text-sm">
           Reguły zapisane pomyślnie.
         </div>
 
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-2">
+        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 space-y-2">
           <!-- Existing rules -->
           <div
             v-for="(rule, index) in rules"
             :key="index"
-            class="flex items-center justify-between bg-white border border-gray-200 rounded-md px-3 py-2"
+            class="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-4 py-3"
           >
             <span class="text-sm text-gray-700">{{ ruleDescription(rule) }}</span>
             <button
@@ -487,11 +487,11 @@ onMounted(async () => {
           </div>
 
           <div v-if="rules.length === 0" class="text-sm text-gray-400 py-2">
-            Brak regul filtrowania.
+            Brak reguł filtrowania.
           </div>
 
           <!-- Pending rule input -->
-          <div v-if="pendingRuleType" class="mt-3 p-3 bg-white border border-indigo-200 rounded-md space-y-2">
+          <div v-if="pendingRuleType" class="mt-3 p-4 bg-white border border-indigo-200 rounded-xl space-y-3">
             <div class="text-sm font-medium text-gray-700">{{ ruleTypeLabels[pendingRuleType] }}</div>
 
             <template v-if="pendingRuleType === 'filter_exclude' || pendingRuleType === 'filter_include'">
@@ -499,7 +499,7 @@ onMounted(async () => {
                 v-model="pendingRuleInput"
                 type="text"
                 placeholder="Wpisz wartość kategorii..."
-                class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
               />
             </template>
 
@@ -508,13 +508,13 @@ onMounted(async () => {
                 v-model="pendingRuleInput"
                 type="text"
                 placeholder="Nazwa pola (np. title)"
-                class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
               />
               <input
                 v-model="pendingRuleInput2"
                 type="text"
                 placeholder="Prefix do dodania (np. PROMO: )"
-                class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
               />
             </template>
 
@@ -523,19 +523,19 @@ onMounted(async () => {
                 v-model="pendingRuleInput"
                 type="text"
                 placeholder="Nazwa pola (np. title)"
-                class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
               />
               <input
                 v-model="pendingRuleInput2"
                 type="text"
                 placeholder="Tekst do znalezienia"
-                class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
               />
               <input
                 v-model="pendingRuleInput3"
                 type="text"
-                placeholder="Zamien na..."
-                class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Zamień na..."
+                class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
               />
             </template>
 
@@ -550,14 +550,14 @@ onMounted(async () => {
             <div class="flex gap-2">
               <button
                 type="button"
-                class="py-1 px-3 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 cursor-pointer"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-xl px-3 py-1.5 transition cursor-pointer"
                 @click="confirmPendingRule"
               >
                 Dodaj
               </button>
               <button
                 type="button"
-                class="py-1 px-3 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 cursor-pointer"
+                class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-xl px-3 py-1.5 transition cursor-pointer"
                 @click="cancelPendingRule"
               >
                 Anuluj
@@ -569,14 +569,14 @@ onMounted(async () => {
           <div class="relative mt-3">
             <button
               type="button"
-              class="py-1.5 px-4 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 font-medium text-gray-700 cursor-pointer"
+              class="border border-gray-200 hover:border-gray-300 text-gray-600 text-sm font-medium rounded-xl px-4 py-2 transition cursor-pointer"
               @click="showRuleMenu = !showRuleMenu"
             >
-              + Dodaj regule
+              + Dodaj regułę
             </button>
             <div
               v-if="showRuleMenu"
-              class="absolute left-0 mt-1 w-72 bg-white border border-gray-200 rounded-md shadow-lg z-10"
+              class="absolute left-0 mt-1 w-72 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden"
             >
               <button
                 v-for="(label, type) in ruleTypeLabels"
@@ -594,19 +594,19 @@ onMounted(async () => {
         <button
           type="button"
           :disabled="savingRules"
-          class="mt-4 py-2 px-6 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer"
+          class="mt-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
           @click="saveRules"
         >
-          {{ savingRules ? 'Zapisywanie...' : 'Zapisz reguly' }}
+          {{ savingRules ? 'Zapisywanie...' : 'Zapisz reguły' }}
         </button>
       </section>
 
       <!-- Title Optimization section -->
-      <section class="mb-10 bg-white rounded-lg shadow-sm border p-5">
-        <h2 class="text-lg font-semibold mb-3">Optymalizacja tytułów</h2>
+      <section class="mb-10 bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="font-heading text-lg font-bold text-gray-900 mb-4">Optymalizacja tytułów</h2>
         <p class="text-sm text-gray-500 mb-4">Automatycznie ulepsz tytuły produktów — dodaj markę, wyczyść formatowanie.</p>
 
-        <button @click="previewOptimization" :disabled="optimizing" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50 cursor-pointer">
+        <button @click="previewOptimization" :disabled="optimizing" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 disabled:opacity-50 cursor-pointer">
           {{ optimizing ? 'Analizuję...' : 'Podgląd optymalizacji' }}
         </button>
 
@@ -619,36 +619,36 @@ onMounted(async () => {
             <p v-else class="text-xs text-gray-400 mt-1">Bez zmian</p>
           </div>
 
-          <button @click="applyOptimization" class="mt-3 px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 cursor-pointer">
+          <button @click="applyOptimization" class="mt-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer">
             Zastosuj optymalizację do feedu
           </button>
         </div>
       </section>
 
       <!-- AI Rewrite section -->
-      <section class="mb-10 bg-white rounded-lg shadow-sm border p-5">
-        <h2 class="text-lg font-semibold mb-3">AI Opisy</h2>
+      <section class="mb-10 bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="font-heading text-lg font-bold text-gray-900 mb-4">AI Opisy</h2>
         <AiRewriteSection :feed-out-id="feedId" />
       </section>
 
       <!-- Category Mapping section -->
       <section class="mb-10">
-        <h2 class="text-lg font-semibold text-gray-800 mb-1">Mapowanie kategorii</h2>
+        <h2 class="font-heading text-lg font-bold text-gray-900 mb-1">Mapowanie kategorii</h2>
         <p class="text-sm text-gray-500 mb-4">Przypisz kategorie ze swojego sklepu do kategorii platformy docelowej</p>
 
-        <div v-if="mappingError" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm">
+        <div v-if="mappingError" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
           {{ mappingError }}
         </div>
-        <div v-if="mappingSuccess" class="mb-3 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm">
-          Mapowanie kategorii zapisane pomyslnie.
+        <div v-if="mappingSuccess" class="mb-3 p-3 bg-green-50 border border-green-200 text-green-700 rounded-xl text-sm">
+          Mapowanie kategorii zapisane pomyślnie.
         </div>
 
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
+        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 space-y-3">
           <!-- Existing mappings -->
           <div
             v-for="(ceneoCategory, sourceCategory) in categoryMapping"
             :key="sourceCategory"
-            class="bg-white border border-gray-200 rounded-md px-3 py-3 space-y-2"
+            class="bg-white border border-gray-200 rounded-xl px-4 py-4 space-y-2"
           >
             <div class="flex items-center justify-between">
               <span class="text-sm font-medium text-gray-700">{{ sourceCategory }}</span>
@@ -657,14 +657,14 @@ onMounted(async () => {
                 class="text-red-500 hover:text-red-700 text-sm font-medium cursor-pointer"
                 @click="removeCategoryRow(sourceCategory as string)"
               >
-                Usun
+                Usuń
               </button>
             </div>
             <div class="flex items-center gap-2">
               <select
                 :value="categoryMapping[sourceCategory as string]"
                 @change="categoryMapping[sourceCategory as string] = ($event.target as HTMLSelectElement).value"
-                class="flex-1 border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="flex-1 px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
               >
                 <option value="">-- Wybierz kategorie Ceneo --</option>
                 <option
@@ -677,7 +677,7 @@ onMounted(async () => {
               </select>
               <button
                 type="button"
-                class="shrink-0 py-1.5 px-3 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 font-medium text-gray-700 cursor-pointer"
+                class="shrink-0 border border-gray-200 hover:border-gray-300 text-gray-600 text-sm font-medium rounded-xl px-4 py-2 transition cursor-pointer"
                 :disabled="loadingSuggestions[sourceCategory as string]"
                 @click="fetchCeneoSuggestions(sourceCategory as string)"
               >
@@ -687,7 +687,7 @@ onMounted(async () => {
           </div>
 
           <div v-if="Object.keys(categoryMapping).length === 0" class="text-sm text-gray-400 py-2">
-            Brak mapowania kategorii. Dodaj kategorie ze swojego sklepu ponizej.
+            Brak mapowania kategorii. Dodaj kategorie ze swojego sklepu poniżej.
           </div>
 
           <!-- Add new category row -->
@@ -696,12 +696,12 @@ onMounted(async () => {
               v-model="newSourceCategory"
               type="text"
               placeholder="Nazwa kategorii ze sklepu..."
-              class="flex-1 border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              class="flex-1 px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
               @keyup.enter="addCategoryRow"
             />
             <button
               type="button"
-              class="py-1.5 px-4 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 font-medium text-gray-700 cursor-pointer"
+              class="border border-gray-200 hover:border-gray-300 text-gray-600 text-sm font-medium rounded-xl px-4 py-2 transition cursor-pointer"
               @click="addCategoryRow"
             >
               + Dodaj
@@ -712,7 +712,7 @@ onMounted(async () => {
           <div v-if="Object.keys(categoryMapping).length > 0" class="mt-2">
             <button
               type="button"
-              class="py-1.5 px-4 text-sm bg-white border border-indigo-300 rounded-md hover:bg-indigo-50 font-medium text-indigo-600 cursor-pointer"
+              class="border border-gray-200 hover:border-gray-300 text-indigo-600 text-sm font-medium rounded-xl px-4 py-2 transition cursor-pointer"
               @click="autoSuggestAll"
             >
               Automatyczne sugestie dla wszystkich
@@ -723,7 +723,7 @@ onMounted(async () => {
         <button
           type="button"
           :disabled="savingMapping"
-          class="mt-4 py-2 px-6 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer"
+          class="mt-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
           @click="saveCategoryMapping"
         >
           {{ savingMapping ? 'Zapisywanie...' : 'Zapisz mapowanie kategorii' }}
@@ -732,24 +732,24 @@ onMounted(async () => {
 
       <!-- Products section -->
       <section class="mb-10">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Produkty</h2>
+        <h2 class="font-heading text-lg font-bold text-gray-900 mb-4">Produkty</h2>
         <FeedOutProducts :feed-out-id="feedId" />
       </section>
 
       <!-- Link section -->
       <section>
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Link do feeda</h2>
+        <h2 class="font-heading text-lg font-bold text-gray-900 mb-4">Link do feeda</h2>
 
-        <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md text-sm text-blue-800">
+        <div class="mb-4 p-4 bg-indigo-50 border border-indigo-200 rounded-xl text-sm text-indigo-800">
           Wklej ten link w panelu porównywarki (Ceneo, Google Merchant Center) jako źródło feeda produktowego.
         </div>
 
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <div class="bg-white border border-gray-200 rounded-2xl p-6">
           <div class="flex items-center gap-3">
             <code class="flex-1 text-sm text-gray-800 break-all">{{ feedUrl }}</code>
             <button
               type="button"
-              class="shrink-0 py-1.5 px-4 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 font-medium text-gray-700 cursor-pointer"
+              class="shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
               @click="copyLink"
             >
               {{ copied ? 'Skopiowano!' : 'Kopiuj' }}
@@ -757,7 +757,7 @@ onMounted(async () => {
             <a
               :href="feedUrl"
               target="_blank"
-              class="shrink-0 py-1.5 px-4 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 font-medium text-indigo-600"
+              class="shrink-0 border border-gray-200 hover:border-gray-300 text-gray-600 text-sm font-medium rounded-xl px-4 py-2 transition cursor-pointer"
             >
               Podgląd XML
             </a>
@@ -766,9 +766,9 @@ onMounted(async () => {
       </section>
 
       <!-- XML Preview section -->
-      <div class="bg-white rounded-lg shadow-sm border p-4 mt-6">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="font-semibold">Podgląd XML</h2>
+      <div class="bg-white rounded-2xl border border-gray-200 p-6 mt-8">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-heading text-lg font-bold text-gray-900">Podgląd XML</h2>
           <button @click="loadPreview" :disabled="loadingPreview" class="text-sm text-indigo-600 hover:text-indigo-800">
             {{ loadingPreview ? 'Ładowanie...' : showPreview ? 'Odśwież' : 'Pokaż podgląd' }}
           </button>
