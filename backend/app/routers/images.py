@@ -1,6 +1,6 @@
 """Image upload and serving endpoints."""
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile, status
 from fastapi.responses import FileResponse
 from sqlalchemy import select, func as sa_func
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -19,6 +19,7 @@ MAX_SIZE_BYTES = 5 * 1024 * 1024  # 5MB
 
 @router.post("/api/images/upload")
 async def upload_image(
+    request: Request,
     file: UploadFile,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
@@ -51,7 +52,12 @@ async def upload_image(
     await db.commit()
     await db.refresh(image)
 
-    return {"id": image.id, "url": url, "filename": image.original_filename}
+    # Build full URL from request
+    scheme = request.headers.get("x-forwarded-proto", request.url.scheme)
+    host = request.headers.get("host", request.url.hostname)
+    full_url = f"{scheme}://{host}{url}"
+
+    return {"id": image.id, "url": full_url, "filename": image.original_filename}
 
 
 @router.delete("/api/images/{image_id}", status_code=status.HTTP_204_NO_CONTENT)

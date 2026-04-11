@@ -69,7 +69,14 @@ function setOverride(key: string, value: string) {
           </label>
           <div v-for="field in fields" :key="field.key" class="border rounded-md p-3">
             <label class="text-xs font-medium text-gray-500 block mb-1">{{ field.key }}</label>
-            <div class="text-xs text-gray-400 mb-1 truncate">Oryginal: {{ field.original }}</div>
+            <div class="flex items-center gap-1 mb-1">
+              <span class="text-xs text-gray-400 truncate flex-1">Oryginał: {{ field.original }}</span>
+              <button
+                class="text-[10px] text-indigo-500 hover:text-indigo-700 cursor-pointer shrink-0 px-1"
+                @click.stop="navigator.clipboard.writeText(field.original)"
+                title="Kopiuj wartość"
+              >kopiuj</button>
+            </div>
             <input type="text" :value="overrides[field.key] ?? ''" :placeholder="field.original"
               class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               @input="setOverride(field.key, ($event.target as HTMLInputElement).value)" />

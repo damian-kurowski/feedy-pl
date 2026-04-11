@@ -68,7 +68,7 @@ function handleImgError(e: Event) {
         <img
           :src="getMainImage(product) || placeholderSvg"
           :alt="product.product_name"
-          class="w-12 h-12 object-cover rounded border border-gray-200 shrink-0"
+          class="w-14 h-14 object-contain rounded border border-gray-200 shrink-0 bg-white"
           loading="lazy"
           @error="handleImgError"
         />

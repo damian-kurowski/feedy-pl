@@ -340,6 +340,26 @@ onMounted(async () => {
         <router-link to="/dashboard" class="text-sm text-gray-500 hover:text-gray-700">&larr; Powrót do dashboardu</router-link>
       </div>
 
+      <!-- Feed URL — always visible at top -->
+      <div class="mb-6 p-4 bg-indigo-50 border border-indigo-200 rounded-xl flex items-center gap-3">
+        <span class="text-sm font-medium text-indigo-700 shrink-0">Link XML:</span>
+        <code class="flex-1 text-sm text-indigo-900 break-all truncate">{{ feedUrl }}</code>
+        <button
+          type="button"
+          class="shrink-0 py-1.5 px-4 text-sm bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg cursor-pointer transition-colors"
+          @click="copyLink"
+        >
+          {{ copied ? 'Skopiowano!' : 'Kopiuj link' }}
+        </button>
+        <a
+          :href="feedUrl"
+          target="_blank"
+          class="shrink-0 py-1.5 px-4 text-sm bg-white border border-indigo-200 hover:bg-indigo-50 text-indigo-700 font-medium rounded-lg"
+        >
+          Podgląd
+        </a>
+      </div>
+
       <!-- Quality Score section -->
       <section class="mb-10">
         <div class="flex items-center justify-between mb-4">
