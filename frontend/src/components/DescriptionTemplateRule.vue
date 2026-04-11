@@ -39,7 +39,7 @@ function insertKey(key: string) { template.value += `{${key}}` }
       <textarea v-model="template" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="np. Kup {name} marki {brand}. {desc}" />
     </div>
     <div v-if="availableKeys.length > 0">
-      <label class="text-xs text-gray-500">Dostepne pola (kliknij aby wstawic):</label>
+      <label class="text-xs text-gray-500">Dostępne pola (kliknij aby wstawic):</label>
       <div class="flex flex-wrap gap-1 mt-1">
         <button v-for="key in availableKeys" :key="key" class="px-2 py-0.5 text-xs bg-gray-100 hover:bg-indigo-100 text-gray-600 hover:text-indigo-700 rounded cursor-pointer" @click="insertKey(key)">
           {{ '{' }}{{ key }}{{ '}' }}

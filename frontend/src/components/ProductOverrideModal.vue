@@ -55,7 +55,7 @@ function setOverride(key: string, value: string) {
           <div class="min-w-0 flex-1">
             <h3 class="font-semibold text-gray-900 truncate">{{ product.product_name }}</h3>
             <span class="text-xs" :class="product.status === 'modified' ? 'text-yellow-600' : product.status === 'excluded' ? 'text-red-600' : 'text-gray-400'">
-              {{ product.status === 'modified' ? 'Zmieniony' : product.status === 'excluded' ? 'Wykluczony' : 'Oryginal' }}
+              {{ product.status === 'modified' ? 'Zmieniony' : product.status === 'excluded' ? 'Wykluczony' : 'Oryginał' }}
             </span>
           </div>
           <button class="text-gray-400 hover:text-gray-600 cursor-pointer" @click="emit('close')">
@@ -65,7 +65,7 @@ function setOverride(key: string, value: string) {
         <div class="p-4 overflow-y-auto flex-1 space-y-3">
           <label class="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-md cursor-pointer">
             <input type="checkbox" v-model="excluded" class="rounded" />
-            <span class="text-sm text-red-700">Wyklucz z feedu wyjsciowego</span>
+            <span class="text-sm text-red-700">Wyklucz z feedu wyjściowego</span>
           </label>
           <div v-for="field in fields" :key="field.key" class="border rounded-md p-3">
             <label class="text-xs font-medium text-gray-500 block mb-1">{{ field.key }}</label>
@@ -89,7 +89,7 @@ function setOverride(key: string, value: string) {
           </div>
         </div>
         <div class="p-4 border-t flex items-center justify-between">
-          <button v-if="product.override" class="text-sm text-red-600 hover:text-red-800 cursor-pointer" @click="emit('restore')">Przywroc oryginal</button>
+          <button v-if="product.override" class="text-sm text-red-600 hover:text-red-800 cursor-pointer" @click="emit('restore')">Przywróć oryginał</button>
           <div v-else></div>
           <div class="flex gap-2">
             <button class="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md cursor-pointer" @click="emit('close')">Anuluj</button>

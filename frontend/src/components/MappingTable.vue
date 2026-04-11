@@ -164,7 +164,7 @@ const xmlPreview = computed(() => {
 
     <!-- Column headers -->
     <div class="hidden md:grid grid-cols-[1fr_1fr_auto_auto_1fr_auto] gap-2 px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wide border-b border-gray-200">
-      <span>Pole wyjsciowe</span>
+      <span>Pole wyjściowe</span>
       <span>Zrodlo / Stala</span>
       <span>Typ</span>
       <span>Warunek</span>
@@ -278,7 +278,7 @@ const xmlPreview = computed(() => {
         <button
           type="button"
           class="text-red-400 hover:text-red-600 transition-colors cursor-pointer opacity-0 group-hover:opacity-100"
-          title="Usun pole"
+          title="Usuń pole"
           @click="emit('remove', idx)"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">

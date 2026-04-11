@@ -251,7 +251,7 @@ function closeOnboarding() {
                 'bg-orange-100 text-orange-700': qualityScores[feed.id].score >= 50 && qualityScores[feed.id].score < 70,
                 'bg-red-100 text-red-700': qualityScores[feed.id].score < 50,
               }"
-              :title="`Jakosc feedu: ${qualityScores[feed.id].score}% — ${qualityScores[feed.id].label}`"
+              :title="`Jakość feedu: ${qualityScores[feed.id].score}% — ${qualityScores[feed.id].label}`"
             >
               {{ qualityScores[feed.id].score }}
             </span>

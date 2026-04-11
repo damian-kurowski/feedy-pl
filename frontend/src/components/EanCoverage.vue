@@ -15,9 +15,9 @@ const show = computed(() => eanField.value != null)
       </div>
       <span class="text-sm font-medium text-gray-700 w-24 text-right">{{ eanField!.filled }}/{{ eanField!.total }} ({{ eanField!.percent }}%)</span>
     </div>
-    <p class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-3">Produkty z poprawnym kodem EAN maja ok. 40% wiecej wyswietlen na Google Shopping.</p>
+    <p class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-3">Produkty z poprawnym kodem EAN maja ok. 40% wiecej wyświetleń na Google Shopping.</p>
     <div v-if="eanIssues.length > 0">
-      <p class="text-xs font-medium text-gray-600 mb-1">Bledne kody EAN ({{ eanIssues.length }}):</p>
+      <p class="text-xs font-medium text-gray-600 mb-1">Błędne kody EAN ({{ eanIssues.length }}):</p>
       <div class="space-y-1 max-h-32 overflow-y-auto">
         <div v-for="(issue, idx) in eanIssues.slice(0, 10)" :key="idx" class="text-xs text-red-600 flex gap-1">
           <span>x</span><span>{{ issue.product_name }} — {{ issue.message }}</span>

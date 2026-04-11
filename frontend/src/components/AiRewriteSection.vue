@@ -17,7 +17,7 @@ async function generateRewrites() {
     rewrites.value = data.rewrites
     selected.value = new Set(data.rewrites.filter((r: any) => r.changed).map((r: any) => r.product_id))
   } catch (e: any) {
-    error.value = e.response?.data?.detail || 'Blad generowania opisow AI'
+    error.value = e.response?.data?.detail || 'Błąd generowania opisów AI'
   } finally { loading.value = false }
 }
 
@@ -35,7 +35,7 @@ async function applySelected() {
     await api.post(`/feeds-out/${props.feedOutId}/ai-rewrite/apply`, { rewrites: items })
     rewrites.value = []
   } catch (e: any) {
-    error.value = e.response?.data?.detail || 'Blad stosowania opisow'
+    error.value = e.response?.data?.detail || 'Błąd stosowania opisow'
   } finally { applying.value = false }
 }
 </script>
@@ -52,7 +52,7 @@ async function applySelected() {
       class="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-medium rounded-md text-sm cursor-pointer"
       @click="generateRewrites"
     >
-      {{ loading ? 'Generowanie...' : 'Generuj opisy AI (10 produktow)' }}
+      {{ loading ? 'Generowanie...' : 'Generuj opisy AI (10 produktów)' }}
     </button>
 
     <div v-if="rewrites.length > 0" class="space-y-3 mt-4">

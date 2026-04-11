@@ -40,14 +40,14 @@ const warningCount = computed(() => props.issues.filter(i => i.level === 'warnin
         :class="activeFilter === 'error' ? 'bg-red-600 text-white' : 'bg-red-50 text-red-600 hover:bg-red-100'"
         @click="activeFilter = 'error'"
       >
-        Bledy ({{ errorCount }})
+        Błędy ({{ errorCount }})
       </button>
       <button
         class="px-3 py-1 text-xs font-medium rounded-full cursor-pointer"
         :class="activeFilter === 'warning' ? 'bg-yellow-600 text-white' : 'bg-yellow-50 text-yellow-600 hover:bg-yellow-100'"
         @click="activeFilter = 'warning'"
       >
-        Ostrzezenia ({{ warningCount }})
+        Ostrzeżenia ({{ warningCount }})
       </button>
     </div>
     <div class="space-y-1 max-h-80 overflow-y-auto">
@@ -67,8 +67,8 @@ const warningCount = computed(() => props.issues.filter(i => i.level === 'warnin
           </p>
         </div>
       </div>
-      <p v-if="filtered.length === 0" class="text-sm text-gray-400 py-2">Brak problemow w tej kategorii.</p>
-      <p v-if="filtered.length > 50" class="text-xs text-gray-400 py-2">Pokazano 50 z {{ filtered.length }} problemow.</p>
+      <p v-if="filtered.length === 0" class="text-sm text-gray-400 py-2">Brak problemów w tej kategorii.</p>
+      <p v-if="filtered.length > 50" class="text-xs text-gray-400 py-2">Pokazano 50 z {{ filtered.length }} problemów.</p>
     </div>
   </div>
 </template>

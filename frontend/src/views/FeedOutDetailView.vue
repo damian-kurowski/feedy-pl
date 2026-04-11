@@ -369,14 +369,14 @@ onMounted(async () => {
       <!-- Quality Score section -->
       <section class="mb-10">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-lg font-semibold text-gray-800">Jakosc feedu</h2>
+          <h2 class="text-lg font-semibold text-gray-800">Jakość feedu</h2>
           <button
             type="button"
             :disabled="validating"
             class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 disabled:opacity-50 text-white font-medium rounded-md text-sm cursor-pointer"
             @click="validateFeed"
           >
-            {{ validating ? 'Sprawdzanie...' : validation ? 'Sprawdz ponownie' : 'Sprawdz jakosc feedu' }}
+            {{ validating ? 'Sprawdzanie...' : validation ? 'Sprawdź ponownie' : 'Sprawdź jakość feedu' }}
           </button>
         </div>
 
@@ -389,7 +389,7 @@ onMounted(async () => {
           />
 
           <div v-if="validation.field_coverage?.length" class="mt-4 bg-white border rounded-lg p-4">
-            <h3 class="text-sm font-medium text-gray-700 mb-3">Pokrycie pol</h3>
+            <h3 class="text-sm font-medium text-gray-700 mb-3">Pokrycie pól</h3>
             <div class="space-y-1.5">
               <div v-for="field in validation.field_coverage" :key="field.field" class="flex items-center gap-2 text-xs">
                 <span class="w-40 truncate" :class="field.required ? 'text-gray-700 font-medium' : 'text-gray-500'">
@@ -422,7 +422,7 @@ onMounted(async () => {
         </div>
 
         <div v-else-if="!validating" class="text-sm text-gray-400 bg-gray-50 border rounded-lg p-6 text-center">
-          Kliknij "Sprawdz jakosc feedu" aby zobaczyc wynik walidacji.
+          Kliknij "Sprawdź jakość feedu" aby zobaczyć wynik walidacji.
         </div>
       </section>
 

@@ -29,9 +29,9 @@ const colorClass = computed(() => {
       <div class="flex-1">
         <h3 class="text-lg font-semibold" :class="colorClass.text">{{ label }}</h3>
         <p class="text-sm text-gray-600 mt-1">
-          {{ summary.errors }} bledow
+          {{ summary.errors }} błędów
           <span class="mx-1">|</span>
-          {{ summary.warnings }} ostrzezen
+          {{ summary.warnings }} ostrzeżeń
           <span v-if="summary.info > 0" class="mx-1">|</span>
           <span v-if="summary.info > 0">{{ summary.info }} informacji</span>
         </p>

@@ -41,8 +41,8 @@ onMounted(loadChanges)
 
 <template>
   <div>
-    <div v-if="loading && changes.length === 0" class="text-sm text-gray-400 py-4">Ladowanie...</div>
-    <div v-else-if="changes.length === 0" class="text-sm text-gray-400 py-4">Brak zmian w historii. Zmiany pojawia sie po kolejnym odswiezeniu feedu.</div>
+    <div v-if="loading && changes.length === 0" class="text-sm text-gray-400 py-4">Ładowanie...</div>
+    <div v-else-if="changes.length === 0" class="text-sm text-gray-400 py-4">Brak zmian w historii. Zmiany pojawią się po kolejnym odświeżeniu feedu.</div>
     <div v-else class="space-y-2">
       <div v-for="change in changes" :key="change.id" class="flex items-start gap-3 py-2 border-b border-gray-100 last:border-0">
         <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0" :class="icon(change.change_type).color">
@@ -57,7 +57,7 @@ onMounted(loadChanges)
             ({{ change.details.changed_fields.join(', ') }})
           </span>
           <span v-if="change.change_type === 'added'" class="text-xs text-green-500 ml-2">nowy produkt</span>
-          <span v-if="change.change_type === 'removed'" class="text-xs text-red-500 ml-2">usuniety</span>
+          <span v-if="change.change_type === 'removed'" class="text-xs text-red-500 ml-2">usunięty</span>
         </div>
         <span class="text-xs text-gray-400 shrink-0">{{ formatDate(change.created_at) }}</span>
       </div>
