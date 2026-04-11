@@ -95,6 +95,26 @@ const router = createRouter({
       component: () => import('../views/seo/PorownanieDataFeedWatchPage.vue'),
     },
     {
+      path: '/blog',
+      name: 'blog',
+      component: () => import('../views/blog/BlogListView.vue'),
+    },
+    {
+      path: '/blog/jak-dodac-produkty-do-ceneo',
+      name: 'blog-ceneo',
+      component: () => import('../views/blog/JakDodacProduktyDoCeneo.vue'),
+    },
+    {
+      path: '/blog/jak-stworzyc-feed-xml',
+      name: 'blog-feed-xml',
+      component: () => import('../views/blog/JakStworzycFeedXml.vue'),
+    },
+    {
+      path: '/blog/ceneo-odrzuca-oferty',
+      name: 'blog-ceneo-odrzuca',
+      component: () => import('../views/blog/CeneoOdrzucaOferty.vue'),
+    },
+    {
       path: '/polityka-prywatnosci',
       name: 'privacy-policy',
       component: () => import('../views/PrivacyPolicyView.vue'),
