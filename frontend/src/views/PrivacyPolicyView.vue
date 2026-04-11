@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-white py-16 px-4 sm:px-6 lg:px-8">
     <div class="max-w-4xl mx-auto">
       <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Polityka prywatności</h1>
-      <p class="text-sm text-gray-500 mb-10">Ostatnia aktualizacja: 10 kwietnia 2026</p>
+      <p class="text-sm text-gray-500 mb-10">Ostatnia aktualizacja: 11 kwietnia 2026</p>
 
       <!-- 1. Administrator -->
       <section class="mb-10">
@@ -71,6 +71,8 @@
           <li><strong>Stripe, Inc.</strong> — operator płatności. Dane niezbędne do realizacji płatności (email, dane karty) są przetwarzane bezpośrednio przez Stripe zgodnie z ich polityką prywatności.</li>
           <li><strong>Dostawca usług hostingowych</strong> — serwery, na których przechowywane są dane usługi.</li>
           <li><strong>Dostawca usług SMTP</strong> — do wysyłania wiadomości email (powiadomienia, resetowanie hasła).</li>
+          <li><strong>Google LLC</strong> — usługa Google Analytics 4 (identyfikator: G-FXG667NT02). Dane analityczne (anonimizowany adres IP, informacje o przeglądarce, odwiedzane strony, czas wizyty) są przetwarzane wyłącznie po wyrażeniu zgody przez użytkownika za pośrednictwem bannera cookie. Dane są przetwarzane z włączoną opcją anonimizacji IP (anonymize_ip). Szczegóły: <a href="https://policies.google.com/privacy" class="text-indigo-600 underline" target="_blank" rel="noopener">Polityka prywatności Google</a>.</li>
+          <li><strong>Anthropic, PBC</strong> — usługa AI (Claude API) do optymalizacji opisów produktów. Treści opisów produktów mogą być przetwarzane przez API Anthropic wyłącznie w celu generowania ulepszonych wersji opisów. Dane nie są przechowywane przez Anthropic po przetworzeniu.</li>
         </ul>
         <p class="text-gray-700 mt-3">
           Nie sprzedajemy Twoich danych osobowych podmiotom trzecim. Dane mogą być również udostępnione organom państwowym, jeśli wynika to z obowiązujących przepisów prawa.
@@ -109,18 +111,26 @@
         </p>
       </section>
 
-      <!-- 8. Pliki cookies -->
+      <!-- 8. Pliki cookies i analityka -->
       <section class="mb-10">
-        <h2 class="text-xl font-semibold text-gray-900 mb-3">8. Pliki cookies i localStorage</h2>
+        <h2 class="text-xl font-semibold text-gray-900 mb-3">8. Pliki cookies, localStorage i analityka</h2>
         <p class="text-gray-700 leading-relaxed mb-3">
-          Usługa Feedy korzysta z mechanizmu localStorage przeglądarki w celu przechowywania danych niezbędnych do prawidłowego działania aplikacji:
+          Usługa Feedy korzysta z mechanizmu localStorage przeglądarki oraz plików cookies:
         </p>
+        <h3 class="text-lg font-medium text-gray-800 mt-4 mb-2">Niezbędne (localStorage)</h3>
         <ul class="list-disc pl-6 space-y-2 text-gray-700">
-          <li><strong>access_token</strong> — token autoryzacyjny umożliwiający korzystanie z usługi bez ponownego logowania (niezbędny).</li>
-          <li><strong>refresh_token</strong> — token służący do automatycznego odświeżania sesji (niezbędny).</li>
-          <li><strong>onboarding_done</strong> — zapamiętanie ukończenia procesu wdrożenia (funkcjonalny).</li>
-          <li><strong>cookies_accepted</strong> — zapamiętanie wyrażenia zgody na politykę cookies (niezbędny).</li>
+          <li><strong>access_token</strong> — token autoryzacyjny umożliwiający korzystanie z usługi bez ponownego logowania.</li>
+          <li><strong>refresh_token</strong> — token służący do automatycznego odświeżania sesji.</li>
+          <li><strong>onboarding_done</strong> — zapamiętanie ukończenia procesu wdrożenia.</li>
+          <li><strong>cookie_consent</strong> — zapamiętanie Twojego wyboru dotyczącego plików cookie (niezbędne, analityczne).</li>
         </ul>
+        <h3 class="text-lg font-medium text-gray-800 mt-4 mb-2">Analityczne (wymagają zgody)</h3>
+        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+          <li><strong>Google Analytics 4</strong> (pliki cookies: _ga, _ga_*) — zbierają anonimizowane dane o sposobie korzystania z serwisu: odwiedzane strony, czas spędzony na stronie, źródło ruchu. Dane te pomagają nam ulepszać usługę. <strong>Ładowane wyłącznie po wyrażeniu zgody</strong> przez użytkownika za pośrednictwem bannera cookie.</li>
+        </ul>
+        <p class="text-gray-700 mt-3">
+          Możesz w każdej chwili zmienić swoją zgodę dotyczącą cookies analitycznych, usuwając klucz <code>cookie_consent</code> z localStorage przeglądarki (Narzędzia deweloperskie → Aplikacja → Local Storage) lub kontaktując się z nami.
+        </p>
         <p class="text-gray-700 mt-3">
           Szczegółowe informacje znajdziesz w naszej
           <router-link to="/polityka-cookies" class="text-indigo-600 underline">polityce cookies</router-link>.
@@ -151,7 +161,7 @@
       </section>
 
       <div class="border-t border-gray-200 pt-6 text-sm text-gray-500">
-        <p>Niniejsza polityka prywatności obowiązuje od dnia 10 kwietnia 2026 roku.</p>
+        <p>Niniejsza polityka prywatności obowiązuje od dnia 11 kwietnia 2026 roku.</p>
       </div>
     </div>
   </div>
