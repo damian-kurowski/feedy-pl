@@ -10,6 +10,8 @@ import FeedOutProducts from '../components/FeedOutProducts.vue'
 import EanCoverage from '../components/EanCoverage.vue'
 import DescriptionTemplateRule from '../components/DescriptionTemplateRule.vue'
 import AiRewriteSection from '../components/AiRewriteSection.vue'
+import FeedEnvelopeEditor from '../components/FeedEnvelopeEditor.vue'
+import type { FeedEnvelope } from '../stores/feedsOut'
 import api from '../api/client'
 
 const route = useRoute()
@@ -129,6 +131,25 @@ async function saveCategoryMapping() {
 async function autoSuggestAll() {
   for (const sourceCategory of Object.keys(categoryMapping.value)) {
     await fetchCeneoSuggestions(sourceCategory)
+  }
+}
+
+// Envelope
+const envelope = ref<FeedEnvelope | null>(null)
+const savingEnvelope = ref(false)
+const envelopeSuccess = ref(false)
+async function saveEnvelope(value: FeedEnvelope) {
+  savingEnvelope.value = true
+  envelopeSuccess.value = false
+  try {
+    const empty = !value.title && !value.description && !value.link && !(value.custom && value.custom.length)
+    const updated = await feedsOutStore.updateFeed(feedId, { envelope: empty ? null : value } as any)
+    feedOut.value = updated
+    envelope.value = updated.envelope
+    envelopeSuccess.value = true
+    setTimeout(() => (envelopeSuccess.value = false), 3000)
+  } finally {
+    savingEnvelope.value = false
   }
 }
 
@@ -311,6 +332,9 @@ onMounted(async () => {
   // Load category mapping
   categoryMapping.value = feedOut.value.category_mapping ? { ...feedOut.value.category_mapping } : {}
 
+  // Load envelope
+  envelope.value = feedOut.value.envelope ? { ...feedOut.value.envelope } : null
+
   // Load structure
   structure.value = (await feedsOutStore.getStructure(feedId)).map((s) => ({
     ...s,
@@ -377,6 +401,16 @@ onMounted(async () => {
           Pobierz XML
         </a>
       </div>
+
+      <!-- Envelope editor section -->
+      <section class="mb-8">
+        <FeedEnvelopeEditor
+          :model-value="envelope"
+          :saving="savingEnvelope"
+          @save="saveEnvelope"
+        />
+        <div v-if="envelopeSuccess" class="mt-2 text-xs text-green-600 font-medium">Nagłówek zapisany ✓</div>
+      </section>
 
       <!-- Quality Score section -->
       <section class="mb-8">

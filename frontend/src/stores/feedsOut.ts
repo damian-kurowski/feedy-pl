@@ -2,6 +2,19 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import api from '../api/client'
 
+export interface FeedEnvelopeCustomField {
+  tag: string
+  value: string
+  cdata?: boolean
+}
+
+export interface FeedEnvelope {
+  title?: string
+  description?: string
+  link?: string
+  custom?: FeedEnvelopeCustomField[]
+}
+
 export interface FeedOut {
   id: number
   feed_in_id: number
@@ -12,6 +25,7 @@ export interface FeedOut {
   link_out: string
   rules: any[] | null
   category_mapping: Record<string, string> | null
+  envelope: FeedEnvelope | null
   created_at: string
 }
 

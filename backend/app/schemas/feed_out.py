@@ -16,6 +16,7 @@ class FeedOutUpdate(BaseModel):
     active: Optional[bool] = None
     rules: list[dict] | None = None
     category_mapping: dict | None = None
+    envelope: dict | None = None
 
 
 class FeedOutResponse(BaseModel):
@@ -28,6 +29,7 @@ class FeedOutResponse(BaseModel):
     link_out: str
     rules: list[dict] | None = None
     category_mapping: dict | None = None
+    envelope: dict | None = None
     created_at: datetime
 
     model_config = {"from_attributes": True}

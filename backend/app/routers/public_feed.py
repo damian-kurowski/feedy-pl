@@ -67,18 +67,19 @@ async def public_feed(
         resolved = {field: maps_by_id[mid] for field, mid in feed_out.field_maps.items() if mid in maps_by_id}
         product_dicts = apply_value_maps(product_dicts, resolved)
 
+    envelope = feed_out.envelope
     if feed_out.type == "ceneo":
-        xml_bytes = generate_ceneo_xml(product_dicts, category_mapping=feed_out.category_mapping)
+        xml_bytes = generate_ceneo_xml(product_dicts, category_mapping=feed_out.category_mapping, envelope=envelope)
     elif feed_out.type == "gmc":
-        xml_bytes = generate_gmc_xml(product_dicts)
+        xml_bytes = generate_gmc_xml(product_dicts, envelope=envelope)
     elif feed_out.type == "allegro":
-        xml_bytes = generate_allegro_xml(product_dicts, category_mapping=feed_out.category_mapping)
+        xml_bytes = generate_allegro_xml(product_dicts, category_mapping=feed_out.category_mapping, envelope=envelope)
     elif feed_out.type == "facebook":
-        xml_bytes = generate_gmc_xml(product_dicts)
+        xml_bytes = generate_gmc_xml(product_dicts, envelope=envelope)
     elif feed_out.type == "skapiec":
-        xml_bytes = generate_skapiec_xml(product_dicts, category_mapping=feed_out.category_mapping)
+        xml_bytes = generate_skapiec_xml(product_dicts, category_mapping=feed_out.category_mapping, envelope=envelope)
     elif feed_out.type == "domodi":
-        xml_bytes = generate_domodi_xml(product_dicts, category_mapping=feed_out.category_mapping)
+        xml_bytes = generate_domodi_xml(product_dicts, category_mapping=feed_out.category_mapping, envelope=envelope)
     else:
         # Custom: load structure and generate
         structure_result = await db.execute(
@@ -96,7 +97,7 @@ async def public_feed(
             }
             for s in structure_result.scalars().all()
         ]
-        xml_bytes = generate_custom_xml(product_dicts, structure)
+        xml_bytes = generate_custom_xml(product_dicts, structure, envelope=envelope)
 
     headers = {}
     if download:

@@ -63,6 +63,41 @@ def _get_value(product_values: dict, source: str) -> str | None:
     return None
 
 
+def _apply_envelope(root: etree._Element, envelope: dict | None) -> None:
+    """Prepend envelope metadata (title/description/link/custom) as root's first children.
+
+    Envelope schema:
+        {
+          "title": "...",
+          "description": "...",
+          "link": "...",
+          "custom": [ {"tag": "...", "value": "...", "cdata": bool}, ... ]
+        }
+    """
+    if not envelope:
+        return
+    new_children: list[etree._Element] = []
+    for key in ("title", "description", "link"):
+        val = envelope.get(key)
+        if val:
+            el = etree.Element(key)
+            el.text = str(val)
+            new_children.append(el)
+    for custom in envelope.get("custom") or []:
+        tag = (custom.get("tag") or "").strip()
+        value = custom.get("value") or ""
+        if not tag:
+            continue
+        el = etree.Element(tag)
+        if custom.get("cdata"):
+            el.text = etree.CDATA(str(value))
+        else:
+            el.text = str(value)
+        new_children.append(el)
+    for i, child in enumerate(new_children):
+        root.insert(i, child)
+
+
 def _apply_template(product_values: dict, template: dict[str, dict]) -> dict[str, str | None]:
     """Map source fields through optional transforms, returning output fields."""
     result: dict[str, str | None] = {}
@@ -76,13 +111,14 @@ def _apply_template(product_values: dict, template: dict[str, dict]) -> dict[str
     return result
 
 
-def generate_ceneo_xml(products: list[dict], category_mapping: dict | None = None) -> bytes:
+def generate_ceneo_xml(products: list[dict], category_mapping: dict | None = None, envelope: dict | None = None) -> bytes:
     """Generate Ceneo XML feed from a list of product dicts.
 
     Each product dict must contain a ``product_value`` key holding the field
     values extracted from the source feed.
     """
     root = etree.Element("offers")
+    _apply_envelope(root, envelope)
 
     for product in products:
         values = _apply_template(product["product_value"], CENEO_TEMPLATE)
@@ -159,9 +195,10 @@ def _map_allegro_availability(val: str | None) -> str:
     return "available"
 
 
-def generate_allegro_xml(products: list[dict], category_mapping: dict | None = None) -> bytes:
+def generate_allegro_xml(products: list[dict], category_mapping: dict | None = None, envelope: dict | None = None) -> bytes:
     """Generate Allegro-compatible XML feed."""
     root = etree.Element("offers")
+    _apply_envelope(root, envelope)
 
     for product in products:
         values = _apply_template(product["product_value"], ALLEGRO_TEMPLATE)
@@ -198,20 +235,35 @@ _AVAIL_REVERSE: dict[str, str] = {
 }
 
 
-def generate_gmc_xml(products: list[dict]) -> bytes:
+def generate_gmc_xml(products: list[dict], envelope: dict | None = None) -> bytes:
     """Generate Google Merchant Center Atom XML feed."""
     root = etree.Element(f"{{{ATOM_NS}}}feed", nsmap=_GMC_NSMAP)
 
     title_el = etree.SubElement(root, f"{{{ATOM_NS}}}title")
-    title_el.text = "Product Feed"
+    title_el.text = (envelope or {}).get("title") or "Product Feed"
 
     link_el = etree.SubElement(root, f"{{{ATOM_NS}}}link")
-    link_el.set("href", "https://feedy.pl")
+    link_el.set("href", (envelope or {}).get("link") or "https://feedy.pl")
     link_el.set("rel", "alternate")
     link_el.set("type", "text/html")
 
     updated_el = etree.SubElement(root, f"{{{ATOM_NS}}}updated")
     updated_el.text = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    env_desc = (envelope or {}).get("description")
+    if env_desc:
+        subtitle = etree.SubElement(root, f"{{{ATOM_NS}}}subtitle")
+        subtitle.text = env_desc
+    for custom in ((envelope or {}).get("custom") or []):
+        tag = (custom.get("tag") or "").strip()
+        value = custom.get("value") or ""
+        if not tag:
+            continue
+        el = etree.SubElement(root, tag)
+        if custom.get("cdata"):
+            el.text = etree.CDATA(str(value))
+        else:
+            el.text = str(value)
 
     for product in products:
         values = _apply_template(product["product_value"], GMC_TEMPLATE)
@@ -312,11 +364,12 @@ def generate_gmc_xml(products: list[dict]) -> bytes:
 # ---------------------------------------------------------------------------
 
 
-def generate_skapiec_xml(products: list[dict], category_mapping: dict | None = None) -> bytes:
+def generate_skapiec_xml(products: list[dict], category_mapping: dict | None = None, envelope: dict | None = None) -> bytes:
     """Generate Skapiec-compatible XML feed."""
     from app.services.templates import SKAPIEC_TEMPLATE
 
     root = etree.Element("offers")
+    _apply_envelope(root, envelope)
 
     for product in products:
         values = _apply_template(product["product_value"], SKAPIEC_TEMPLATE)
@@ -339,11 +392,12 @@ def generate_skapiec_xml(products: list[dict], category_mapping: dict | None = N
 # ---------------------------------------------------------------------------
 
 
-def generate_domodi_xml(products: list[dict], category_mapping: dict | None = None) -> bytes:
+def generate_domodi_xml(products: list[dict], category_mapping: dict | None = None, envelope: dict | None = None) -> bytes:
     """Generate Domodi/Homebook-compatible XML feed."""
     from app.services.templates import DOMODI_TEMPLATE
 
     root = etree.Element("offers")
+    _apply_envelope(root, envelope)
 
     for product in products:
         values = _apply_template(product["product_value"], DOMODI_TEMPLATE)
@@ -367,7 +421,7 @@ def generate_domodi_xml(products: list[dict], category_mapping: dict | None = No
 # ---------------------------------------------------------------------------
 
 
-def generate_custom_xml(products: list[dict], structure: list[dict]) -> bytes:
+def generate_custom_xml(products: list[dict], structure: list[dict], envelope: dict | None = None) -> bytes:
     """Generate XML from user-defined structure mapping.
 
     *structure* is a list of dicts with keys matching XmlStructureOut columns,
@@ -376,6 +430,7 @@ def generate_custom_xml(products: list[dict], structure: list[dict]) -> bytes:
     Supports ``condition``: "always" or "if_not_empty".
     """
     root = etree.Element("products")
+    _apply_envelope(root, envelope)
 
     for product in products:
         pv = product["product_value"]
