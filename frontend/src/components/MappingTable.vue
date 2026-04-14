@@ -20,17 +20,6 @@ const sourceKeys = computed(() => {
   return Object.keys(props.sampleProduct)
 })
 
-/** Unique parent paths for "add as child" dropdown */
-const parentPaths = computed(() => {
-  const paths = new Set<string>()
-  for (const row of props.rows) {
-    if (!row.is_leaf || !row.attribute) {
-      paths.add(row.path_out || row.element_name_out)
-    }
-  }
-  return Array.from(paths)
-})
-
 function resolveValue(row: StructureElement): string {
   if (row.constant_value != null && row.constant_value !== '') return row.constant_value
   if (!row.path_in || !props.sampleProduct) return ''

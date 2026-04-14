@@ -709,7 +709,7 @@ onMounted(async () => {
         <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 space-y-3">
           <!-- Existing mappings -->
           <div
-            v-for="(ceneoCategory, sourceCategory) in categoryMapping"
+            v-for="(_ceneoCategory, sourceCategory) in categoryMapping"
             :key="sourceCategory"
             class="bg-white border border-gray-200 rounded-xl px-4 py-4 space-y-2"
           >

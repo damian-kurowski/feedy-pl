@@ -44,6 +44,10 @@ function setOverride(key: string, value: string) {
     const copy = { ...overrides.value }; delete copy[key]; overrides.value = copy
   } else { overrides.value = { ...overrides.value, [key]: value } }
 }
+
+function copyToClipboard(value: string) {
+  void navigator.clipboard.writeText(value)
+}
 </script>
 
 <template>
@@ -73,7 +77,7 @@ function setOverride(key: string, value: string) {
               <span class="text-xs text-gray-400 truncate flex-1">Oryginał: {{ field.original }}</span>
               <button
                 class="text-[10px] text-indigo-500 hover:text-indigo-700 cursor-pointer shrink-0 px-1"
-                @click.stop="navigator.clipboard.writeText(field.original)"
+                @click.stop="copyToClipboard(field.original)"
                 title="Kopiuj wartość"
               >kopiuj</button>
             </div>

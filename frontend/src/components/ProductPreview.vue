@@ -8,6 +8,11 @@ defineProps<{
   products: Product[]
 }>()
 
+const emit = defineEmits<{
+  delete: [id: number]
+  edit: [product: Product]
+}>()
+
 const expanded = ref<Set<number>>(new Set())
 const lightboxImages = ref<string[]>([])
 const showLightbox = ref(false)
@@ -77,6 +82,7 @@ function handleImgError(e: Event) {
           <span v-if="getCategory(product)" class="text-xs text-gray-400 truncate block">{{ getCategory(product) }}</span>
         </div>
         <span v-if="getPrice(product)" class="text-sm font-medium text-gray-700 shrink-0">{{ getPrice(product) }}</span>
+        <span v-if="product.custom_product" class="text-[10px] font-medium text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-full px-2 py-0.5 shrink-0">ręczny</span>
         <svg
           class="w-4 h-4 text-gray-400 transition-transform shrink-0"
           :class="{ 'rotate-180': expanded.has(product.id) }"
@@ -99,6 +105,22 @@ function handleImgError(e: Event) {
           />
         </div>
         <pre class="text-xs bg-gray-50 p-3 rounded overflow-x-auto">{{ JSON.stringify(product.product_value, null, 2) }}</pre>
+        <div v-if="product.custom_product" class="flex gap-2">
+          <button
+            type="button"
+            class="text-xs font-medium text-indigo-600 hover:text-indigo-800 border border-indigo-200 hover:border-indigo-400 bg-indigo-50 hover:bg-indigo-100 rounded-lg px-3 py-1.5 transition cursor-pointer"
+            @click.stop="emit('edit', product)"
+          >
+            Edytuj
+          </button>
+          <button
+            type="button"
+            class="text-xs font-medium text-red-600 hover:text-red-800 border border-red-200 hover:border-red-400 bg-red-50 hover:bg-red-100 rounded-lg px-3 py-1.5 transition cursor-pointer"
+            @click.stop="emit('delete', product.id)"
+          >
+            Usuń
+          </button>
+        </div>
       </div>
     </div>
     <ImageLightbox :images="lightboxImages" :show="showLightbox" @close="showLightbox = false" />

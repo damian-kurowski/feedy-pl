@@ -16,7 +16,7 @@ function nextStep() {
   }
 }
 
-function selectComparator(type: string) {
+function selectComparator(_type: string) {
   currentStep.value = 4
 }
 

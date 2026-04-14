@@ -24,6 +24,7 @@ const refreshInterval = ref<string>('')
 const saving = ref(false)
 const fetching = ref(false)
 const showAddProduct = ref(false)
+const editingProduct = ref<Product | null>(null)
 
 const refreshIntervalLabel = computed(() => {
   if (!feed.value?.refresh_interval) return null
@@ -73,11 +74,18 @@ function useAsRecordPath() {
 async function saveConfig() {
   saving.value = true
   try {
+    const prevRecordPath = feed.value?.record_path || ''
+    const prevProductName = feed.value?.product_name || ''
     await store.updateFeed(feedId.value, {
       record_path: recordPath.value || null,
       product_name: productName.value || null,
       refresh_interval: refreshInterval.value ? parseInt(refreshInterval.value) : null,
     })
+    const pathChanged = (recordPath.value || '') !== prevRecordPath
+    const nameChanged = (productName.value || '') !== prevProductName
+    if (pathChanged || nameChanged) {
+      await refetchXml()
+    }
   } finally {
     saving.value = false
   }
@@ -85,10 +93,33 @@ async function saveConfig() {
 
 async function addManualProduct(name: string, value: Record<string, string>) {
   try {
-    await api.post(`/feeds-in/${feedId.value}/products`, { product_name: name, product_value: value })
+    if (editingProduct.value) {
+      await api.put(`/feeds-in/${feedId.value}/products/${editingProduct.value.id}`, { product_name: name, product_value: value })
+      editingProduct.value = null
+    } else {
+      await api.post(`/feeds-in/${feedId.value}/products`, { product_name: name, product_value: value })
+    }
     showAddProduct.value = false
     await loadData()
   } catch {}
+}
+
+function startEditProduct(product: Product) {
+  editingProduct.value = product
+  showAddProduct.value = true
+}
+
+async function deleteProduct(id: number) {
+  if (!confirm('Na pewno usunąć ten produkt?')) return
+  try {
+    await api.delete(`/feeds-in/${feedId.value}/products/${id}`)
+    await loadData()
+  } catch {}
+}
+
+function cancelProductForm() {
+  showAddProduct.value = false
+  editingProduct.value = null
 }
 
 async function refetchXml() {
@@ -285,7 +316,7 @@ async function refetchXml() {
               class="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
               @click="saveConfig"
             >
-              {{ saving ? 'Zapisywanie...' : 'Zapisz' }}
+              {{ saving ? 'Zapisywanie...' : 'Zapisz i odśwież' }}
             </button>
           </div>
         </section>
@@ -299,13 +330,19 @@ async function refetchXml() {
               </div>
               <h2 class="font-heading text-lg font-bold text-gray-900">Produkty ({{ products.length }})</h2>
             </div>
-            <button @click="showAddProduct = !showAddProduct"
+            <button @click="showAddProduct ? cancelProductForm() : (showAddProduct = true)"
               class="text-xs font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer">
               {{ showAddProduct ? 'Anuluj' : '+ Dodaj ręcznie' }}
             </button>
           </div>
-          <ManualProductForm v-if="showAddProduct" @save="addManualProduct" @cancel="showAddProduct = false" class="mb-4" />
-          <ProductPreview :products="products" />
+          <ManualProductForm
+            v-if="showAddProduct"
+            :initial="editingProduct ? { name: editingProduct.product_name, value: editingProduct.product_value } : null"
+            class="mb-4"
+            @save="addManualProduct"
+            @cancel="cancelProductForm"
+          />
+          <ProductPreview :products="products" @delete="deleteProduct" @edit="startEditProduct" />
         </section>
 
         <!-- Changelog section -->

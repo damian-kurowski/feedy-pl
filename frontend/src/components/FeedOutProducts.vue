@@ -50,15 +50,6 @@ function getImage(p: any): string | null { return extractImageUrls(p.product_val
 function getPrice(p: any): string | null { const pv = p.product_value; return pv['@price'] ?? pv['g:price'] ?? pv['price'] ?? null }
 function openEdit(p: any) { editProduct.value = p; showModal.value = true }
 
-async function toggleExclude(product: any) {
-  const newExcluded = product.status !== 'excluded'
-  await store.upsertOverride(props.feedOutId, product.id, {
-    field_overrides: product.override?.field_overrides || {},
-    excluded: newExcluded,
-  })
-  await loadProducts()
-}
-
 async function handleSave(overrides: Record<string, string>, excluded: boolean) {
   if (!editProduct.value) return
   await store.upsertOverride(props.feedOutId, editProduct.value.id, { field_overrides: overrides, excluded })
