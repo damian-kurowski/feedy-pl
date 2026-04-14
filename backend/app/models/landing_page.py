@@ -42,3 +42,4 @@ class LandingPage(Base):
     is_followable: Mapped[bool] = mapped_column(Boolean, server_default="true", default=True)
     is_published: Mapped[bool] = mapped_column(Boolean, server_default="false", default=False)
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    scheduled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

@@ -22,6 +22,7 @@ class BlogPost(Base):
     html: Mapped[str] = mapped_column(Text, nullable=False)
     is_published: Mapped[bool] = mapped_column(Boolean, server_default="false", default=False, nullable=False)
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    scheduled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     meta_title: Mapped[str | None] = mapped_column(String(255), nullable=True)
     meta_description: Mapped[str | None] = mapped_column(String(320), nullable=True)
     is_indexable: Mapped[bool] = mapped_column(Boolean, server_default="true", default=True, nullable=False)

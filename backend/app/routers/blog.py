@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -13,11 +13,31 @@ from app.routers.auth import get_current_user
 router = APIRouter(prefix="/api", tags=["blog"])
 
 
+async def _publish_scheduled(db: AsyncSession) -> int:
+    """Lazy-publish any blog posts whose scheduled_at has passed."""
+    now = datetime.now(timezone.utc)
+    result = await db.execute(
+        select(BlogPost)
+        .where(BlogPost.is_published == False)  # noqa: E712
+        .where(BlogPost.scheduled_at.isnot(None))
+        .where(BlogPost.scheduled_at <= now)
+    )
+    posts = result.scalars().all()
+    for p in posts:
+        p.is_published = True
+        if p.published_at is None:
+            p.published_at = p.scheduled_at or now
+    if posts:
+        await db.commit()
+    return len(posts)
+
+
 class BlogPostCreate(BaseModel):
     slug: str
     title: str
     html: str
     is_published: bool = False
+    scheduled_at: datetime | None = None
     meta_title: str | None = None
     meta_description: str | None = None
     is_indexable: bool = True
@@ -35,6 +55,7 @@ class BlogPostUpdate(BaseModel):
     title: str | None = None
     html: str | None = None
     is_published: bool | None = None
+    scheduled_at: datetime | None = None
     meta_title: str | None = None
     meta_description: str | None = None
     is_indexable: bool | None = None
@@ -54,6 +75,7 @@ class BlogPostResponse(BaseModel):
     html: str
     is_published: bool
     published_at: datetime | None
+    scheduled_at: datetime | None
     meta_title: str | None
     meta_description: str | None
     is_indexable: bool
@@ -89,6 +111,7 @@ class BlogPostListItem(BaseModel):
 
 @router.get("/blog", response_model=list[BlogPostListItem])
 async def list_public_posts(db: AsyncSession = Depends(get_db)):
+    await _publish_scheduled(db)
     result = await db.execute(
         select(BlogPost)
         .where(BlogPost.is_published == True)  # noqa: E712
@@ -99,6 +122,7 @@ async def list_public_posts(db: AsyncSession = Depends(get_db)):
 
 @router.get("/blog/{slug}", response_model=BlogPostResponse)
 async def get_public_post(slug: str, db: AsyncSession = Depends(get_db)):
+    await _publish_scheduled(db)
     result = await db.execute(select(BlogPost).where(BlogPost.slug == slug))
     post = result.scalar_one_or_none()
     if not post or not post.is_published:

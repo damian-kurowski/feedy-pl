@@ -14,6 +14,25 @@ from app.routers.auth import get_current_user
 router = APIRouter(prefix="/api", tags=["landing-pages"])
 
 
+async def _publish_scheduled_landings(db: AsyncSession) -> int:
+    """Lazy-publish landing pages whose scheduled_at has passed."""
+    now = datetime.now(timezone.utc)
+    result = await db.execute(
+        select(LandingPage)
+        .where(LandingPage.is_published == False)  # noqa: E712
+        .where(LandingPage.scheduled_at.isnot(None))
+        .where(LandingPage.scheduled_at <= now)
+    )
+    pages = result.scalars().all()
+    for p in pages:
+        p.is_published = True
+        if p.published_at is None:
+            p.published_at = p.scheduled_at or now
+    if pages:
+        await db.commit()
+    return len(pages)
+
+
 def _slugify(text: str) -> str:
     text = text.lower().strip()
     replacements = {
@@ -49,6 +68,7 @@ class LandingPageBase(BaseModel):
     is_indexable: bool = True
     is_followable: bool = True
     is_published: bool = False
+    scheduled_at: datetime | None = None
 
 
 class LandingPageCreate(LandingPageBase):
@@ -72,6 +92,7 @@ class LandingPageUpdate(BaseModel):
     is_indexable: bool | None = None
     is_followable: bool | None = None
     is_published: bool | None = None
+    scheduled_at: datetime | None = None
 
 
 class LandingPageResponse(BaseModel):
@@ -94,6 +115,7 @@ class LandingPageResponse(BaseModel):
     is_followable: bool
     is_published: bool
     published_at: datetime | None
+    scheduled_at: datetime | None
     created_at: datetime
     updated_at: datetime
 
@@ -220,6 +242,7 @@ async def delete_my_page(
 
 @router.get("/landing/{slug:path}", response_model=LandingPageResponse)
 async def get_public_page(slug: str, db: AsyncSession = Depends(get_db)):
+    await _publish_scheduled_landings(db)
     result = await db.execute(select(LandingPage).where(LandingPage.slug == slug))
     page = result.scalar_one_or_none()
     if not page or not page.is_published:

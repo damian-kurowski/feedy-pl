@@ -437,6 +437,42 @@ async def bulk_action(
     return {"applied": applied, "action": data.action}
 
 
+@router.get("/{feed_out_id}/quality-history")
+async def quality_history(
+    feed_out_id: int,
+    days: int = 30,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Return Quality Score snapshots for the last N days."""
+    from datetime import datetime, timedelta, timezone
+    from app.models.quality_snapshot import FeedQualitySnapshot
+
+    await _get_user_feed_out(db, feed_out_id, user.id)
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+    result = await db.execute(
+        select(FeedQualitySnapshot)
+        .where(FeedQualitySnapshot.feed_out_id == feed_out_id)
+        .where(FeedQualitySnapshot.created_at >= since)
+        .order_by(FeedQualitySnapshot.created_at.asc())
+    )
+    rows = result.scalars().all()
+    return {
+        "feed_out_id": feed_out_id,
+        "days": days,
+        "snapshots": [
+            {
+                "created_at": s.created_at.isoformat(),
+                "quality_score": s.quality_score,
+                "error_count": s.error_count,
+                "warning_count": s.warning_count,
+                "products_count": s.products_count,
+            }
+            for s in rows
+        ],
+    }
+
+
 @router.get("/{feed_out_id}/validate")
 async def validate_feed_endpoint(
     feed_out_id: int,
@@ -467,6 +503,27 @@ async def validate_feed_endpoint(
         products = apply_rules(products, feed_out.rules)
 
     result = validate_feed(feed_out.type, products)
+
+    # Persist a quality snapshot if no snapshot in the last hour
+    from datetime import datetime, timedelta, timezone
+    from app.models.quality_snapshot import FeedQualitySnapshot
+    one_hour_ago = datetime.now(timezone.utc) - timedelta(hours=1)
+    recent = await db.execute(
+        select(FeedQualitySnapshot)
+        .where(FeedQualitySnapshot.feed_out_id == feed_out_id)
+        .where(FeedQualitySnapshot.created_at >= one_hour_ago)
+        .limit(1)
+    )
+    if recent.scalar_one_or_none() is None:
+        snap = FeedQualitySnapshot(
+            feed_out_id=feed_out_id,
+            quality_score=result.quality_score,
+            error_count=sum(1 for i in result.issues if i.level == "error"),
+            warning_count=sum(1 for i in result.issues if i.level == "warning"),
+            products_count=result.total_products,
+        )
+        db.add(snap)
+        await db.commit()
 
     return {
         "platform": result.platform,

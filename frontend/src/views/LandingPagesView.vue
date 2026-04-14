@@ -25,6 +25,7 @@ interface LandingPage {
   is_indexable: boolean
   is_followable: boolean
   is_published: boolean
+  scheduled_at: string | null
 }
 
 const pages = ref<LandingPage[]>([])
@@ -67,6 +68,7 @@ function newPage() {
     is_indexable: true,
     is_followable: true,
     is_published: false,
+    scheduled_at: null,
   }
 }
 
@@ -260,6 +262,17 @@ async function deletePage(id: number) {
           <label class="block text-sm font-medium text-gray-700 mb-1">SEO: meta description</label>
           <textarea v-model="editing.meta_description" rows="2" maxlength="320"
             class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 resize-none"></textarea>
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Zaplanuj publikację (opcjonalnie)</label>
+          <input
+            :value="editing.scheduled_at ? editing.scheduled_at.slice(0, 16) : ''"
+            type="datetime-local"
+            class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            @input="editing.scheduled_at = ($event.target as HTMLInputElement).value ? new Date(($event.target as HTMLInputElement).value).toISOString() : null"
+          />
+          <p class="text-xs text-gray-500 mt-1">Strona pojawi się publicznie automatycznie o tej godzinie.</p>
         </div>
 
         <div class="flex items-center gap-5 md:col-span-2 flex-wrap">

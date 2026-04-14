@@ -8,6 +8,7 @@ import QualityScore from '../components/QualityScore.vue'
 import ValidationIssues from '../components/ValidationIssues.vue'
 import FeedOutProducts from '../components/FeedOutProducts.vue'
 import EanCoverage from '../components/EanCoverage.vue'
+import QualityHistoryChart from '../components/QualityHistoryChart.vue'
 import DescriptionTemplateRule from '../components/DescriptionTemplateRule.vue'
 import AiRewriteSection from '../components/AiRewriteSection.vue'
 import FeedEnvelopeEditor from '../components/FeedEnvelopeEditor.vue'
@@ -444,6 +445,10 @@ onMounted(async () => {
             :breakdown="validation.quality_breakdown"
             :summary="validation.summary"
           />
+
+          <div class="mt-4">
+            <QualityHistoryChart :feed-out-id="feedId" :days="30" variant="full" />
+          </div>
 
           <div v-if="validation.field_coverage?.length" class="mt-4 bg-white border border-gray-200 rounded-2xl p-6">
             <h3 class="text-sm font-medium text-gray-700 mb-3">Pokrycie pól</h3>

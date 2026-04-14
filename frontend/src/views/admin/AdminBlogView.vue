@@ -17,6 +17,7 @@ interface BlogPost {
   html: string
   is_published: boolean
   published_at: string | null
+  scheduled_at: string | null
   meta_title: string | null
   meta_description: string | null
   is_indexable: boolean
@@ -105,6 +106,7 @@ function blankPost(): Partial<BlogPost> {
     title: '',
     html: '<h2>Pierwszy nagłówek</h2>\n<p>Treść...</p>',
     is_published: false,
+    scheduled_at: null,
     meta_title: '',
     meta_description: '',
     is_indexable: true,
@@ -319,6 +321,16 @@ async function deletePost(id: number) {
             <BlogEditor v-model="editing.html" />
             <p class="text-xs text-gray-500 mt-1">Edytor WYSIWYG. Użyj toolbara lub skrótów (Ctrl+B, Ctrl+I, Ctrl+Z).</p>
           </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Zaplanuj publikację (opcjonalnie)</label>
+            <input
+              :value="editing.scheduled_at ? editing.scheduled_at.slice(0, 16) : ''"
+              type="datetime-local"
+              class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+              @input="editing.scheduled_at = ($event.target as HTMLInputElement).value ? new Date(($event.target as HTMLInputElement).value).toISOString() : null"
+            />
+            <p class="text-xs text-gray-500 mt-1">Wpis pojawi się publicznie automatycznie o tej godzinie. Zostaw puste aby publikować od razu.</p>
+          </div>
           <div class="flex items-center gap-5 md:col-span-2 flex-wrap">
             <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
               <input type="checkbox" v-model="editing.is_published" class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
@@ -360,9 +372,15 @@ async function deletePost(id: number) {
             class="bg-white border border-gray-200 rounded-2xl p-5 flex items-start justify-between gap-4 flex-wrap">
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2 mb-1 flex-wrap">
-                <span class="text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full"
-                  :class="p.is_published ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'">
-                  {{ p.is_published ? 'Opublikowany' : 'Szkic' }}
+                <span v-if="p.is_published" class="text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-green-100 text-green-700">
+                  Opublikowany
+                </span>
+                <span v-else-if="p.scheduled_at && new Date(p.scheduled_at) > new Date()" class="text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-blue-100 text-blue-700"
+                  :title="new Date(p.scheduled_at).toLocaleString('pl-PL')">
+                  Zaplanowany · {{ new Date(p.scheduled_at).toLocaleDateString('pl-PL', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) }}
+                </span>
+                <span v-else class="text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
+                  Szkic
                 </span>
                 <span v-if="p.category" class="text-[11px] bg-indigo-100 text-indigo-700 rounded-full px-2 py-0.5 font-medium">{{ p.category }}</span>
               </div>

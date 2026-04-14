@@ -105,6 +105,30 @@ def fetch_and_parse_sync(session: Session, feed_in_id: int) -> None:
         feed.last_fetched_at = datetime.now(timezone.utc)
         session.commit()
 
+        # Detect significant product count drop (-30% or more)
+        old_count = len(old_products)
+        new_count = len(new_products_for_changelog)
+        if old_count > 10 and new_count < old_count * 0.7:
+            try:
+                drop_pct = round((1 - new_count / old_count) * 100)
+                _push_notification_sync(
+                    session,
+                    user_id=feed.user_id,
+                    type="alert",
+                    title=f"Spadek liczby produktów w „{feed.name}"",
+                    body=f"Liczba produktów spadła z {old_count} do {new_count} (-{drop_pct}%). Sprawdź czy XML źródłowy jest poprawny.",
+                    link=f"/feeds-in/{feed.id}",
+                )
+                user = session.get(User, feed.user_id)
+                if user:
+                    send_feed_error_notification(
+                        user.email,
+                        feed.name,
+                        f"Spadek produktów: {old_count} → {new_count} (-{drop_pct}%)",
+                    )
+            except Exception:
+                pass
+
     except Exception as e:
         session.rollback()
         feed.fetch_status = "error"
@@ -114,9 +138,25 @@ def fetch_and_parse_sync(session: Session, feed_in_id: int) -> None:
             user = session.get(User, feed.user_id)
             if user:
                 send_feed_error_notification(user.email, feed.name, str(e)[:500])
+            _push_notification_sync(
+                session,
+                user_id=feed.user_id,
+                type="alert",
+                title=f"Błąd pobierania feedu „{feed.name}"",
+                body=str(e)[:300],
+                link=f"/feeds-in/{feed.id}",
+            )
         except Exception:
-            pass  # Don't fail the task if email fails
+            pass  # Don't fail the task if email/notification fails
         raise
+
+
+def _push_notification_sync(session, *, user_id: int, type: str, title: str, body: str | None = None, link: str | None = None) -> None:
+    """Sync helper to insert a UserNotification from Celery sync code."""
+    from app.models.notification import UserNotification
+    note = UserNotification(user_id=user_id, type=type, title=title, body=body, link=link)
+    session.add(note)
+    session.commit()
 
 
 @celery.task(name="feedy.refresh_due_feeds")
