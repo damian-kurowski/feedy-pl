@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import api from '../api/client'
@@ -8,7 +9,7 @@ const auth = useAuthStore()
 
 async function selectPlan(planId: number) {
   if (!auth.isLoggedIn) {
-    router.push('/register')
+    router.push(`/register?plan=${planId}`)
     return
   }
   if (planId === 1) {
@@ -19,20 +20,35 @@ async function selectPlan(planId: number) {
     const { data } = await api.post('/billing/checkout', { plan_id: planId })
     window.location.href = data.checkout_url
   } catch (e: any) {
-    alert(e.response?.data?.detail || 'Brak konfiguracji platnosci')
+    alert(e.response?.data?.detail || 'Płatności jeszcze nie skonfigurowane. Skontaktuj się z kontakt@feedy.pl.')
   }
+}
+
+// ROI calculator
+const products = ref(1000)
+const aov = ref(150)
+const conversionLift = 0.012  // realistic 1.2% extra conversion from richer/validated feeds + multi-channel exposure
+const monthlyRevenueLift = computed(() => Math.round(products.value * aov.value * conversionLift))
+const yearlyRevenueLift = computed(() => monthlyRevenueLift.value * 12)
+const proCost = 149
+const roiMultiple = computed(() => proCost > 0 ? Math.round(monthlyRevenueLift.value / proCost) : 0)
+function fmt(n: number): string {
+  return n.toLocaleString('pl-PL')
 }
 </script>
 
 <template>
   <!-- HERO -->
   <section class="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center">
+      <div class="inline-block px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-indigo-100 mb-6 tracking-wider">
+        🇵🇱 POLSKIE NARZĘDZIE · 14 DNI ZA DARMO · BEZ KARTY
+      </div>
       <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1]">
-        Zarządzaj feedami produktówymi<br class="hidden sm:inline" /> z jednego miejsca
+        Zarządzaj feedami produktowymi<br class="hidden sm:inline" /> z jednego miejsca
       </h1>
       <p class="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-indigo-100/90 leading-relaxed">
-        Pobieraj XML z dowolnego sklepu, transformuj i generuj feedy dla Ceneo, Google Merchant Center, Allegro i innych porównywarek.
+        Pobieraj XML z dowolnego sklepu, transformuj i generuj feedy dla Ceneo, Google Merchant Center, Allegro i innych porównywarek — w 5 minut, bez programowania.
       </p>
       <div class="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
         <router-link
@@ -48,11 +64,13 @@ async function selectPlan(planId: number) {
           Zobacz cennik
         </a>
       </div>
-      <p class="mt-5 text-[13px] text-indigo-200/60">Bez karty kredytowej. 200 produktów za darmo, na zawsze.</p>
+      <p class="mt-5 text-[13px] text-indigo-200/80">
+        ✓ Bez karty kredytowej · ✓ Setup w 5 minut · ✓ Anuluj jednym klikiem · ✓ Hostowane w EU, RODO
+      </p>
     </div>
   </section>
 
-  <!-- SOCIAL PROOF BAR — logos -->
+  <!-- SOCIAL PROOF BAR — platforms + comparison sites -->
   <section class="py-10 bg-white border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4">
       <p class="text-center text-xs font-semibold text-gray-400 uppercase tracking-[0.2em] mb-6">Integrujemy z platformami, na których sprzedajesz</p>
@@ -62,6 +80,20 @@ async function selectPlan(planId: number) {
         <span class="text-xl font-bold text-gray-300 hover:text-gray-500 transition">PrestaShop</span>
         <span class="text-xl font-bold text-gray-300 hover:text-gray-500 transition">Magento</span>
         <span class="text-xl font-bold text-gray-300 hover:text-gray-500 transition">Shopify</span>
+      </div>
+      <p class="text-center text-xs font-semibold text-gray-400 uppercase tracking-[0.2em] mt-10 mb-6">Generujemy feedy do</p>
+      <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-3">
+        <span class="text-base font-semibold text-gray-400">Ceneo</span>
+        <span class="text-gray-200">·</span>
+        <span class="text-base font-semibold text-gray-400">Google Shopping</span>
+        <span class="text-gray-200">·</span>
+        <span class="text-base font-semibold text-gray-400">Allegro</span>
+        <span class="text-gray-200">·</span>
+        <span class="text-base font-semibold text-gray-400">Skąpiec</span>
+        <span class="text-gray-200">·</span>
+        <span class="text-base font-semibold text-gray-400">Facebook Catalog</span>
+        <span class="text-gray-200">·</span>
+        <span class="text-base font-semibold text-gray-400">Domodi</span>
       </div>
     </div>
   </section>
@@ -102,15 +134,15 @@ async function selectPlan(planId: number) {
             </li>
             <li class="flex gap-3 text-gray-600">
               <svg class="w-6 h-6 text-green-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              Walidacja feedu zanim wyślesz do porównywarki
+              Wbudowana walidacja Quality Score
             </li>
             <li class="flex gap-3 text-gray-600">
               <svg class="w-6 h-6 text-green-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              Automatyczne odświeżanie co 1h / 6h / 24h
+              Auto-refresh co 1, 6 lub 24 godziny
             </li>
             <li class="flex gap-3 text-gray-600">
               <svg class="w-6 h-6 text-green-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              Ceneo, GMC, Allegro, Skapiec — jeden panel
+              6 porównywarek z jednego źródłowego XML
             </li>
           </ul>
         </div>
@@ -118,45 +150,28 @@ async function selectPlan(planId: number) {
     </div>
   </section>
 
-  <!-- HOW IT WORKS — 3 steps, big numbers -->
+  <!-- HOW IT WORKS -->
   <section class="py-24 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4">
+    <div class="max-w-5xl mx-auto px-4">
       <p class="text-center text-sm font-bold text-indigo-600 uppercase tracking-wider mb-3">Jak to działa</p>
       <h2 class="font-heading text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-4">Trzy kroki do gotowego feeda</h2>
-      <p class="text-center text-gray-500 text-lg mb-16 max-w-2xl mx-auto">Konfiguracja zajmuje mniej niż 5 minut. Bez kodowania, bez pomocy programisty.</p>
+      <p class="text-center text-gray-500 text-lg mb-16 max-w-2xl mx-auto">Bez programowania, bez wtyczek, bez czekania.</p>
 
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="relative bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-          <span class="absolute -top-5 -left-3 text-8xl font-black text-indigo-100 select-none">1</span>
-          <div class="relative">
-            <div class="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mb-5">
-              <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" /></svg>
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Wklej link do XML</h3>
-            <p class="text-gray-500">Skopiuj URL feeda z panelu sklepu. System automatycznie pobierze i przeanalizuje wszystkie produkty.</p>
-          </div>
+      <div class="grid sm:grid-cols-3 gap-8">
+        <div>
+          <div class="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-lg mb-4">1</div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Wklej link do XML</h3>
+          <p class="text-gray-500 text-sm">Skopiuj URL feeda z panelu sklepu (Shoper, WooCommerce, PrestaShop). System pobierze i przeanalizuje produkty.</p>
         </div>
-
-        <div class="relative bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-          <span class="absolute -top-5 -left-3 text-8xl font-black text-indigo-100 select-none">2</span>
-          <div class="relative">
-            <div class="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mb-5">
-              <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Wybierz porównywarkę</h3>
-            <p class="text-gray-500">Ceneo, Google Merchant, Allegro — kliknij szablon i pola zmapują się automatycznie. Zero konfiguracji.</p>
-          </div>
+        <div>
+          <div class="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-lg mb-4">2</div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Wybierz porównywarkę</h3>
+          <p class="text-gray-500 text-sm">Ceneo, Google, Allegro, Skąpiec, Facebook, Domodi — kliknij szablon i pola zmapują się automatycznie.</p>
         </div>
-
-        <div class="relative bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-          <span class="absolute -top-5 -left-3 text-8xl font-black text-indigo-100 select-none">3</span>
-          <div class="relative">
-            <div class="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mb-5">
-              <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" /></svg>
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Gotowy link XML</h3>
-            <p class="text-gray-500">Skopiuj link i wklej w panelu porównywarki. Feed odświeża się automatycznie.</p>
-          </div>
+        <div>
+          <div class="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-lg mb-4">3</div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Gotowy link XML</h3>
+          <p class="text-gray-500 text-sm">Skopiuj link i wklej w panelu porównywarki. Feed odświeża się sam.</p>
         </div>
       </div>
     </div>
@@ -206,7 +221,7 @@ async function selectPlan(planId: number) {
           <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" /></svg>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 mb-2">Walidacja przed wyslaniem</h3>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Walidacja przed wysłaniem</h3>
           <p class="text-gray-500 text-sm">Sprawdź czy feed przejdzie w Ceneo/GMC zanim wyślesz. Zero odrzuceń.</p>
         </div>
 
@@ -240,9 +255,9 @@ async function selectPlan(planId: number) {
           <tbody class="divide-y">
             <tr>
               <td class="p-4 text-gray-700">Cena (1000 produktów)</td>
-              <td class="p-4 text-center font-bold text-indigo-600 bg-indigo-50/50">29 zl/mies.</td>
-              <td class="p-4 text-center text-gray-500">~280 zl/mies.</td>
-              <td class="p-4 text-center text-gray-500">~260 zl/mies.</td>
+              <td class="p-4 text-center font-bold text-indigo-600 bg-indigo-50/50">49 zł/mies.</td>
+              <td class="p-4 text-center text-gray-500">~280 zł/mies.</td>
+              <td class="p-4 text-center text-gray-500">~260 zł/mies.</td>
             </tr>
             <tr>
               <td class="p-4 text-gray-700">Liczba porównywarek w cenie</td>
@@ -251,7 +266,7 @@ async function selectPlan(planId: number) {
               <td class="p-4 text-center text-gray-500">1 kanał</td>
             </tr>
             <tr>
-              <td class="p-4 text-gray-700">Ceneo + Skapiec + Allegro</td>
+              <td class="p-4 text-gray-700">Ceneo + Skąpiec + Allegro</td>
               <td class="p-4 text-center bg-indigo-50/50"><svg class="w-5 h-5 mx-auto text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg></td>
               <td class="p-4 text-center"><svg class="w-5 h-5 mx-auto text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg></td>
               <td class="p-4 text-center text-gray-400">Częściowo</td>
@@ -263,7 +278,19 @@ async function selectPlan(planId: number) {
               <td class="p-4 text-center text-gray-400">Angielski</td>
             </tr>
             <tr>
-              <td class="p-4 text-gray-700">Darmowy plan</td>
+              <td class="p-4 text-gray-700">Darmowy plan na zawsze</td>
+              <td class="p-4 text-center bg-indigo-50/50"><svg class="w-5 h-5 mx-auto text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg></td>
+              <td class="p-4 text-center"><svg class="w-5 h-5 mx-auto text-red-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg></td>
+              <td class="p-4 text-center"><svg class="w-5 h-5 mx-auto text-red-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg></td>
+            </tr>
+            <tr>
+              <td class="p-4 text-gray-700">Polski support + faktura VAT</td>
+              <td class="p-4 text-center bg-indigo-50/50"><svg class="w-5 h-5 mx-auto text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg></td>
+              <td class="p-4 text-center text-gray-400">EN tylko</td>
+              <td class="p-4 text-center text-gray-400">EN tylko</td>
+            </tr>
+            <tr>
+              <td class="p-4 text-gray-700">BLIK + Przelewy24</td>
               <td class="p-4 text-center bg-indigo-50/50"><svg class="w-5 h-5 mx-auto text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg></td>
               <td class="p-4 text-center"><svg class="w-5 h-5 mx-auto text-red-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg></td>
               <td class="p-4 text-center"><svg class="w-5 h-5 mx-auto text-red-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg></td>
@@ -274,71 +301,20 @@ async function selectPlan(planId: number) {
     </div>
   </section>
 
-  <!-- TESTIMONIALS -->
-  <section class="py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4">
-      <p class="text-center text-sm font-bold text-indigo-600 uppercase tracking-wider mb-3">Opinie</p>
-      <h2 class="font-heading text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-12">Zaufali nam właściciele sklepów</h2>
-
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 border border-gray-100 shadow-sm">
-          <div class="flex gap-1 mb-4">
-            <svg v-for="i in 5" :key="i" class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          </div>
-          <p class="text-gray-600 leading-relaxed">"Wreszcie mogę zarządzać feedami bez ręcznej edycji XML. Konfiguracja trwała 5 minut, a wcześniej poświęcałem na to pół dnia."</p>
-          <div class="mt-6 flex items-center gap-3">
-            <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold text-lg">M</div>
-            <div>
-              <p class="font-semibold text-gray-900">Marek K.</p>
-              <p class="text-sm text-gray-500">Właściciel sklepu na Shoperze</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 border border-gray-100 shadow-sm">
-          <div class="flex gap-1 mb-4">
-            <svg v-for="i in 5" :key="i" class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          </div>
-          <p class="text-gray-600 leading-relaxed">"Automatyczne odświeżanie feedów oszczędza mi godziny tygodniowo. Zarządzam 3 sklepami i 8 feedami z jednego panelu."</p>
-          <div class="mt-6 flex items-center gap-3">
-            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold text-lg">A</div>
-            <div>
-              <p class="font-semibold text-gray-900">Anna W.</p>
-              <p class="text-sm text-gray-500">E-commerce manager, 3 sklepy</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 border border-gray-100 shadow-sm">
-          <div class="flex gap-1 mb-4">
-            <svg v-for="i in 5" :key="i" class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          </div>
-          <p class="text-gray-600 leading-relaxed">"Jedno narzędzie do Ceneo, Google i Allegro. Wcześniej płaciłem 200 zl za DataFeedWatch — teraz mam lepsze narzędzie za 59 zl."</p>
-          <div class="mt-6 flex items-center gap-3">
-            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold text-lg">P</div>
-            <div>
-              <p class="font-semibold text-gray-900">Paweł D.</p>
-              <p class="text-sm text-gray-500">Agencja e-commerce, 12 klientów</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- PRICING -->
   <section id="pricing" class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4">
       <p class="text-center text-sm font-bold text-indigo-600 uppercase tracking-wider mb-3">Cennik</p>
       <h2 class="font-heading text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-4">Prosty cennik, bez ukrytych kosztów</h2>
-      <p class="text-center text-gray-500 text-lg mb-16 max-w-2xl mx-auto">Wszystkie porównywarki w cenie. Bez limitu kanałów. Bez dodatkowych opłat.</p>
+      <p class="text-center text-gray-500 text-lg mb-6 max-w-2xl mx-auto">Wszystkie porównywarki w cenie. Bez limitu kanałów. Bez dodatkowych opłat.</p>
+      <p class="text-center text-sm text-gray-400 mb-16">14 dni bezpłatnego trialu na każdy płatny plan · BLIK · Przelewy24 · karta · faktura VAT</p>
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Free -->
         <div class="bg-white rounded-2xl border border-gray-200 p-8 flex flex-col hover:shadow-lg transition-shadow">
           <h3 class="text-lg font-bold text-gray-900">Free</h3>
           <p class="mt-4 flex items-baseline gap-1">
-            <span class="text-5xl font-extrabold text-gray-900">0 zl</span>
+            <span class="text-5xl font-extrabold text-gray-900">0 zł</span>
             <span class="text-gray-500">/mies.</span>
           </p>
           <p class="mt-2 text-sm text-gray-500">Na zawsze, bez karty kredytowej</p>
@@ -355,9 +331,13 @@ async function selectPlan(planId: number) {
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
               Wszystkie szablony
             </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+              Ręczne odświeżanie
+            </li>
           </ul>
           <button @click="selectPlan(1)" class="mt-8 w-full py-3 rounded-xl border-2 border-gray-200 text-gray-700 font-semibold hover:border-indigo-300 hover:text-indigo-600 transition cursor-pointer">
-            Zacznij za darmo
+            Załóż darmowe konto
           </button>
         </div>
 
@@ -365,10 +345,10 @@ async function selectPlan(planId: number) {
         <div class="bg-white rounded-2xl border border-gray-200 p-8 flex flex-col hover:shadow-lg transition-shadow">
           <h3 class="text-lg font-bold text-gray-900">Starter</h3>
           <p class="mt-4 flex items-baseline gap-1">
-            <span class="text-5xl font-extrabold text-gray-900">29 zl</span>
+            <span class="text-5xl font-extrabold text-gray-900">49 zł</span>
             <span class="text-gray-500">/mies.</span>
           </p>
-          <p class="mt-2 text-sm text-gray-500">Dla małych sklepów</p>
+          <p class="mt-2 text-sm text-gray-500">14 dni za darmo · anulujesz kiedy chcesz</p>
           <ul class="mt-8 space-y-3 text-sm text-gray-600 flex-1">
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
@@ -376,15 +356,19 @@ async function selectPlan(planId: number) {
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              3 feedy wyjsciowe
+              3 feedy wyjściowe
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
               Auto-refresh
             </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+              Mapowanie kategorii
+            </li>
           </ul>
           <button @click="selectPlan(2)" class="mt-8 w-full py-3 rounded-xl border-2 border-indigo-200 text-indigo-600 font-semibold hover:bg-indigo-50 transition cursor-pointer">
-            Wybierz plan
+            Spróbuj 14 dni za darmo
           </button>
         </div>
 
@@ -395,14 +379,14 @@ async function selectPlan(planId: number) {
           </div>
           <h3 class="text-lg font-bold text-gray-900">Pro</h3>
           <p class="mt-4 flex items-baseline gap-1">
-            <span class="text-5xl font-extrabold text-gray-900">59 zl</span>
+            <span class="text-5xl font-extrabold text-gray-900">149 zł</span>
             <span class="text-gray-500">/mies.</span>
           </p>
-          <p class="mt-2 text-sm text-gray-500">Dla rozwijających się sklepow</p>
+          <p class="mt-2 text-sm text-gray-500">14 dni za darmo · brak setup fee</p>
           <ul class="mt-8 space-y-3 text-sm text-gray-600 flex-1">
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              5 000 produktów
+              10 000 produktów
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
@@ -410,15 +394,19 @@ async function selectPlan(planId: number) {
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              Reguly + optymalizacja AI
+              Reguły + AI optymalizacja opisów
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              Walidacja feedów
+              Walidacja + Quality Score
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+              Override per produkt
             </li>
           </ul>
           <button @click="selectPlan(3)" class="mt-8 w-full py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition cursor-pointer">
-            Wybierz plan
+            Spróbuj Pro 14 dni za darmo
           </button>
         </div>
 
@@ -426,14 +414,14 @@ async function selectPlan(planId: number) {
         <div class="bg-white rounded-2xl border border-gray-200 p-8 flex flex-col hover:shadow-lg transition-shadow">
           <h3 class="text-lg font-bold text-gray-900">Business</h3>
           <p class="mt-4 flex items-baseline gap-1">
-            <span class="text-5xl font-extrabold text-gray-900">99 zl</span>
+            <span class="text-5xl font-extrabold text-gray-900">349 zł</span>
             <span class="text-gray-500">/mies.</span>
           </p>
-          <p class="mt-2 text-sm text-gray-500">Dla agencji i dużych sklepów</p>
+          <p class="mt-2 text-sm text-gray-500">Custom onboarding · SLA</p>
           <ul class="mt-8 space-y-3 text-sm text-gray-600 flex-1">
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-              20 000 produktów
+              50 000 produktów
             </li>
             <li class="flex items-center gap-2">
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
@@ -447,10 +435,95 @@ async function selectPlan(planId: number) {
               <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
               Multi-user / organizacje
             </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+              Priorytetowy support
+            </li>
           </ul>
           <button @click="selectPlan(4)" class="mt-8 w-full py-3 rounded-xl border-2 border-indigo-200 text-indigo-600 font-semibold hover:bg-indigo-50 transition cursor-pointer">
-            Wybierz plan
+            Skontaktuj się
           </button>
+        </div>
+      </div>
+
+      <!-- Trust badges row -->
+      <div class="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-gray-400">
+        <span class="inline-flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z"/></svg>
+          RODO compliant
+        </span>
+        <span>·</span>
+        <span class="inline-flex items-center gap-1.5">🇪🇺 Hostowane w EU</span>
+        <span>·</span>
+        <span class="inline-flex items-center gap-1.5">🔒 SSL · backupy 24h</span>
+        <span>·</span>
+        <span class="inline-flex items-center gap-1.5">💳 BLIK · Przelewy24 · karta</span>
+        <span>·</span>
+        <span class="inline-flex items-center gap-1.5">📄 Faktura VAT automatycznie</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROI CALCULATOR -->
+  <section class="py-24 bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <p class="text-center text-sm font-bold text-indigo-600 uppercase tracking-wider mb-3">Kalkulator ROI</p>
+      <h2 class="font-heading text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-4">Sprawdź, ile zarobisz dodatkowo z lepszymi feedami</h2>
+      <p class="text-center text-gray-500 text-lg mb-12 max-w-2xl mx-auto">Walidacja, AI tytuły i ekspozycja w 6 porównywarkach typowo dodaje ~1,2% do konwersji.</p>
+
+      <div class="bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 rounded-3xl p-8 sm:p-12">
+        <div class="grid sm:grid-cols-2 gap-8 mb-10">
+          <div>
+            <label for="roi-products" class="block text-sm font-semibold text-gray-700 mb-2">Liczba produktów w sklepie</label>
+            <input
+              id="roi-products"
+              v-model.number="products"
+              type="number"
+              min="1"
+              max="100000"
+              class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-lg font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            />
+          </div>
+          <div>
+            <label for="roi-aov" class="block text-sm font-semibold text-gray-700 mb-2">Średnia wartość koszyka (zł)</label>
+            <input
+              id="roi-aov"
+              v-model.number="aov"
+              type="number"
+              min="1"
+              max="100000"
+              class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-lg font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            />
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-4 text-center">
+          <div class="bg-white rounded-2xl border border-gray-100 p-5">
+            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Dodatkowy przychód / mies.</p>
+            <p class="font-heading text-3xl font-extrabold text-indigo-600">+{{ fmt(monthlyRevenueLift) }} zł</p>
+          </div>
+          <div class="bg-white rounded-2xl border border-gray-100 p-5">
+            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Dodatkowy przychód / rok</p>
+            <p class="font-heading text-3xl font-extrabold text-indigo-600">+{{ fmt(yearlyRevenueLift) }} zł</p>
+          </div>
+          <div class="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl p-5 text-white">
+            <p class="text-xs text-indigo-100 font-semibold uppercase tracking-wider mb-1">ROI vs Pro (149 zł/mies.)</p>
+            <p class="font-heading text-3xl font-extrabold">{{ roiMultiple }}×</p>
+          </div>
+        </div>
+
+        <p class="mt-6 text-center text-xs text-gray-400">
+          Szacunek bazujący na średnim wpływie czystego, zwalidowanego feedu z ekspozycją w 6 porównywarkach. Twoje wyniki zależą od branży i marży.
+        </p>
+
+        <div class="mt-8 text-center">
+          <router-link
+            to="/register"
+            class="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all hover:-translate-y-0.5"
+          >
+            Załóż konto i sprawdź na żywo
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+          </router-link>
         </div>
       </div>
     </div>
@@ -460,7 +533,7 @@ async function selectPlan(planId: number) {
   <section class="py-24 bg-gradient-to-br from-indigo-600 to-indigo-800 text-white">
     <div class="max-w-4xl mx-auto px-4 text-center">
       <h2 class="font-heading text-3xl sm:text-4xl font-extrabold mb-6">Gotowy na lepsze feedy?</h2>
-      <p class="text-xl text-indigo-100 mb-10 max-w-2xl mx-auto">Dolacz do setek sklepów, ktore juz oszczędzają czas i pieniądze dzięki Feedy.</p>
+      <p class="text-xl text-indigo-100 mb-10 max-w-2xl mx-auto">Załóż konto w 30 sekund. Bez karty kredytowej. 200 produktów za darmo na zawsze.</p>
       <router-link
         to="/register"
         class="inline-flex items-center gap-2 px-10 py-4 text-lg font-bold rounded-xl bg-white text-indigo-700 hover:bg-indigo-50 shadow-xl shadow-indigo-900/30 transition-all hover:-translate-y-0.5"
@@ -481,8 +554,17 @@ async function selectPlan(planId: number) {
             Czy Feedy działa z moim sklepem?
             <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
           </summary>
-          <p class="px-5 pb-5 text-gray-600">Feedy działa z kazdym sklepem, który generuje XML z produktami — Shoper, WooCommerce, PrestaShop, Magento, Shopify i inne. Wystarczy wkleić link do XML.</p>
+          <p class="px-5 pb-5 text-gray-600">Feedy działa z każdym sklepem, który generuje XML z produktami — Shoper, WooCommerce, PrestaShop, Magento, Shopify i inne. Wystarczy wkleić link do XML. Jeśli Twój sklep nie generuje XML, możesz dodawać produkty ręcznie albo skontaktować się z nami — pomożemy podpiąć dowolne źródło.</p>
         </details>
+
+        <details class="group bg-gray-50 rounded-xl border border-gray-200 transition-all open:bg-white open:shadow-md">
+          <summary class="p-5 font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
+            Jak długo trwa setup?
+            <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+          </summary>
+          <p class="px-5 pb-5 text-gray-600">5 minut. Wklejasz link do XML ze swojego sklepu, wybierasz szablon Ceneo/Google/Allegro, kopiujesz wygenerowany URL feedu i wklejasz w panelu porównywarki. Bez programowania.</p>
+        </details>
+
         <details class="group bg-gray-50 rounded-xl border border-gray-200 transition-all open:bg-white open:shadow-md">
           <summary class="p-5 font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
             Jak szybko feed się odświeża?
@@ -490,19 +572,61 @@ async function selectPlan(planId: number) {
           </summary>
           <p class="px-5 pb-5 text-gray-600">Możesz ustawić automatyczne odświeżanie co 1, 6 lub 24 godziny. Feed jest zawsze aktualny — ceny i dostępność synchronizują się automatycznie.</p>
         </details>
+
         <details class="group bg-gray-50 rounded-xl border border-gray-200 transition-all open:bg-white open:shadow-md">
           <summary class="p-5 font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
             Czy mogę przetestować za darmo?
             <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
           </summary>
-          <p class="px-5 pb-5 text-gray-600">Tak! Plan Free pozwala na 200 produktów i 1 feed wyjściowy — bez karty kredytowej, bez limitu czasowego. Możesz używać tak długo jak chcesz.</p>
+          <p class="px-5 pb-5 text-gray-600">Tak. Plan Free pozwala na 200 produktów i 1 feed wyjściowy — bez karty kredytowej, bez limitu czasowego. Każdy płatny plan ma dodatkowo 14 dni triala — anulujesz jednym klikiem, bez tłumaczenia.</p>
         </details>
+
         <details class="group bg-gray-50 rounded-xl border border-gray-200 transition-all open:bg-white open:shadow-md">
           <summary class="p-5 font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
-            Ile kosztuje obsluga wielu porównywarek?
+            Czy potrzebuję programisty?
             <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
           </summary>
-          <p class="px-5 pb-5 text-gray-600">Nic dodatkowego! W przeciwieństwie do konkurencji, u nas wszystkie porównywarki są w cenie planu. Nie doliczamy za dodatkowe kanały.</p>
+          <p class="px-5 pb-5 text-gray-600">Nie. Cały interfejs jest po polsku i zaprojektowany dla nie-technicznych właścicieli sklepów. Nic nie instalujesz, nic nie modyfikujesz w sklepie — tylko kopiujesz linki.</p>
+        </details>
+
+        <details class="group bg-gray-50 rounded-xl border border-gray-200 transition-all open:bg-white open:shadow-md">
+          <summary class="p-5 font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
+            Co jeśli mam więcej produktów niż w planie?
+            <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+          </summary>
+          <p class="px-5 pb-5 text-gray-600">Łagodny upgrade prompt — feed dalej działa, a Ty dostajesz powiadomienie z propozycją wyższego planu. Nikogo nie wyłączamy bez ostrzeżenia.</p>
+        </details>
+
+        <details class="group bg-gray-50 rounded-xl border border-gray-200 transition-all open:bg-white open:shadow-md">
+          <summary class="p-5 font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
+            Czy obsługujecie warianty produktów (rozmiary, kolory)?
+            <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+          </summary>
+          <p class="px-5 pb-5 text-gray-600">Tak. Każdy wariant traktowany jest jako osobny produkt z własnym ID, ceną, dostępnością i kategorią. Mapowanie automatyczne, override per wariant w razie potrzeby.</p>
+        </details>
+
+        <details class="group bg-gray-50 rounded-xl border border-gray-200 transition-all open:bg-white open:shadow-md">
+          <summary class="p-5 font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
+            Płatności BLIK, Przelewy24, faktura VAT?
+            <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+          </summary>
+          <p class="px-5 pb-5 text-gray-600">Tak — akceptujemy BLIK, Przelewy24 i karty (przez Stripe). Faktura VAT generuje się automatycznie i trafia mailem po każdej płatności. NIP wpisujesz przy checkoucie.</p>
+        </details>
+
+        <details class="group bg-gray-50 rounded-xl border border-gray-200 transition-all open:bg-white open:shadow-md">
+          <summary class="p-5 font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
+            Jak wygląda anulacja subskrypcji?
+            <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+          </summary>
+          <p class="px-5 pb-5 text-gray-600">Jeden klik w panelu klienta. Bez pytań, bez „dlaczego rezygnujesz", bez prób ratowania. Płatny plan działa do końca okresu rozliczeniowego, potem konto wraca na Free — Twoje feedy zostają.</p>
+        </details>
+
+        <details class="group bg-gray-50 rounded-xl border border-gray-200 transition-all open:bg-white open:shadow-md">
+          <summary class="p-5 font-semibold text-gray-900 cursor-pointer flex justify-between items-center">
+            Czy mogę przejść z DataFeedWatch / Channable?
+            <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+          </summary>
+          <p class="px-5 pb-5 text-gray-600">Tak. Migracja jest darmowa i pomożemy ją przeprowadzić — wystarczy wskazać Twój obecny feed źródłowy. Większość konfiguracji odtworzymy automatycznie. Napisz: kontakt@feedy.pl.</p>
         </details>
       </div>
     </div>
@@ -511,32 +635,49 @@ async function selectPlan(planId: number) {
   <!-- FOOTER -->
   <footer class="bg-gray-900 text-gray-400 py-16">
     <div class="max-w-7xl mx-auto px-4">
-      <div class="grid sm:grid-cols-3 gap-8 mb-12">
-        <div>
+      <div class="grid sm:grid-cols-4 gap-8 mb-12">
+        <div class="sm:col-span-2">
           <span class="font-heading text-xl font-extrabold text-white tracking-tight">Feedy</span>
-          <p class="mt-3 text-sm text-gray-500">Platforma do zarządzania feedami produktówymi dla e-commerce.</p>
+          <p class="mt-3 text-sm text-gray-500 max-w-md">Polska platforma do zarządzania feedami produktowymi dla e-commerce. Generuj feedy XML dla Ceneo, Google Shopping, Allegro i innych porównywarek z jednego panelu.</p>
         </div>
         <div>
           <p class="font-semibold text-gray-300 mb-3">Produkt</p>
           <ul class="space-y-2 text-sm">
             <li><a href="#pricing" class="hover:text-white transition">Cennik</a></li>
-            <li><router-link to="/register" class="hover:text-white transition">Zaloz konto</router-link></li>
-            <li><router-link to="/login" class="hover:text-white transition">Zaloguj sie</router-link></li>
+            <li><router-link to="/feed-ceneo" class="hover:text-white transition">Feed Ceneo</router-link></li>
+            <li><router-link to="/feed-google-shopping" class="hover:text-white transition">Feed Google Shopping</router-link></li>
+            <li><router-link to="/feed-allegro" class="hover:text-white transition">Feed Allegro</router-link></li>
+            <li><router-link to="/integracja-shoper" class="hover:text-white transition">Integracja Shoper</router-link></li>
+            <li><router-link to="/integracja-woocommerce" class="hover:text-white transition">Integracja WooCommerce</router-link></li>
+            <li><router-link to="/blog" class="hover:text-white transition">Blog</router-link></li>
+            <li><router-link to="/register" class="hover:text-white transition">Załóż konto</router-link></li>
           </ul>
         </div>
         <div>
           <p class="font-semibold text-gray-300 mb-3">Informacje prawne</p>
           <ul class="space-y-2 text-sm">
             <li><router-link to="/regulamin" class="hover:text-white transition">Regulamin</router-link></li>
-            <li><router-link to="/polityka-prywatnosci" class="hover:text-white transition">Polityka prywatnosci</router-link></li>
+            <li><router-link to="/polityka-prywatnosci" class="hover:text-white transition">Polityka prywatności</router-link></li>
             <li><router-link to="/polityka-cookies" class="hover:text-white transition">Polityka cookies</router-link></li>
+            <li><a href="mailto:kontakt@feedy.pl" class="hover:text-white transition">kontakt@feedy.pl</a></li>
           </ul>
         </div>
       </div>
       <div class="border-t border-gray-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <p class="text-sm">&copy; 2026 Feedy — Artur Dylik. NIP: 7282905430. Wszelkie prawa zastrzezone.</p>
+        <p class="text-sm">© 2026 Feedy — Artur Dylik. NIP: 7282905430. Wszelkie prawa zastrzeżone.</p>
         <p class="text-sm">kontakt@feedy.pl</p>
       </div>
     </div>
   </footer>
+
+  <!-- STICKY MOBILE CTA -->
+  <div class="fixed bottom-0 left-0 right-0 z-40 sm:hidden bg-white border-t border-gray-200 shadow-2xl px-4 py-3">
+    <router-link
+      to="/register"
+      class="flex items-center justify-center gap-2 w-full py-3 text-sm font-bold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition"
+    >
+      Zacznij za darmo — 30 sekund
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+    </router-link>
+  </div>
 </template>

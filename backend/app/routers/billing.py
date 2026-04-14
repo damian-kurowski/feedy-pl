@@ -52,12 +52,17 @@ async def create_checkout(
 
     session = stripe.checkout.Session.create(
         customer=user.stripe_customer_id,
-        payment_method_types=["card"],
+        payment_method_types=["card", "blik", "p24"],
         line_items=[{"price": price_id, "quantity": 1}],
         mode="subscription",
+        subscription_data={"trial_period_days": 14},
+        allow_promotion_codes=True,
         success_url=f"{frontend_url}/dashboard?billing=success",
         cancel_url=f"{frontend_url}/dashboard?billing=cancel",
         metadata={"user_id": str(user.id), "plan_id": str(body.plan_id)},
+        locale="pl",
+        billing_address_collection="required",
+        tax_id_collection={"enabled": True},
     )
     return CheckoutResponse(checkout_url=session.url)
 
