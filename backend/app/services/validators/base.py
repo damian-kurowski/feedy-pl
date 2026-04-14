@@ -41,6 +41,62 @@ _ISO_CURRENCY_RE = re.compile(r"^\d+(\.\d{1,2})?\s+[A-Z]{3}$")
 _NUMERIC_PRICE_RE = re.compile(r"^\d+(\.\d{1,2})?$")
 
 
+def validate_ean(value: str | None) -> dict:
+    """Validate an EAN/GTIN code. Returns dict with status and details.
+
+    Accepts EAN-8, EAN-12 (UPC-A), EAN-13, EAN-14 (GTIN-14).
+    Returns:
+      {"valid": bool, "format": "ean8"|"ean12"|"ean13"|"ean14"|None,
+       "reason": str, "fixed": str|None}
+
+    The "fixed" key, if present, contains an auto-corrected version
+    (e.g. trimmed whitespace, leading-zero padding to 13 digits).
+    """
+    if value is None or value == "":
+        return {"valid": False, "format": None, "reason": "Pusty kod EAN", "fixed": None}
+
+    raw = str(value)
+    stripped = raw.strip().replace(" ", "").replace("-", "")
+    if not stripped:
+        return {"valid": False, "format": None, "reason": "Pusty kod EAN", "fixed": None}
+
+    if not stripped.isdigit():
+        return {"valid": False, "format": None, "reason": "EAN zawiera znaki inne niż cyfry", "fixed": None}
+
+    fixed: str | None = None
+    if stripped != raw:
+        fixed = stripped
+
+    length = len(stripped)
+    if length not in (8, 12, 13, 14):
+        # Try padding with leading zeros (common for short codes)
+        if length < 13:
+            padded = stripped.zfill(13)
+            if _checksum_valid(padded):
+                return {"valid": True, "format": "ean13", "reason": "OK (auto-padded)", "fixed": padded}
+        return {"valid": False, "format": None, "reason": f"Nieprawidłowa długość: {length} (oczekiwane 8/12/13/14)", "fixed": fixed}
+
+    if not _checksum_valid(stripped):
+        return {"valid": False, "format": f"ean{length}", "reason": "Nieprawidłowa suma kontrolna", "fixed": fixed}
+
+    return {"valid": True, "format": f"ean{length}", "reason": "OK", "fixed": fixed}
+
+
+def _checksum_valid(digits: str) -> bool:
+    """Verify GTIN checksum (works for EAN-8, UPC-A, EAN-13, GTIN-14)."""
+    if not digits.isdigit() or len(digits) < 8:
+        return False
+    body = digits[:-1]
+    expected = int(digits[-1])
+    total = 0
+    # Multiply each digit by 3 or 1 alternately, starting from the right of body
+    for i, d in enumerate(reversed(body)):
+        weight = 3 if (i % 2 == 0) else 1
+        total += int(d) * weight
+    check = (10 - (total % 10)) % 10
+    return check == expected
+
+
 class BaseValidator:
     """Base class for platform validators."""
 
@@ -159,35 +215,20 @@ class BaseValidator:
     ) -> list[ValidationIssue]:
         if not value:
             return []
-        digits = value.strip()
-        if not digits.isdigit() or len(digits) not in (8, 12, 13, 14):
-            return [
-                ValidationIssue(
-                    level="warning",
-                    field=field_name,
-                    message=f"Nieprawidłowy kod EAN/GTIN: '{digits}' (oczekiwano 8, 12, 13 lub 14 cyfr)",
-                    product_id=pid,
-                    product_name=pname,
-                    rule="invalid_ean_length",
-                )
-            ]
-        if len(digits) == 13:
-            # EAN-13 checksum
-            odd = sum(int(digits[i]) for i in range(0, 12, 2))
-            even = sum(int(digits[i]) for i in range(1, 12, 2))
-            check = (10 - (odd + even * 3) % 10) % 10
-            if check != int(digits[12]):
-                return [
-                    ValidationIssue(
-                        level="warning",
-                        field=field_name,
-                        message=f"Nieprawidłowa suma kontrolna EAN-13: '{digits}'",
-                        product_id=pid,
-                        product_name=pname,
-                        rule="invalid_ean_checksum",
-                    )
-                ]
-        return []
+        result = validate_ean(value)
+        if result["valid"]:
+            return []
+        rule = "invalid_ean_length" if "długość" in result["reason"].lower() else "invalid_ean_checksum"
+        return [
+            ValidationIssue(
+                level="warning",
+                field=field_name,
+                message=f"Nieprawidłowy kod EAN/GTIN: '{value}' — {result['reason']}",
+                product_id=pid,
+                product_name=pname,
+                rule=rule,
+            )
+        ]
 
     def check_max_length(
         self,

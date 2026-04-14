@@ -6,6 +6,7 @@ import type { XmlElement, Product } from '../stores/feedsIn'
 import XmlTree from '../components/XmlTree.vue'
 import ProductPreview from '../components/ProductPreview.vue'
 import FeedChangelog from '../components/FeedChangelog.vue'
+import EanReportCard from '../components/EanReportCard.vue'
 import ManualProductForm from '../components/ManualProductForm.vue'
 import api from '../api/client'
 import { useToast, getApiError, undoableDelete } from '../composables/useToast'
@@ -358,6 +359,9 @@ async function refetchXml() {
           />
           <ProductPreview :products="products" @delete="deleteProduct" @edit="startEditProduct" />
         </section>
+
+        <!-- EAN coverage report -->
+        <EanReportCard :feed-id="feedId" />
 
         <!-- Changelog section -->
         <section class="bg-white border border-gray-200 rounded-2xl p-6">

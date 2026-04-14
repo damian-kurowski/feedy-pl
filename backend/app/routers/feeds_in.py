@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.services.recommendations import generate_recommendations
 from pydantic import BaseModel
-from sqlalchemy import func, select
+from sqlalchemy import String, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -238,6 +238,124 @@ async def list_products(
         select(ProductIn).where(ProductIn.feed_in_id == feed_id)
     )
     return result.scalars().all()
+
+
+_EAN_FIELD_KEYS = ["ean", "gtin", "code", "g:gtin", "@ean", "barcode", "attr:EAN", "attr:GTIN"]
+
+
+def _extract_ean(product_value: dict) -> str | None:
+    for key in _EAN_FIELD_KEYS:
+        v = product_value.get(key)
+        if isinstance(v, str) and v.strip():
+            return v.strip()
+        if isinstance(v, (int, float)):
+            return str(int(v))
+    return None
+
+
+@router.get("/search/global")
+async def global_search(
+    q: str,
+    limit: int = 30,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Cross-feed search across all user's products by name, EAN, SKU, category."""
+    if not q or len(q.strip()) < 2:
+        return {"results": []}
+    needle = f"%{q.strip().lower()}%"
+
+    # Limit search to user's feeds
+    user_feeds_res = await db.execute(
+        select(FeedIn.id, FeedIn.name).where(FeedIn.user_id == current_user.id)
+    )
+    user_feeds = {row.id: row.name for row in user_feeds_res.all()}
+    if not user_feeds:
+        return {"results": []}
+
+    # Search by product_name (cheap, indexed)
+    name_res = await db.execute(
+        select(ProductIn)
+        .where(ProductIn.feed_in_id.in_(user_feeds.keys()))
+        .where(func.lower(ProductIn.product_name).like(needle))
+        .limit(limit)
+    )
+    name_matches = list(name_res.scalars().all())
+
+    # Also search inside JSONB product_value for EAN/SKU/category
+    if len(name_matches) < limit:
+        text_res = await db.execute(
+            select(ProductIn)
+            .where(ProductIn.feed_in_id.in_(user_feeds.keys()))
+            .where(func.lower(func.cast(ProductIn.product_value, String)).like(needle))
+            .limit(limit - len(name_matches))
+        )
+        seen_ids = {p.id for p in name_matches}
+        for p in text_res.scalars().all():
+            if p.id not in seen_ids:
+                name_matches.append(p)
+
+    results = []
+    for p in name_matches:
+        pv = p.product_value or {}
+        results.append({
+            "id": p.id,
+            "feed_in_id": p.feed_in_id,
+            "feed_in_name": user_feeds.get(p.feed_in_id, ""),
+            "product_name": p.product_name,
+            "ean": pv.get("ean") or pv.get("gtin") or pv.get("code") or pv.get("g:gtin") or pv.get("attr:EAN"),
+            "price": pv.get("price") or pv.get("@price") or pv.get("g:price"),
+            "category": pv.get("cat") or pv.get("category") or pv.get("g:product_type"),
+            "image": pv.get("image") or pv.get("img") or pv.get("g:image_link"),
+            "custom_product": p.custom_product,
+        })
+    return {"results": results, "query": q}
+
+
+@router.get("/{feed_id}/ean-report")
+async def ean_report(
+    feed_id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Returns EAN/GTIN coverage and validity stats for a source feed."""
+    from app.services.validators.base import validate_ean
+
+    await _get_user_feed(db, feed_id, current_user.id)
+    result = await db.execute(select(ProductIn).where(ProductIn.feed_in_id == feed_id))
+    products = result.scalars().all()
+
+    total = len(products)
+    with_ean = 0
+    valid = 0
+    invalid_items: list[dict] = []
+    for p in products:
+        raw_ean = _extract_ean(p.product_value or {})
+        if not raw_ean:
+            continue
+        with_ean += 1
+        result_dict = validate_ean(raw_ean)
+        if result_dict["valid"]:
+            valid += 1
+        else:
+            invalid_items.append({
+                "id": p.id,
+                "product_name": p.product_name,
+                "ean": raw_ean,
+                "reason": result_dict["reason"],
+                "fixed": result_dict.get("fixed"),
+            })
+
+    return {
+        "total_products": total,
+        "with_ean": with_ean,
+        "valid_ean": valid,
+        "invalid_ean": with_ean - valid,
+        "missing_ean": total - with_ean,
+        "ean_coverage_pct": round((with_ean / total * 100), 1) if total else 0,
+        "ean_validity_pct": round((valid / with_ean * 100), 1) if with_ean else 0,
+        "invalid_items": invalid_items[:200],  # cap to 200 for UI
+    }
 
 
 class ManualProductCreate(BaseModel):

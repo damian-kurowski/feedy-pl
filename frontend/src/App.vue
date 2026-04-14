@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from './stores/auth'
 import CookieConsent from './components/CookieConsent.vue'
 import ToastContainer from './components/ToastContainer.vue'
+import GlobalSearch from './components/GlobalSearch.vue'
+import NotificationBell from './components/NotificationBell.vue'
+
+const searchRef = ref<InstanceType<typeof GlobalSearch> | null>(null)
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -35,8 +39,19 @@ function handleLogout() {
             <router-link to="/dashboard" class="font-heading text-lg font-extrabold tracking-tight text-indigo-600 shrink-0">Feedy</router-link>
             <router-link to="/dashboard" class="text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors">Dashboard</router-link>
             <router-link to="/oferty" class="text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors hidden sm:inline">Oferty</router-link>
+            <button
+              type="button"
+              class="hidden md:inline-flex items-center gap-2 text-[12px] text-gray-400 hover:text-gray-700 border border-gray-200 hover:border-gray-300 rounded-lg px-3 py-1.5 transition cursor-pointer ml-2"
+              title="Wyszukaj produkt (Ctrl+K)"
+              @click="searchRef?.openModal()"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+              Szukaj
+              <kbd class="text-[10px] font-semibold border border-gray-200 rounded px-1">⌘K</kbd>
+            </button>
           </div>
           <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+            <NotificationBell />
             <span class="hidden md:inline text-[13px] text-gray-400 truncate max-w-[180px]">{{ auth.user?.email }}</span>
             <span
               v-if="auth.user?.plan"
@@ -96,5 +111,6 @@ function handleLogout() {
     <router-view />
     <CookieConsent />
     <ToastContainer />
+    <GlobalSearch v-if="auth.isLoggedIn" ref="searchRef" />
   </div>
 </template>
