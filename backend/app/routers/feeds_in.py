@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.services.recommendations import generate_recommendations
 from pydantic import BaseModel
+from fastapi.responses import StreamingResponse
 from sqlalchemy import String, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -310,6 +311,58 @@ async def global_search(
             "custom_product": p.custom_product,
         })
     return {"results": results, "query": q}
+
+
+@router.get("/{feed_id}/products/export.xlsx")
+async def export_products_xlsx(
+    feed_id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Export all products of a source feed to XLSX. Each product_value key
+    becomes a column. Useful for offline edits + re-import."""
+    import io
+    from openpyxl import Workbook
+
+    feed = await _get_user_feed(db, feed_id, current_user.id)
+    result = await db.execute(select(ProductIn).where(ProductIn.feed_in_id == feed_id))
+    products = list(result.scalars().all())
+    if not products:
+        raise HTTPException(status_code=404, detail="Brak produktów do eksportu")
+
+    # Collect all unique keys across all products
+    all_keys: list[str] = ["__id", "__product_name"]
+    seen: set[str] = set(all_keys)
+    for p in products:
+        for k in (p.product_value or {}).keys():
+            if k not in seen:
+                seen.add(k)
+                all_keys.append(k)
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "products"
+    ws.append(all_keys)
+    for p in products:
+        pv = p.product_value or {}
+        row = [p.id, p.product_name]
+        for k in all_keys[2:]:
+            v = pv.get(k, "")
+            if isinstance(v, (dict, list)):
+                v = str(v)
+            row.append(v)
+        ws.append(row)
+
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    safe_name = "".join(c if c.isalnum() else "-" for c in feed.name)[:50]
+    filename = f"feedy-{safe_name}-{feed.id}.xlsx"
+    return StreamingResponse(
+        buf,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 
 @router.get("/{feed_id}/ean-report")

@@ -41,6 +41,12 @@ const router = createRouter({
       meta: { auth: true },
     },
     {
+      path: '/feeds-in/import',
+      name: 'feed-in-import',
+      component: () => import('../views/CsvImportView.vue'),
+      meta: { auth: true },
+    },
+    {
       path: '/feeds-in/:id',
       name: 'feed-in-detail',
       component: () => import('../views/FeedInDetailView.vue'),

@@ -188,7 +188,16 @@ async function refetchXml() {
             {{ feed.fetch_status === 'success' ? 'Aktywny' : feed.fetch_status === 'error' ? 'Błąd' : feed.fetch_status }}
           </span>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 flex-wrap">
+          <a
+            :href="`/api/feeds-in/${feedId}/products/export.xlsx`"
+            target="_blank"
+            class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-xl px-4 py-2 transition cursor-pointer flex items-center gap-1.5"
+            title="Eksportuj produkty do Excela"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+            Eksport XLSX
+          </a>
           <button
             :disabled="fetching"
             class="bg-gray-100 hover:bg-gray-200 disabled:opacity-50 text-gray-700 text-sm font-medium rounded-xl px-4 py-2 transition cursor-pointer"

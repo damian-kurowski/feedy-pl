@@ -202,6 +202,14 @@ function qualityScoreColor(score: number): string {
           ? Samouczek
         </button>
         <router-link
+          to="/feeds-in/import"
+          class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-indigo-600 border border-gray-200 hover:border-indigo-300 rounded-xl px-4 py-2 transition cursor-pointer"
+          title="Import z CSV/Excel"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+          Import CSV
+        </router-link>
+        <router-link
           to="/feeds-in/new"
           class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/25 cursor-pointer active:scale-[0.98]"
         >
