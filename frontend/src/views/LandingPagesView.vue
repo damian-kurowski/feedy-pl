@@ -150,7 +150,7 @@ async function deletePage(id: number) {
     <div class="flex items-center justify-between mb-8 flex-wrap gap-3">
       <div>
         <h1 class="font-heading text-2xl font-bold text-gray-900">Strony ofert</h1>
-        <p class="text-sm text-gray-500 mt-1">Publiczne landingi na feedy.pl — każda oferta ma własny URL, SEO tagi i przycisk CTA do Twojego sklepu.</p>
+        <p class="text-sm text-gray-500 mt-1">Publiczne landingi na feedy.pl — każda oferta ma własny URL, SEO tagi i przycisk CTA do Twojego sklepu. <router-link to="/oferty/cennik" class="text-indigo-600 hover:text-indigo-800 font-medium">Zobacz cennik →</router-link></p>
       </div>
       <button v-if="!editing" @click="newPage"
         class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer">

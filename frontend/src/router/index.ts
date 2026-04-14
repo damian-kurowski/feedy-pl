@@ -131,6 +131,11 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/oferty/cennik',
+      name: 'oferty-pricing',
+      component: () => import('../views/OfertyPricingView.vue'),
+    },
+    {
       path: '/p/:pathMatch(.*)*',
       name: 'public-landing',
       component: () => import('../views/PublicLandingView.vue'),
