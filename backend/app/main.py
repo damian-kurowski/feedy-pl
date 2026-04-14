@@ -5,7 +5,7 @@ from slowapi.errors import RateLimitExceeded
 
 from app.config import settings
 from app.limiter import limiter
-from app.routers import ai, auth, billing, feeds_in, feeds_out, images, organizations, public_feed, value_maps
+from app.routers import ai, auth, billing, blog, feeds_in, feeds_out, images, organizations, public_feed, value_maps
 
 
 def create_app() -> FastAPI:
@@ -39,6 +39,7 @@ def create_app() -> FastAPI:
     app.include_router(images.router)
     app.include_router(ai.router)
     app.include_router(value_maps.router)
+    app.include_router(blog.router)
 
     return app
 

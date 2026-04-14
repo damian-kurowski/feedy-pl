@@ -115,6 +115,16 @@ const router = createRouter({
       component: () => import('../views/blog/CeneoOdrzucaOferty.vue'),
     },
     {
+      path: '/blog/:slug',
+      name: 'blog-post',
+      component: () => import('../views/blog/BlogPostView.vue'),
+    },
+    {
+      path: '/admin/blog',
+      name: 'admin-blog',
+      component: () => import('../views/admin/AdminBlogView.vue'),
+    },
+    {
       path: '/polityka-prywatnosci',
       name: 'privacy-policy',
       component: () => import('../views/PrivacyPolicyView.vue'),
