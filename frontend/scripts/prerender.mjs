@@ -114,11 +114,40 @@ function applyRoute(template, route) {
     html = html.replace(/<\/head>/, `${jsonLdHtml}\n  </head>`)
   }
 
+  // Global SEO footer appended to every noscript block — distributes link equity
+  // across all key landings/blog/pricing on every crawled page.
+  const SEO_FOOTER = `
+        <hr />
+        <nav aria-label="Linki Feedy.pl" style="font-size:13px;line-height:1.8;margin-top:30px">
+          <strong>Feedy.pl</strong> —
+          <a href="/">strona główna</a> ·
+          <a href="/blog">blog</a> ·
+          <a href="/feed-ceneo">feed Ceneo</a> ·
+          <a href="/feed-google-shopping">feed Google Shopping</a> ·
+          <a href="/feed-allegro">feed Allegro</a> ·
+          <a href="/integracja-shoper">integracja Shoper</a> ·
+          <a href="/integracja-woocommerce">integracja WooCommerce</a> ·
+          <a href="/porownanie/feedy-vs-datafeedwatch">vs DataFeedWatch</a> ·
+          <a href="/oferty/cennik">cennik stron ofert</a> ·
+          <a href="/regulamin">regulamin</a> ·
+          <a href="/polityka-prywatnosci">polityka prywatności</a>
+        </nav>
+        <p style="font-size:11px;color:#888;margin-top:10px">© Feedy.pl — Zarządzanie feedami produktowymi dla e-commerce</p>
+  `
+
   // Replace noscript content (only if route provides one)
   if (route.noscript) {
     html = html.replace(
       /<noscript>[\s\S]*?<\/noscript>/,
-      `<noscript>\n      <div style="max-width:800px;margin:0 auto;padding:40px 20px;font-family:system-ui,sans-serif">\n${route.noscript}\n      </div>\n    </noscript>`,
+      `<noscript>\n      <div style="max-width:800px;margin:0 auto;padding:40px 20px;font-family:system-ui,sans-serif">\n${route.noscript}\n${SEO_FOOTER}\n      </div>\n    </noscript>`,
+    )
+  } else {
+    // Routes without a custom noscript (e.g. homepage) keep the default
+    // noscript content but get the SEO footer injected just before its
+    // closing </div></noscript>.
+    html = html.replace(
+      /(<\/div>\s*<\/noscript>)/,
+      `${SEO_FOOTER}\n$1`,
     )
   }
 

@@ -166,9 +166,29 @@ def _inject_jsonld(html: str, blocks: list[dict]) -> str:
     return html.replace("</head>", f"{snippets}\n  </head>")
 
 
+SEO_FOOTER = """
+        <hr />
+        <nav aria-label="Linki Feedy.pl" style="font-size:13px;line-height:1.8;margin-top:30px">
+          <strong>Feedy.pl</strong> —
+          <a href="/">strona główna</a> ·
+          <a href="/blog">blog</a> ·
+          <a href="/feed-ceneo">feed Ceneo</a> ·
+          <a href="/feed-google-shopping">feed Google Shopping</a> ·
+          <a href="/feed-allegro">feed Allegro</a> ·
+          <a href="/integracja-shoper">integracja Shoper</a> ·
+          <a href="/integracja-woocommerce">integracja WooCommerce</a> ·
+          <a href="/porownanie/feedy-vs-datafeedwatch">vs DataFeedWatch</a> ·
+          <a href="/oferty/cennik">cennik stron ofert</a> ·
+          <a href="/regulamin">regulamin</a> ·
+          <a href="/polityka-prywatnosci">polityka prywatności</a>
+        </nav>
+        <p style="font-size:11px;color:#888;margin-top:10px">© Feedy.pl — Zarządzanie feedami produktowymi dla e-commerce</p>
+"""
+
+
 def _replace_noscript(html: str, body_html: str) -> str:
     pattern = re.compile(r"<noscript>[\s\S]*?</noscript>")
-    wrapped = f'<noscript>\n      <div style="max-width:800px;margin:0 auto;padding:40px 20px;font-family:system-ui,sans-serif">\n{body_html}\n      </div>\n    </noscript>'
+    wrapped = f'<noscript>\n      <div style="max-width:800px;margin:0 auto;padding:40px 20px;font-family:system-ui,sans-serif">\n{body_html}\n{SEO_FOOTER}\n      </div>\n    </noscript>'
     if pattern.search(html):
         return pattern.sub(wrapped, html)
     return html.replace("</body>", f"{wrapped}\n  </body>")
@@ -311,9 +331,12 @@ async def render_landing_page(slug: str, db: AsyncSession = Depends(get_db)):
     elif page.hero_image:
         product_schema["image"] = page.hero_image
     if page.price:
+        # Extract first numeric value from free-form price string ("od 199 zł/m²")
+        m = re.search(r"\d+(?:[.,]\d+)?", page.price)
+        price_value = m.group(0).replace(",", ".") if m else "0"
         product_schema["offers"] = {
             "@type": "Offer",
-            "price": re.sub(r"[^0-9.,]", "", page.price).replace(",", ".") or "0",
+            "price": price_value,
             "priceCurrency": "PLN",
             "availability": "https://schema.org/InStock",
             "url": canonical,
