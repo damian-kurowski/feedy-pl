@@ -43,9 +43,9 @@ def _get_value(product_values: dict, source: str) -> str | None:
         "g:shipping_price": ["g:shipping", "shipping_price", "shipping_cost"],
         "description": ["desc", "desclong"],
         "g:image_link": ["image", "img", "photo"],
-        "g:brand": ["brand", "vendor", "producent", "producer"],
-        "g:gtin": ["ean", "gtin", "code"],
-        "g:mpn": ["mpn", "partnr"],
+        "g:brand": ["brand", "vendor", "producent", "producer", "attr:Producent", "attr:Brand"],
+        "g:gtin": ["ean", "gtin", "code", "attr:EAN", "attr:GTIN"],
+        "g:mpn": ["mpn", "partnr", "attr:Kod_producenta", "attr:MPN"],
     }
 
     for alt in alternatives.get(source, []):

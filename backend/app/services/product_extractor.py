@@ -25,6 +25,7 @@ def _element_to_dict(el: etree._Element) -> dict | str:
 
     * Attributes get ``@`` prefix.
     * Child elements are added recursively.
+    * Repeated sibling children with the same tag become a list.
     * If an element has no children and no attributes it is returned as its text value.
     """
     children = list(el)
@@ -35,23 +36,65 @@ def _element_to_dict(el: etree._Element) -> dict | str:
 
     result: dict = {}
 
-    # Attributes with @ prefix
     for attr_name, attr_value in attribs.items():
         result[f"@{attr_name}"] = attr_value
 
-    # Child elements
     for child in children:
         key = _local_tag(child)
         value = _element_to_dict(child)
-        result[key] = value
+        if key in result:
+            existing = result[key]
+            if isinstance(existing, list):
+                existing.append(value)
+            else:
+                result[key] = [existing, value]
+        else:
+            result[key] = value
 
-    # If dict has no text-bearing children and the element itself has meaningful
-    # text, store it (rare for record-level elements, but handle gracefully).
     text = (el.text or "").strip()
     if text and not children:
         result["#text"] = text
 
     return result
+
+
+def _flatten_named_attrs(value: dict) -> None:
+    """Mutate *value* in place: promote Ceneo-style ``<attrs><a name="X">v</a></attrs>``
+    to top-level keys ``attr:X`` = ``v`` so they show up as first-class fields.
+
+    Also removes the nested ``attrs`` structure once flattened.
+    """
+    if not isinstance(value, dict):
+        return
+    attrs = value.get("attrs")
+    if not isinstance(attrs, dict):
+        return
+    a_items = attrs.get("a")
+    if a_items is None:
+        return
+    if isinstance(a_items, dict):
+        a_items = [a_items]
+    if not isinstance(a_items, list):
+        return
+    for item in a_items:
+        if not isinstance(item, dict):
+            continue
+        name = item.get("@name")
+        if not name:
+            continue
+        text = item.get("#text")
+        if text is None:
+            text = ""
+            for k, v in item.items():
+                if k.startswith("@") or k == "#text":
+                    continue
+                if isinstance(v, str):
+                    text = v
+                    break
+        key = f"attr:{name}"
+        if key not in value:
+            value[key] = text
+    value.pop("attrs", None)
 
 
 def _find_record_elements(
@@ -129,6 +172,7 @@ def extract_products(
         # value should always be a dict for record-level elements
         if isinstance(value, str):
             value = {"#text": value}
+        _flatten_named_attrs(value)
         products.append({"product_name": name, "product_value": value})
 
     return products
