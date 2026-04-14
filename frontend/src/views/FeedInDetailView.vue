@@ -7,6 +7,7 @@ import XmlTree from '../components/XmlTree.vue'
 import ProductPreview from '../components/ProductPreview.vue'
 import FeedChangelog from '../components/FeedChangelog.vue'
 import EanReportCard from '../components/EanReportCard.vue'
+import CompetitorPricesCard from '../components/CompetitorPricesCard.vue'
 import ManualProductForm from '../components/ManualProductForm.vue'
 import api from '../api/client'
 import { useToast, getApiError, undoableDelete } from '../composables/useToast'
@@ -408,6 +409,9 @@ async function refetchXml() {
 
         <!-- EAN coverage report -->
         <EanReportCard :feed-id="feedId" />
+
+        <!-- Competitor prices on Ceneo (Pro feature) -->
+        <CompetitorPricesCard :feed-id="feedId" />
 
         <!-- Changelog section -->
         <section class="bg-white border border-gray-200 rounded-2xl p-6">
