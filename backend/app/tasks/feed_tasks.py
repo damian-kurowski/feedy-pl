@@ -128,7 +128,7 @@ def fetch_and_parse_sync(session: Session, feed_in_id: int) -> None:
                     session,
                     user_id=feed.user_id,
                     type="alert",
-                    title=f"Spadek liczby produktów w „{feed.name}"",
+                    title=f"Spadek liczby produktów w „{feed.name}”",
                     body=f"Liczba produktów spadła z {old_count} do {new_count} (-{drop_pct}%). Sprawdź czy XML źródłowy jest poprawny.",
                     link=f"/feeds-in/{feed.id}",
                 )
@@ -155,7 +155,7 @@ def fetch_and_parse_sync(session: Session, feed_in_id: int) -> None:
                 session,
                 user_id=feed.user_id,
                 type="alert",
-                title=f"Błąd pobierania feedu „{feed.name}"",
+                title=f"Błąd pobierania feedu „{feed.name}”",
                 body=str(e)[:300],
                 link=f"/feeds-in/{feed.id}",
             )
