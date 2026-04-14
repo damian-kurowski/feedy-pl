@@ -29,8 +29,15 @@ class FeedIn(Base):
     )
     refresh_interval: Mapped[int | None] = mapped_column(
         Integer, nullable=True, default=None
-    )  # in minutes: 60, 360, 1440 (1h, 6h, 24h)
+    )  # in minutes: 60, 360, 1440 (1h, 6h, 24h) — legacy preset
     fetch_error: Mapped[str | None] = mapped_column(String(1024), nullable=True)
+    # Cron-style schedule. Stored as comma-separated hours (0-23).
+    # Example: "6,18" = run at 06:00 and 18:00. Empty/null = use refresh_interval.
+    refresh_hours: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    # Comma-separated weekdays (0=Mon ... 6=Sun). Empty/null = all days.
+    refresh_weekdays: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    # Webhook fired after each successful fetch. Pro feature.
+    webhook_url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
 
     user: Mapped["User"] = relationship("User", back_populates="feeds_in")
     xml_elements: Mapped[list["XmlElementIn"]] = relationship(

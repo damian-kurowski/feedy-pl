@@ -15,6 +15,38 @@ router = APIRouter(tags=["images"])
 
 ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp"}
 MAX_SIZE_BYTES = 5 * 1024 * 1024  # 5MB
+OPTIMIZE_THRESHOLD = 300 * 1024   # optimize if > 300KB
+MAX_DIMENSION = 1200              # resize max edge to 1200px
+
+
+def _optimize_image(file_bytes: bytes, content_type: str) -> tuple[bytes, str, str]:
+    """Optimize an image: resize + convert to WebP if larger than threshold.
+
+    Returns (new_bytes, new_content_type, new_extension).
+    Falls back to original on any error.
+    """
+    if len(file_bytes) <= OPTIMIZE_THRESHOLD:
+        return file_bytes, content_type, ""
+    try:
+        from io import BytesIO
+        from PIL import Image
+        img = Image.open(BytesIO(file_bytes))
+        img.load()
+        # Resize if needed (keep aspect ratio)
+        w, h = img.size
+        if max(w, h) > MAX_DIMENSION:
+            img.thumbnail((MAX_DIMENSION, MAX_DIMENSION), Image.Resampling.LANCZOS)
+        # Convert to RGB if it has alpha and we want JPEG; for WebP keep alpha
+        if img.mode in ("RGBA", "LA", "P"):
+            img = img.convert("RGBA") if img.mode != "P" else img.convert("RGBA")
+        out = BytesIO()
+        img.save(out, format="WEBP", quality=82, method=6)
+        new_bytes = out.getvalue()
+        if len(new_bytes) >= len(file_bytes):
+            return file_bytes, content_type, ""
+        return new_bytes, "image/webp", ".webp"
+    except Exception:
+        return file_bytes, content_type, ""
 
 
 @router.post("/api/images/upload")
@@ -37,16 +69,24 @@ async def upload_image(
             detail=f"Plik za duzy. Maksymalny rozmiar: 5MB",
         )
 
+    original_size = len(file_bytes)
+    optimized_bytes, optimized_type, new_ext = _optimize_image(file_bytes, file.content_type)
+    optimized_filename = file.filename or "image.jpg"
+    if new_ext:
+        # Replace extension
+        base = optimized_filename.rsplit(".", 1)[0] if "." in optimized_filename else optimized_filename
+        optimized_filename = f"{base}{new_ext}"
+
     storage = get_storage()
-    stored_path = storage.save(file_bytes, current_user.id, file.filename or "image.jpg", file.content_type)
+    stored_path = storage.save(optimized_bytes, current_user.id, optimized_filename, optimized_type)
     url = storage.get_url(stored_path)
 
     image = UploadedImage(
         user_id=current_user.id,
         original_filename=file.filename or "image.jpg",
         stored_path=stored_path,
-        file_size=len(file_bytes),
-        content_type=file.content_type,
+        file_size=len(optimized_bytes),
+        content_type=optimized_type,
     )
     db.add(image)
     await db.commit()
@@ -57,7 +97,14 @@ async def upload_image(
     host = request.headers.get("host", request.url.hostname)
     full_url = f"{scheme}://{host}{url}"
 
-    return {"id": image.id, "url": full_url, "filename": image.original_filename}
+    return {
+        "id": image.id,
+        "url": full_url,
+        "filename": image.original_filename,
+        "original_size": original_size,
+        "optimized_size": len(optimized_bytes),
+        "optimized": new_ext != "",
+    }
 
 
 @router.delete("/api/images/{image_id}", status_code=status.HTTP_204_NO_CONTENT)

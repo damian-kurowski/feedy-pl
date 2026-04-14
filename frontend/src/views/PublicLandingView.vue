@@ -74,6 +74,15 @@ function applySeo(p: LandingPage) {
   robots.setAttribute('content', parts.join(','))
 }
 
+async function trackClick() {
+  if (!slug.value) return
+  try {
+    await api.post(`/landing/${slug.value}/click`)
+  } catch {
+    // ignore — click is fire-and-forget
+  }
+}
+
 onMounted(() => loadPage(slug.value))
 watch(slug, (s) => s && loadPage(s))
 </script>
@@ -128,6 +137,7 @@ watch(slug, (s) => s && loadPage(s))
               target="_blank"
               rel="ugc sponsored nofollow noopener"
               class="mt-6 block text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl px-5 py-3 transition-all hover:shadow-lg hover:shadow-indigo-500/20"
+              @click="trackClick"
             >
               {{ page.cta_text || 'Przejdź do oferty!' }}
             </a>

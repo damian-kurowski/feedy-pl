@@ -105,6 +105,19 @@ def fetch_and_parse_sync(session: Session, feed_in_id: int) -> None:
         feed.last_fetched_at = datetime.now(timezone.utc)
         session.commit()
 
+        # Fire user webhook (Pro feature)
+        if feed.webhook_url:
+            try:
+                _fire_webhook(feed.webhook_url, {
+                    "event": "feed.fetched",
+                    "feed_id": feed.id,
+                    "feed_name": feed.name,
+                    "products_count": new_count if 'new_count' in dir() else len(new_products_for_changelog),
+                    "fetched_at": feed.last_fetched_at.isoformat() if feed.last_fetched_at else None,
+                })
+            except Exception:
+                pass
+
         # Detect significant product count drop (-30% or more)
         old_count = len(old_products)
         new_count = len(new_products_for_changelog)
@@ -159,9 +172,85 @@ def _push_notification_sync(session, *, user_id: int, type: str, title: str, bod
     session.commit()
 
 
+def _fire_webhook(url: str, payload: dict) -> None:
+    """Fire-and-forget POST webhook to user-defined URL with HMAC signature.
+
+    Adds X-Feedy-Signature header (HMAC-SHA256 of body using SECRET_KEY)
+    and X-Feedy-Event header.
+    """
+    import hashlib
+    import hmac
+    import json
+    import urllib.request
+
+    from app.config import settings as app_settings
+
+    body = json.dumps(payload, default=str).encode("utf-8")
+    sig = hmac.new(
+        (app_settings.secret_key or "").encode("utf-8"),
+        body,
+        hashlib.sha256,
+    ).hexdigest()
+    req = urllib.request.Request(
+        url,
+        data=body,
+        method="POST",
+        headers={
+            "Content-Type": "application/json",
+            "X-Feedy-Event": payload.get("event", "unknown"),
+            "X-Feedy-Signature": f"sha256={sig}",
+            "User-Agent": "Feedy.pl/1.0 (+https://feedy.pl)",
+        },
+    )
+    try:
+        urllib.request.urlopen(req, timeout=5)
+    except Exception:
+        pass  # webhook is fire-and-forget
+
+
+def _should_refresh_feed(feed: FeedIn, now: datetime) -> bool:
+    """Decide if a feed should be refreshed right now based on its schedule.
+
+    Two modes (mutually exclusive, cron beats interval if set):
+      - Cron mode: refresh_hours = "6,18", refresh_weekdays = "0,1,2,3,4"
+        Refreshes when current hour matches AND last refresh was in a
+        previous hour (or never).
+      - Interval mode: refresh_interval = minutes (60/360/1440)
+    """
+    # Cron mode
+    if feed.refresh_hours:
+        try:
+            allowed_hours = {int(h) for h in feed.refresh_hours.split(",") if h.strip()}
+        except ValueError:
+            allowed_hours = set()
+        if now.hour not in allowed_hours:
+            return False
+        if feed.refresh_weekdays:
+            try:
+                allowed_wd = {int(w) for w in feed.refresh_weekdays.split(",") if w.strip()}
+            except ValueError:
+                allowed_wd = set()
+            if allowed_wd and now.weekday() not in allowed_wd:
+                return False
+        # Avoid double-fire within same hour
+        if feed.last_fetched_at is None:
+            return True
+        last = feed.last_fetched_at
+        return last.hour != now.hour or last.date() != now.date()
+
+    # Interval mode
+    if feed.refresh_interval:
+        if feed.last_fetched_at is None:
+            return True
+        next_refresh = feed.last_fetched_at + timedelta(minutes=feed.refresh_interval)
+        return now >= next_refresh
+
+    return False
+
+
 @celery.task(name="feedy.refresh_due_feeds")
 def refresh_due_feeds_task() -> dict:
-    """Check all feeds with refresh_interval and re-fetch if due."""
+    """Check all feeds with refresh_interval/refresh_hours and re-fetch if due."""
     engine = create_engine(settings.database_url_sync)
     SessionLocal = sessionmaker(bind=engine)
     session = SessionLocal()
@@ -170,25 +259,18 @@ def refresh_due_feeds_task() -> dict:
         feeds = session.execute(
             select(FeedIn).where(
                 FeedIn.active == True,  # noqa: E712
-                FeedIn.refresh_interval.isnot(None),
                 FeedIn.record_path.isnot(None),
             )
         ).scalars().all()
 
         refreshed = []
         for feed in feeds:
-            if feed.last_fetched_at is None:
-                needs_refresh = True
-            else:
-                next_refresh = feed.last_fetched_at + timedelta(minutes=feed.refresh_interval)
-                needs_refresh = now >= next_refresh
-
-            if needs_refresh:
+            if _should_refresh_feed(feed, now):
                 try:
                     fetch_and_parse_sync(session, feed.id)
                     refreshed.append(feed.id)
                 except Exception:
-                    pass  # fetch_and_parse_sync already sets status to "error"
+                    pass
 
         return {"refreshed": refreshed, "checked": len(feeds)}
     finally:

@@ -25,6 +25,9 @@ const selectedPath = ref<string>()
 const recordPath = ref('')
 const productName = ref('')
 const refreshInterval = ref<string>('')
+const refreshHours = ref<string>('')
+const refreshWeekdays = ref<string>('')
+const webhookUrl = ref<string>('')
 const saving = ref(false)
 const fetching = ref(false)
 const showAddProduct = ref(false)
@@ -48,6 +51,9 @@ onMounted(async () => {
     recordPath.value = feed.value.record_path || ''
     productName.value = feed.value.product_name || ''
     refreshInterval.value = feed.value.refresh_interval?.toString() || ''
+    refreshHours.value = (feed.value as any).refresh_hours || ''
+    refreshWeekdays.value = (feed.value as any).refresh_weekdays || ''
+    webhookUrl.value = (feed.value as any).webhook_url || ''
   }
   await loadData()
 })
@@ -84,7 +90,10 @@ async function saveConfig() {
       record_path: recordPath.value || null,
       product_name: productName.value || null,
       refresh_interval: refreshInterval.value ? parseInt(refreshInterval.value) : null,
-    })
+      refresh_hours: refreshHours.value || null,
+      refresh_weekdays: refreshWeekdays.value || null,
+      webhook_url: webhookUrl.value || null,
+    } as any)
     const pathChanged = (recordPath.value || '') !== prevRecordPath
     const nameChanged = (productName.value || '') !== prevProductName
     if (pathChanged || nameChanged) {
@@ -325,7 +334,8 @@ async function refetchXml() {
               <select
                 id="refresh_interval"
                 v-model="refreshInterval"
-                class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                :disabled="!!refreshHours"
+                class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all disabled:opacity-50"
               >
                 <option value="">Wyłączone</option>
                 <option value="60">Co 1 godzinę</option>
@@ -333,6 +343,33 @@ async function refetchXml() {
                 <option value="1440">Co 24 godziny</option>
               </select>
             </div>
+
+            <details class="text-sm">
+              <summary class="font-medium text-gray-700 cursor-pointer hover:text-indigo-600">Zaawansowany harmonogram (cron)</summary>
+              <div class="mt-3 space-y-3 pl-1">
+                <div>
+                  <label class="block text-xs font-medium text-gray-600 mb-1">Godziny (UTC, oddzielone przecinkami)</label>
+                  <input v-model="refreshHours" type="text" placeholder="np. 6,12,18"
+                    class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/20" />
+                  <p class="text-[11px] text-gray-400 mt-1">Pusto = użyj presetu „Automatyczne odświeżanie" wyżej</p>
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-600 mb-1">Dni tygodnia (0=pon ... 6=ndz)</label>
+                  <input v-model="refreshWeekdays" type="text" placeholder="np. 0,1,2,3,4 (pon-pt)"
+                    class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/20" />
+                </div>
+              </div>
+            </details>
+
+            <details class="text-sm">
+              <summary class="font-medium text-gray-700 cursor-pointer hover:text-indigo-600">Webhook (Pro)</summary>
+              <div class="mt-3 space-y-2 pl-1">
+                <label class="block text-xs font-medium text-gray-600 mb-1">URL webhooka</label>
+                <input v-model="webhookUrl" type="url" placeholder="https://twojaapi.pl/feedy-webhook"
+                  class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/20" />
+                <p class="text-[11px] text-gray-400">Po każdym udanym pobraniu wysłamy POST z nagłówkiem <code class="font-mono">X-Feedy-Signature</code> (HMAC-SHA256). Slack/Make/Zapier compatible.</p>
+              </div>
+            </details>
 
             <button
               :disabled="saving"

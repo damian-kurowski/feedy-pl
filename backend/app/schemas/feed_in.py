@@ -16,6 +16,9 @@ class FeedInUpdate(BaseModel):
     product_name: Optional[str] = None
     active: Optional[bool] = None
     refresh_interval: Optional[int] = None  # minutes: 60, 360, 1440 or null
+    refresh_hours: Optional[str] = None     # cron: "6,18" = run at 06:00 and 18:00
+    refresh_weekdays: Optional[str] = None  # cron: "0,1,2,3,4" = Mon-Fri
+    webhook_url: Optional[str] = None       # POST after each successful fetch
 
 
 class FeedInResponse(BaseModel):
@@ -29,6 +32,9 @@ class FeedInResponse(BaseModel):
     fetch_error: Optional[str] = None
     last_fetched_at: Optional[datetime] = None
     refresh_interval: Optional[int] = None
+    refresh_hours: Optional[str] = None
+    refresh_weekdays: Optional[str] = None
+    webhook_url: Optional[str] = None
     product_count: int = 0
     created_at: datetime
 

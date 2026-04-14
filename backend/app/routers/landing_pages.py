@@ -116,6 +116,8 @@ class LandingPageResponse(BaseModel):
     is_published: bool
     published_at: datetime | None
     scheduled_at: datetime | None
+    click_count: int = 0
+    view_count: int = 0
     created_at: datetime
     updated_at: datetime
 
@@ -247,4 +249,17 @@ async def get_public_page(slug: str, db: AsyncSession = Depends(get_db)):
     page = result.scalar_one_or_none()
     if not page or not page.is_published:
         raise HTTPException(status_code=404, detail="Landing page not found")
+    page.view_count = (page.view_count or 0) + 1
+    await db.commit()
     return page
+
+
+@router.post("/landing/{slug:path}/click", status_code=204)
+async def track_click(slug: str, db: AsyncSession = Depends(get_db)):
+    """Increment CTA click counter for a landing page (public endpoint)."""
+    result = await db.execute(select(LandingPage).where(LandingPage.slug == slug))
+    page = result.scalar_one_or_none()
+    if not page or not page.is_published:
+        raise HTTPException(status_code=404, detail="Not found")
+    page.click_count = (page.click_count or 0) + 1
+    await db.commit()

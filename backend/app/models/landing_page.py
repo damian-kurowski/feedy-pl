@@ -43,3 +43,5 @@ class LandingPage(Base):
     is_published: Mapped[bool] = mapped_column(Boolean, server_default="false", default=False)
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     scheduled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    click_count: Mapped[int] = mapped_column(Integer, server_default="0", default=0, nullable=False)
+    view_count: Mapped[int] = mapped_column(Integer, server_default="0", default=0, nullable=False)
