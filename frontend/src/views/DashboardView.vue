@@ -150,7 +150,7 @@ function qualityScoreColor(score: number): string {
 
 <template>
   <OnboardingWizard v-if="showOnboarding" :show="showOnboarding" @close="closeOnboarding" />
-  <div class="max-w-5xl mx-auto px-4 py-10">
+  <div class="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-10">
 
     <!-- Billing notification -->
     <Transition enter-active-class="transition duration-300 ease-out" enter-from-class="opacity-0 -translate-y-2" enter-to-class="opacity-100 translate-y-0" leave-active-class="transition duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0">

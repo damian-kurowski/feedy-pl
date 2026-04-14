@@ -153,7 +153,7 @@ async function refetchXml() {
 </script>
 
 <template>
-  <div class="max-w-5xl mx-auto px-4 py-8">
+  <div class="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
     <!-- Header -->
     <div v-if="feed" class="mb-8">
       <router-link to="/dashboard" class="text-xs text-gray-400 hover:text-indigo-600 transition-colors mb-3 inline-flex items-center gap-1">

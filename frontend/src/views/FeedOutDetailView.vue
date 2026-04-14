@@ -355,7 +355,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="max-w-5xl mx-auto py-10 px-4">
+  <div class="max-w-5xl mx-auto py-6 sm:py-10 px-3 sm:px-4">
     <div v-if="!feedOut" class="text-gray-500">Ładowanie...</div>
 
     <template v-else>
@@ -374,11 +374,11 @@ onMounted(async () => {
       </div>
 
       <!-- Feed URL — always visible at top -->
-      <div class="mb-8 p-5 bg-gradient-to-r from-indigo-50 to-white rounded-2xl border border-indigo-100 flex items-center gap-4">
+      <div class="mb-8 p-4 sm:p-5 bg-gradient-to-r from-indigo-50 to-white rounded-2xl border border-indigo-100 flex flex-wrap items-center gap-3 sm:gap-4">
         <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center shrink-0">
           <svg class="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-2.54a4.5 4.5 0 00-1.242-7.244l-4.5-4.5a4.5 4.5 0 00-6.364 6.364L4.343 8.05" /></svg>
         </div>
-        <code class="flex-1 text-sm text-gray-700 break-all truncate">{{ feedUrl }}</code>
+        <code class="flex-1 min-w-0 basis-full sm:basis-auto text-xs sm:text-sm text-gray-700 break-all">{{ feedUrl }}</code>
         <button
           type="button"
           class="shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"

@@ -90,25 +90,27 @@ function handleSave() {
           class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500" />
       </div>
 
-      <div v-for="(field, idx) in fields" :key="idx" class="flex items-stretch gap-2">
+      <div v-for="(field, idx) in fields" :key="idx" class="flex flex-wrap sm:flex-nowrap items-stretch gap-2 bg-gray-50 sm:bg-transparent rounded-lg p-2 sm:p-0">
         <div class="flex flex-col gap-0.5 shrink-0 justify-center">
           <button type="button" @click="moveField(idx, -1)" :disabled="idx === 0"
-            class="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-indigo-600 disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
+            class="w-6 h-6 sm:w-5 sm:h-5 flex items-center justify-center text-gray-400 hover:text-indigo-600 disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
             title="Przesuń w górę">
-            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+            <svg class="w-3.5 h-3.5 sm:w-3 sm:h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
           </button>
           <button type="button" @click="moveField(idx, 1)" :disabled="idx === fields.length - 1"
-            class="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-indigo-600 disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
+            class="w-6 h-6 sm:w-5 sm:h-5 flex items-center justify-center text-gray-400 hover:text-indigo-600 disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
             title="Przesuń w dół">
-            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            <svg class="w-3.5 h-3.5 sm:w-3 sm:h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
           </button>
         </div>
         <input v-model="field.key" type="text" placeholder="Pole (np. price)"
-          class="w-1/3 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20" />
-        <input v-model="field.value" type="text" :placeholder="field.key === 'price' ? 'np. 49.99' : field.key === 'url' ? 'https://...' : ''"
-          class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20" />
+          class="flex-1 sm:flex-none sm:w-1/3 px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20" />
         <button type="button" @click="removeField(idx)"
-          class="text-red-400 hover:text-red-600 text-xs cursor-pointer px-2" title="Usuń pole">×</button>
+          class="sm:hidden text-red-400 hover:text-red-600 text-base cursor-pointer px-2" title="Usuń pole">×</button>
+        <input v-model="field.value" type="text" :placeholder="field.key === 'price' ? 'np. 49.99' : field.key === 'url' ? 'https://...' : ''"
+          class="w-full sm:flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20" />
+        <button type="button" @click="removeField(idx)"
+          class="hidden sm:block text-red-400 hover:text-red-600 text-xs cursor-pointer px-2" title="Usuń pole">×</button>
       </div>
 
       <button type="button" @click="addField" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer">+ Dodaj własne pole</button>
