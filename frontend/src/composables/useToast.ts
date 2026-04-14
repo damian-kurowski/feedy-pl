@@ -59,3 +59,53 @@ export function getApiError(e: any, fallback = 'Coś poszło nie tak. Spróbuj p
   if (Array.isArray(detail)) return detail.map((d: any) => d?.msg || String(d)).join(' · ')
   return e?.message || fallback
 }
+
+/**
+ * Optimistic delete with undo toast. Removes the item from local state
+ * immediately, shows a toast with a "Cofnij" button, and delays the actual
+ * API call by `delayMs` milliseconds. If the user clicks Cofnij, the item is
+ * restored locally and the API call is cancelled.
+ */
+export function undoableDelete(opts: {
+  /** Human-friendly message shown in the toast. */
+  message: string
+  /** Optimistically remove the item from the UI (returns nothing). */
+  localRemove: () => void
+  /** Restore the item to the UI when the user clicks Cofnij. */
+  localRestore: () => void
+  /** Actually delete the item on the server. */
+  commit: () => Promise<void>
+  /** Show error message and restore on failure. */
+  errorMessage?: string
+  /** Delay before commit. Default 5000. */
+  delayMs?: number
+}) {
+  const { message, localRemove, localRestore, commit, errorMessage, delayMs } = opts
+  const t = useToast()
+  let undone = false
+
+  localRemove()
+
+  const toastId = t.success(message, {
+    duration: delayMs ?? 5000,
+    action: {
+      label: 'Cofnij',
+      handler: () => {
+        undone = true
+        localRestore()
+        t.info('Operacja cofnięta')
+      },
+    },
+  })
+
+  setTimeout(async () => {
+    if (undone) return
+    try {
+      await commit()
+    } catch (e) {
+      localRestore()
+      t.error(errorMessage || getApiError(e, 'Nie udało się usunąć'))
+    }
+    t.dismiss(toastId)
+  }, delayMs ?? 5000)
+}

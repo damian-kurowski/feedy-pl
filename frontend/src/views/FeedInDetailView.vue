@@ -8,7 +8,7 @@ import ProductPreview from '../components/ProductPreview.vue'
 import FeedChangelog from '../components/FeedChangelog.vue'
 import ManualProductForm from '../components/ManualProductForm.vue'
 import api from '../api/client'
-import { useToast, getApiError } from '../composables/useToast'
+import { useToast, getApiError, undoableDelete } from '../composables/useToast'
 
 const toast = useToast()
 
@@ -117,14 +117,16 @@ function startEditProduct(product: Product) {
 }
 
 async function deleteProduct(id: number) {
-  if (!confirm('Na pewno usunąć ten produkt?')) return
-  try {
-    await api.delete(`/feeds-in/${feedId.value}/products/${id}`)
-    await loadData()
-    toast.success('Produkt usunięty')
-  } catch (e) {
-    toast.error(getApiError(e, 'Nie udało się usunąć produktu'))
-  }
+  const idx = products.value.findIndex((p) => p.id === id)
+  if (idx === -1) return
+  const snapshot = products.value[idx]
+  undoableDelete({
+    message: `Usunięto „${snapshot.product_name}"`,
+    localRemove: () => { products.value.splice(idx, 1) },
+    localRestore: () => { products.value.splice(idx, 0, snapshot) },
+    commit: () => api.delete(`/feeds-in/${feedId.value}/products/${id}`).then(() => undefined),
+    errorMessage: 'Nie udało się usunąć produktu',
+  })
 }
 
 function cancelProductForm() {

@@ -52,12 +52,12 @@ function copyToClipboard(value: string) {
 
 <template>
   <Teleport to="body">
-    <div v-if="show && product" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60" @click.self="emit('close')">
+    <div v-if="show && product" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60" role="dialog" aria-modal="true" aria-labelledby="override-modal-title" @click.self="emit('close')" @keydown.esc="emit('close')" tabindex="-1">
       <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[85vh] flex flex-col">
         <div class="p-4 border-b flex items-center gap-3">
           <img v-if="mainImage" :src="mainImage" class="w-10 h-10 object-cover rounded border" />
           <div class="min-w-0 flex-1">
-            <h3 class="font-semibold text-gray-900 truncate">{{ product.product_name }}</h3>
+            <h3 id="override-modal-title" class="font-semibold text-gray-900 truncate">{{ product.product_name }}</h3>
             <span class="text-xs" :class="product.status === 'modified' ? 'text-yellow-600' : product.status === 'excluded' ? 'text-red-600' : 'text-gray-400'">
               {{ product.status === 'modified' ? 'Zmieniony' : product.status === 'excluded' ? 'Wykluczony' : 'Oryginał' }}
             </span>

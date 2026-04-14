@@ -7,7 +7,7 @@ import { useFeedsOutStore, type FeedOut } from '../stores/feedsOut'
 import OnboardingWizard from '../components/OnboardingWizard.vue'
 import SmartDashboard from '../components/SmartDashboard.vue'
 import api from '../api/client'
-import { useToast, getApiError } from '../composables/useToast'
+import { useToast, getApiError, undoableDelete } from '../composables/useToast'
 
 const toast = useToast()
 
@@ -69,6 +69,11 @@ async function openPortal() {
   }
 }
 
+function startOnboarding() {
+  showOnboarding.value = true
+  localStorage.removeItem('onboarding_done')
+}
+
 function statusColor(status: string) {
   switch (status) {
     case 'fetching': return 'bg-yellow-100 text-yellow-700'
@@ -95,13 +100,29 @@ async function copyToClipboard(text: string) {
 }
 
 async function handleDelete(id: number) {
-  if (!confirm('Czy na pewno chcesz usunąć ten feed?')) return
-  await store.deleteFeed(id)
+  const idx = store.feeds.findIndex((f) => f.id === id)
+  if (idx === -1) return
+  const snapshot = store.feeds[idx]
+  undoableDelete({
+    message: `Usunięto feed „${snapshot.name}"`,
+    localRemove: () => { store.feeds.splice(idx, 1) },
+    localRestore: () => { store.feeds.splice(idx, 0, snapshot) },
+    commit: () => store.deleteFeed(id),
+    errorMessage: 'Nie udało się usunąć feedu',
+  })
 }
 
 async function handleDeleteOut(id: number) {
-  if (!confirm('Czy na pewno chcesz usunąć ten feed wyjściowy?')) return
-  await feedsOutStore.deleteFeed(id)
+  const idx = feedsOutStore.feeds.findIndex((f) => f.id === id)
+  if (idx === -1) return
+  const snapshot = feedsOutStore.feeds[idx]
+  undoableDelete({
+    message: `Usunięto feed wyjściowy „${snapshot.name}"`,
+    localRemove: () => { feedsOutStore.feeds.splice(idx, 1) },
+    localRestore: () => { feedsOutStore.feeds.splice(idx, 0, snapshot) },
+    commit: () => feedsOutStore.deleteFeed(id),
+    errorMessage: 'Nie udało się usunąć feedu wyjściowego',
+  })
 }
 
 async function toggleActive(feedOut: FeedOut) {
@@ -166,18 +187,51 @@ function qualityScoreColor(score: number): string {
     </Transition>
 
     <!-- Page header -->
-    <div class="flex items-center justify-between mb-8">
+    <div class="flex items-center justify-between mb-8 flex-wrap gap-3">
       <div>
         <h1 class="font-heading text-2xl font-bold text-gray-900">Dashboard</h1>
         <p class="text-sm text-gray-400 mt-1">Przegląd Twoich feedów produktowych</p>
       </div>
-      <router-link
-        to="/feeds-in/new"
-        class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/25 cursor-pointer active:scale-[0.98]"
-      >
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-        Dodaj feed
-      </router-link>
+      <div class="flex items-center gap-2 flex-wrap">
+        <button
+          type="button"
+          class="text-xs font-medium text-gray-500 hover:text-indigo-600 border border-gray-200 hover:border-indigo-300 rounded-xl px-3 py-2 transition cursor-pointer"
+          title="Pokaż samouczek"
+          @click="startOnboarding"
+        >
+          ? Samouczek
+        </button>
+        <router-link
+          to="/feeds-in/new"
+          class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl px-5 py-2.5 transition-all hover:shadow-lg hover:shadow-indigo-500/25 cursor-pointer active:scale-[0.98]"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+          Dodaj feed
+        </router-link>
+      </div>
+    </div>
+
+    <!-- First-time hero CTA when no feeds exist -->
+    <div v-if="store.feeds.length === 0 && !analytics" class="mb-8 p-6 sm:p-8 bg-gradient-to-br from-indigo-600 to-indigo-800 text-white rounded-3xl shadow-xl shadow-indigo-200">
+      <div class="grid sm:grid-cols-3 gap-6 items-center">
+        <div class="sm:col-span-2">
+          <p class="text-xs font-bold uppercase tracking-wider text-indigo-200 mb-2">Pierwsze kroki</p>
+          <h2 class="font-heading text-2xl font-extrabold mb-2">Dodaj swój pierwszy feed w 5 minut</h2>
+          <p class="text-sm text-indigo-100 mb-5 max-w-md">Skopiuj URL XML ze sklepu, wybierz porównywarkę, dostajesz gotowy feed pod stałym linkiem. Bez programowania.</p>
+          <div class="flex gap-2 flex-wrap">
+            <router-link to="/feeds-in/new" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl bg-white text-indigo-700 hover:bg-indigo-50 transition shadow">
+              Dodaj pierwszy feed
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+            </router-link>
+            <button type="button" class="text-sm text-indigo-100 hover:text-white border border-white/20 hover:bg-white/10 rounded-xl px-4 py-2.5 transition cursor-pointer" @click="startOnboarding">
+              Pokaż samouczek
+            </button>
+          </div>
+        </div>
+        <div class="hidden sm:block text-center">
+          <div class="text-6xl">📦</div>
+        </div>
+      </div>
     </div>
 
     <!-- Analytics Cards -->

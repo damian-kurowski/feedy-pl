@@ -111,7 +111,7 @@ watch(slug, (s) => s && loadPage(s))
             </button>
           </div>
 
-          <div v-if="page.full_description" class="mt-8 prose prose-gray max-w-none" v-html="page.full_description"></div>
+          <div v-if="page.full_description" class="mt-8 blog-prose" v-html="page.full_description"></div>
         </div>
 
         <!-- Side card -->

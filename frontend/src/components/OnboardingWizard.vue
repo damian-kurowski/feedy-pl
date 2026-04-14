@@ -29,7 +29,7 @@ function finish() {
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" @click.self="emit('close')">
+      <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" role="dialog" aria-modal="true" aria-label="Samouczek Feedy" @click.self="emit('close')" @keydown.esc="emit('close')" tabindex="-1">
         <Transition name="slide" mode="out-in">
           <div :key="currentStep" class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 p-8 relative">
             <!-- Progress dots -->

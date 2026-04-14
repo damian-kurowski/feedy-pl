@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import api from '../api/client'
-import { useToast, getApiError } from '../composables/useToast'
+import { useToast, getApiError, undoableDelete } from '../composables/useToast'
 import SkeletonCard from '../components/SkeletonCard.vue'
 
 const toast = useToast()
@@ -139,14 +139,16 @@ async function savePage() {
 }
 
 async function deletePage(id: number) {
-  if (!confirm('Usunąć stronę oferty na stałe?')) return
-  try {
-    await api.delete(`/landing-pages/${id}`)
-    await load()
-    toast.success('Strona oferty usunięta')
-  } catch (e) {
-    toast.error(getApiError(e, 'Nie udało się usunąć strony'))
-  }
+  const idx = pages.value.findIndex((p) => p.id === id)
+  if (idx === -1) return
+  const snapshot = pages.value[idx]
+  undoableDelete({
+    message: `Usunięto „${snapshot.title}"`,
+    localRemove: () => { pages.value.splice(idx, 1) },
+    localRestore: () => { pages.value.splice(idx, 0, snapshot) },
+    commit: () => api.delete(`/landing-pages/${id}`).then(() => undefined),
+    errorMessage: 'Nie udało się usunąć strony',
+  })
 }
 </script>
 
