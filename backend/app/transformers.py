@@ -19,7 +19,13 @@ def format_price(value: str | None) -> str | None:
     if value == "":
         return ""
     stripped = strip_currency(value)
-    return f"{float(stripped):.2f}"
+    if stripped is None:
+        return None
+    normalized = stripped.strip().replace(" ", "").replace("\u00a0", "").replace(",", ".")
+    try:
+        return f"{float(normalized):.2f}"
+    except (ValueError, TypeError):
+        return stripped
 
 
 def map_availability(value: str | None) -> str:
