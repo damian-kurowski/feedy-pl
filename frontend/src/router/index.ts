@@ -125,6 +125,17 @@ const router = createRouter({
       component: () => import('../views/admin/AdminBlogView.vue'),
     },
     {
+      path: '/oferty',
+      name: 'landing-pages',
+      component: () => import('../views/LandingPagesView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/p/:pathMatch(.*)*',
+      name: 'public-landing',
+      component: () => import('../views/PublicLandingView.vue'),
+    },
+    {
       path: '/polityka-prywatnosci',
       name: 'privacy-policy',
       component: () => import('../views/PrivacyPolicyView.vue'),

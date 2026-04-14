@@ -33,6 +33,7 @@ function handleLogout() {
           <div class="flex items-center gap-3 sm:gap-7 min-w-0">
             <router-link to="/dashboard" class="font-heading text-lg font-extrabold tracking-tight text-indigo-600 shrink-0">Feedy</router-link>
             <router-link to="/dashboard" class="text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors">Dashboard</router-link>
+            <router-link to="/oferty" class="text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors hidden sm:inline">Oferty</router-link>
           </div>
           <div class="flex items-center gap-2 sm:gap-4 shrink-0">
             <span class="hidden md:inline text-[13px] text-gray-400 truncate max-w-[180px]">{{ auth.user?.email }}</span>
