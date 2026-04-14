@@ -91,7 +91,9 @@ async function saveConfig() {
   }
 }
 
+const productFormError = ref('')
 async function addManualProduct(name: string, value: Record<string, string>) {
+  productFormError.value = ''
   try {
     if (editingProduct.value) {
       await api.put(`/feeds-in/${feedId.value}/products/${editingProduct.value.id}`, { product_name: name, product_value: value })
@@ -101,7 +103,9 @@ async function addManualProduct(name: string, value: Record<string, string>) {
     }
     showAddProduct.value = false
     await loadData()
-  } catch {}
+  } catch (e: any) {
+    productFormError.value = e?.response?.data?.detail || e?.message || 'Błąd zapisu produktu'
+  }
 }
 
 function startEditProduct(product: Product) {
@@ -338,6 +342,7 @@ async function refetchXml() {
           <ManualProductForm
             v-if="showAddProduct"
             :initial="editingProduct ? { name: editingProduct.product_name, value: editingProduct.product_value } : null"
+            :error="productFormError"
             class="mb-4"
             @save="addManualProduct"
             @cancel="cancelProductForm"
