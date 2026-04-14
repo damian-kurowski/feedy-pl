@@ -62,8 +62,9 @@ function handleImgError(e: Event) {
 
 <template>
   <div>
-    <div v-if="products.length === 0" class="text-gray-500 text-sm py-4">
-      Brak produktow do wyswietlenia.
+    <div v-if="products.length === 0" class="text-center py-10 border border-dashed border-gray-200 rounded-xl bg-gray-50">
+      <p class="text-sm text-gray-500 mb-2">Brak produktów do wyświetlenia.</p>
+      <p class="text-xs text-gray-400">Pobierz XML z linku źródłowego albo dodaj produkt ręcznie ↑</p>
     </div>
     <div v-for="product in products" :key="product.id" class="border border-gray-200 rounded-md mb-2">
       <button

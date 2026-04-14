@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -11,6 +11,22 @@ const password = ref('')
 const error = ref('')
 const loading = ref(false)
 const consent = ref(false)
+
+// Password strength: 0-4
+const passwordStrength = computed(() => {
+  const p = password.value
+  if (!p) return 0
+  let score = 0
+  if (p.length >= 8) score++
+  if (p.length >= 12) score++
+  if (/[A-Z]/.test(p) && /[a-z]/.test(p)) score++
+  if (/\d/.test(p)) score++
+  if (/[^a-zA-Z0-9]/.test(p)) score++
+  return Math.min(score, 4)
+})
+const strengthLabel = computed(() => ['Bardzo słabe', 'Słabe', 'Średnie', 'Mocne', 'Bardzo mocne'][passwordStrength.value])
+const strengthColor = computed(() => ['bg-red-400', 'bg-orange-400', 'bg-amber-400', 'bg-lime-500', 'bg-green-500'][passwordStrength.value])
+const strengthTextColor = computed(() => ['text-red-600', 'text-orange-600', 'text-amber-600', 'text-lime-600', 'text-green-600'][passwordStrength.value])
 
 async function handleSubmit() {
   error.value = ''
@@ -38,7 +54,7 @@ async function handleSubmit() {
     <div class="w-full max-w-sm">
       <div class="text-center mb-8">
         <router-link to="/" class="font-heading text-2xl font-extrabold tracking-tight text-indigo-600">Feedy</router-link>
-        <p class="mt-2 text-sm text-gray-400">Zaloz darmowe konto</p>
+        <p class="mt-2 text-sm text-gray-400">Załóż darmowe konto</p>
       </div>
 
       <div class="bg-white rounded-2xl shadow-sm border border-gray-200/60 p-7">
@@ -56,17 +72,24 @@ async function handleSubmit() {
             />
           </div>
           <div>
-            <label for="password" class="block text-[13px] font-medium text-gray-600 mb-1.5">Haslo (min. 6 znakow)</label>
+            <label for="password" class="block text-[13px] font-medium text-gray-600 mb-1.5">Hasło (min. 8 znaków)</label>
             <input
-              id="password" v-model="password" type="password" required minlength="6"
+              id="password" v-model="password" type="password" required minlength="8"
               class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
             />
+            <div v-if="password" class="mt-2">
+              <div class="flex gap-1 mb-1">
+                <div v-for="i in 4" :key="i" class="h-1 flex-1 rounded-full transition-colors"
+                  :class="i <= passwordStrength ? strengthColor : 'bg-gray-200'"></div>
+              </div>
+              <p class="text-[11px]" :class="strengthTextColor">{{ strengthLabel }}</p>
+            </div>
           </div>
 
           <label class="flex items-start gap-2.5 text-[13px] text-gray-500 pt-1">
             <input v-model="consent" type="checkbox" required class="mt-0.5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500/20" />
-            <span>Akceptuje <router-link to="/regulamin" class="text-indigo-600 hover:underline">regulamin</router-link>
-            oraz <router-link to="/polityka-prywatnosci" class="text-indigo-600 hover:underline">polityke prywatnosci</router-link>.</span>
+            <span>Akceptuję <router-link to="/regulamin" class="text-indigo-600 hover:underline">regulamin</router-link>
+            oraz <router-link to="/polityka-prywatnosci" class="text-indigo-600 hover:underline">politykę prywatności</router-link>.</span>
           </label>
 
           <button
@@ -81,11 +104,11 @@ async function handleSubmit() {
       <div class="mt-6 text-center space-y-2">
         <p class="text-[12px] text-gray-400 flex items-center justify-center gap-1.5">
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
-          Darmowy plan: 100 produktów, 1 feed wyjściowy
+          Darmowy plan: 200 produktów, 1 feed wyjściowy
         </p>
         <p class="text-[13px] text-gray-400">
-          Masz juz konto?
-          <router-link to="/login" class="text-indigo-600 hover:text-indigo-500 font-semibold transition-colors">Zaloguj sie</router-link>
+          Masz już konto?
+          <router-link to="/login" class="text-indigo-600 hover:text-indigo-500 font-semibold transition-colors">Zaloguj się</router-link>
         </p>
       </div>
     </div>

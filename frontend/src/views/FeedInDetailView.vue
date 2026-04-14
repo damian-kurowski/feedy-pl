@@ -8,6 +8,9 @@ import ProductPreview from '../components/ProductPreview.vue'
 import FeedChangelog from '../components/FeedChangelog.vue'
 import ManualProductForm from '../components/ManualProductForm.vue'
 import api from '../api/client'
+import { useToast, getApiError } from '../composables/useToast'
+
+const toast = useToast()
 
 const route = useRoute()
 const store = useFeedsInStore()
@@ -118,7 +121,10 @@ async function deleteProduct(id: number) {
   try {
     await api.delete(`/feeds-in/${feedId.value}/products/${id}`)
     await loadData()
-  } catch {}
+    toast.success('Produkt usunięty')
+  } catch (e) {
+    toast.error(getApiError(e, 'Nie udało się usunąć produktu'))
+  }
 }
 
 function cancelProductForm() {
@@ -150,8 +156,9 @@ async function refetchXml() {
         await loadData()
       }
     }, 2000)
-  } catch {
+  } catch (e) {
     fetching.value = false
+    toast.error(getApiError(e, 'Nie udało się pobrać XML'))
   }
 }
 </script>

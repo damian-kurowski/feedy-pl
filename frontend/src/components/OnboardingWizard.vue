@@ -46,7 +46,7 @@ function finish() {
             <div v-if="currentStep === 1" class="text-center">
               <div class="text-4xl mb-4">&#128075;</div>
               <h2 class="text-2xl font-bold text-gray-900 mb-3">Witaj w Feedy!</h2>
-              <p class="text-gray-600 mb-8">Za chwile skonfigurujesz swoj pierwszy feed produktowy.</p>
+              <p class="text-gray-600 mb-8">Za chwilę skonfigurujesz swój pierwszy feed produktowy.</p>
               <button
                 @click="nextStep"
                 class="w-full px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors cursor-pointer"
@@ -68,20 +68,20 @@ function finish() {
                 @click="nextStep"
                 class="w-full px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors mb-3 cursor-pointer"
               >
-                Juz mam link, dalej &rarr;
+                Już mam link, dalej &rarr;
               </button>
               <button
                 @click="showHelperText = !showHelperText"
                 class="w-full text-sm text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer"
               >
-                {{ showHelperText ? 'Ukryj pomoc' : 'Nie mam linka, pokaz jak go znalezc' }}
+                {{ showHelperText ? 'Ukryj pomoc' : 'Nie mam linka, pokaż jak go znaleźć' }}
               </button>
               <Transition name="expand">
                 <div v-if="showHelperText" class="mt-4 p-4 bg-indigo-50 border border-indigo-100 rounded-lg text-sm text-gray-700">
                   <p class="font-semibold text-indigo-800 mb-2">Shoper:</p>
                   <ol class="list-decimal list-inside space-y-1">
-                    <li>Zaloguj sie do panelu Shoper</li>
-                    <li>Przejdz do <span class="font-medium">Integracja</span></li>
+                    <li>Zaloguj się do panelu Shoper</li>
+                    <li>Przejdź do <span class="font-medium">Integracje</span></li>
                     <li>Wybierz <span class="font-medium">Google Product Search</span></li>
                     <li>Skopiuj wygenerowany link XML</li>
                   </ol>
@@ -91,9 +91,9 @@ function finish() {
 
             <!-- Step 3: Choose comparator -->
             <div v-if="currentStep === 3">
-              <h2 class="text-2xl font-bold text-gray-900 mb-3 text-center">Wybierz porownywarke</h2>
+              <h2 class="text-2xl font-bold text-gray-900 mb-3 text-center">Wybierz porównywarkę</h2>
               <p class="text-gray-600 mb-6 text-center">
-                Feedy automatycznie zmapuje pola Twojego XML na format wymagany przez porownywarke.
+                Feedy automatycznie zmapuje pola Twojego XML na format wymagany przez porównywarkę.
               </p>
               <div class="grid grid-cols-3 gap-3">
                 <button
@@ -115,7 +115,7 @@ function finish() {
                   class="flex flex-col items-center p-4 border-2 border-gray-200 rounded-xl hover:border-indigo-500 hover:bg-indigo-50 transition-colors cursor-pointer"
                 >
                   <div class="text-2xl mb-2">&#9881;&#65039;</div>
-                  <span class="font-semibold text-gray-900 text-sm">Custom</span>
+                  <span class="font-semibold text-gray-900 text-sm">Niestandardowy</span>
                 </button>
               </div>
             </div>
@@ -125,13 +125,13 @@ function finish() {
               <div class="text-4xl mb-4">&#127881;</div>
               <h2 class="text-2xl font-bold text-gray-900 mb-3">Gotowe!</h2>
               <p class="text-gray-600 mb-8">
-                Twoj feed bedzie dostepny pod unikalnym linkiem. Wklej go w panelu porownywarki.
+                Twój feed będzie dostępny pod unikalnym linkiem. Wklej go w panelu porównywarki.
               </p>
               <button
                 @click="finish"
                 class="w-full px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors cursor-pointer"
               >
-                Przejdz do panelu
+                Przejdź do panelu
               </button>
             </div>
           </div>

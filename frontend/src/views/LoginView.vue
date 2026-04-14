@@ -30,7 +30,7 @@ async function handleSubmit() {
     <div class="w-full max-w-sm">
       <div class="text-center mb-8">
         <router-link to="/" class="font-heading text-2xl font-extrabold tracking-tight text-indigo-600">Feedy</router-link>
-        <p class="mt-2 text-sm text-gray-400">Zaloguj sie na swoje konto</p>
+        <p class="mt-2 text-sm text-gray-400">Zaloguj się na swoje konto</p>
       </div>
 
       <div class="bg-white rounded-2xl shadow-sm border border-gray-200/60 p-7">
@@ -48,7 +48,7 @@ async function handleSubmit() {
             />
           </div>
           <div>
-            <label for="password" class="block text-[13px] font-medium text-gray-600 mb-1.5">Haslo</label>
+            <label for="password" class="block text-[13px] font-medium text-gray-600 mb-1.5">Hasło</label>
             <input
               id="password" v-model="password" type="password" required
               class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
@@ -58,18 +58,18 @@ async function handleSubmit() {
             type="submit" :disabled="loading"
             class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-semibold rounded-xl transition-all hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
           >
-            {{ loading ? 'Logowanie...' : 'Zaloguj sie' }}
+            {{ loading ? 'Logowanie...' : 'Zaloguj się' }}
           </button>
         </form>
 
         <p class="mt-4 text-center">
-          <router-link to="/forgot-password" class="text-[13px] text-gray-400 hover:text-indigo-600 transition-colors">Nie pamietam hasla</router-link>
+          <router-link to="/forgot-password" class="text-[13px] text-gray-400 hover:text-indigo-600 transition-colors">Nie pamiętam hasła</router-link>
         </p>
       </div>
 
       <p class="mt-6 text-center text-[13px] text-gray-400">
         Nie masz konta?
-        <router-link to="/register" class="text-indigo-600 hover:text-indigo-500 font-semibold transition-colors">Zarejestruj sie</router-link>
+        <router-link to="/register" class="text-indigo-600 hover:text-indigo-500 font-semibold transition-colors">Zarejestruj się</router-link>
       </p>
     </div>
   </div>

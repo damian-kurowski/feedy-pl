@@ -7,6 +7,9 @@ import { useFeedsOutStore, type FeedOut } from '../stores/feedsOut'
 import OnboardingWizard from '../components/OnboardingWizard.vue'
 import SmartDashboard from '../components/SmartDashboard.vue'
 import api from '../api/client'
+import { useToast, getApiError } from '../composables/useToast'
+
+const toast = useToast()
 
 const route = useRoute()
 const auth = useAuthStore()
@@ -30,7 +33,9 @@ onMounted(async () => {
   try {
     const { data } = await api.get('/feeds-in/analytics/summary')
     analytics.value = data
-  } catch {}
+  } catch (e) {
+    toast.error(getApiError(e, 'Nie udało się załadować statystyk'))
+  }
 
   if (route.query.billing === 'success') {
     billingMsg.value = 'Plan został zmieniony pomyślnie!'
@@ -59,8 +64,8 @@ async function openPortal() {
   try {
     const { data } = await api.get('/billing/portal')
     window.open(data.portal_url, '_blank')
-  } catch (e: any) {
-    alert(e.response?.data?.detail || 'Błąd')
+  } catch (e) {
+    toast.error(getApiError(e, 'Nie udało się otworzyć portalu klienta'))
   }
 }
 

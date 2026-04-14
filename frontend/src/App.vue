@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from './stores/auth'
 import CookieConsent from './components/CookieConsent.vue'
+import ToastContainer from './components/ToastContainer.vue'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -85,7 +86,7 @@ function handleLogout() {
               to="/register"
               class="text-[13px] font-semibold px-5 py-2 rounded-lg bg-white text-indigo-700 hover:bg-indigo-50 transition-all shadow-sm"
             >
-              Zarejestruj sie
+              Zarejestruj się
             </router-link>
           </div>
         </div>
@@ -94,5 +95,6 @@ function handleLogout() {
 
     <router-view />
     <CookieConsent />
+    <ToastContainer />
   </div>
 </template>

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import api from '../api/client'
+import { useToast, getApiError } from '../composables/useToast'
+
+const toast = useToast()
 
 const props = defineProps<{
   initial?: { name: string; value: Record<string, unknown> } | null
@@ -71,8 +74,8 @@ async function uploadToField(idx: number, event: Event) {
     formData.append('file', input.files[0])
     const { data } = await api.post('/images/upload', formData)
     if (fields.value[idx]) fields.value[idx].value = data.url
-  } catch {
-    alert('Błąd uploadu zdjęcia')
+  } catch (e) {
+    toast.error(getApiError(e, 'Nie udało się wgrać zdjęcia'))
   } finally {
     uploadingIdx.value = null
     input.value = ''

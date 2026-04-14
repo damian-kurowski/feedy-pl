@@ -53,7 +53,7 @@ async function handleCreateOrg() {
     await loadMembers()
     success.value = 'Organizacja utworzona'
   } catch (e: any) {
-    error.value = e.response?.data?.detail || 'Nie udalo sie utworzyc organizacji'
+    error.value = e.response?.data?.detail || 'Nie udało się utworzyć organizacji'
   }
 }
 
@@ -75,10 +75,10 @@ async function handleInvite() {
     await orgStore.inviteMember(orgStore.currentOrg.id, inviteEmail.value.trim(), inviteRole.value)
     inviteEmail.value = ''
     inviteRole.value = 'member'
-    success.value = 'Zaproszenie wyslane'
+    success.value = 'Zaproszenie wysłane'
     await loadMembers()
   } catch (e: any) {
-    error.value = e.response?.data?.detail || 'Nie udalo sie zaprosic uzytkownika'
+    error.value = e.response?.data?.detail || 'Nie udało się zaprosić użytkownika'
   } finally {
     loading.value = false
   }
@@ -90,10 +90,10 @@ async function handleRemove(memberId: number) {
   success.value = ''
   try {
     await orgStore.removeMember(orgStore.currentOrg.id, memberId)
-    success.value = 'Czlonek usuniety'
+    success.value = 'Członek usunięty'
     await loadMembers()
   } catch (e: any) {
-    error.value = e.response?.data?.detail || 'Nie udalo sie usunac czlonka'
+    error.value = e.response?.data?.detail || 'Nie udało się usunąć członka'
   }
 }
 
@@ -109,7 +109,7 @@ async function saveBranding() {
     } as any)
     success.value = 'Branding zapisany'
   } catch (e: any) {
-    error.value = e.response?.data?.detail || 'Nie udalo sie zapisac brandingu'
+    error.value = e.response?.data?.detail || 'Nie udało się zapisać brandingu'
   }
 }
 

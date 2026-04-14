@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import api from '../../api/client'
+import SkeletonCard from '../../components/SkeletonCard.vue'
 
 interface BlogPostListItem {
   id: number
@@ -83,7 +84,9 @@ const visibleLegacyArticles = computed(() => legacyArticles.value.filter((a) => 
     </section>
 
     <div class="max-w-4xl mx-auto px-4 py-10 sm:py-16">
-      <div v-if="loading" class="text-gray-400 text-sm">Ładowanie wpisów...</div>
+      <div v-if="loading" class="space-y-6">
+        <SkeletonCard v-for="i in 3" :key="i" :rows="3" />
+      </div>
 
       <div v-else class="space-y-6 sm:space-y-8">
         <!-- DB posts first -->
@@ -130,8 +133,16 @@ const visibleLegacyArticles = computed(() => legacyArticles.value.filter((a) => 
           </article>
         </router-link>
 
-        <div v-if="posts.length === 0 && visibleLegacyArticles.length === 0" class="text-gray-400 text-sm py-12 text-center">
-          Brak wpisów.
+        <div v-if="posts.length === 0 && visibleLegacyArticles.length === 0" class="text-center py-16 border border-dashed border-gray-200 rounded-2xl bg-gray-50">
+          <div class="w-12 h-12 mx-auto rounded-xl bg-indigo-100 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
+          </div>
+          <p class="font-heading text-lg font-bold text-gray-900">Wkrótce nowe poradniki</p>
+          <p class="text-sm text-gray-500 mt-2 max-w-md mx-auto">Pracujemy nad pierwszymi wpisami. Tymczasem zarejestruj się i wypróbuj Feedy za darmo.</p>
+          <router-link to="/register" class="inline-flex items-center gap-2 mt-5 px-5 py-2.5 text-sm font-semibold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition shadow-sm">
+            Załóż darmowe konto
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+          </router-link>
         </div>
       </div>
     </div>

@@ -13,6 +13,9 @@ import AiRewriteSection from '../components/AiRewriteSection.vue'
 import FeedEnvelopeEditor from '../components/FeedEnvelopeEditor.vue'
 import type { FeedEnvelope } from '../stores/feedsOut'
 import api from '../api/client'
+import { useToast, getApiError } from '../composables/useToast'
+
+const toast = useToast()
 
 const route = useRoute()
 const feedsOutStore = useFeedsOutStore()
@@ -253,7 +256,9 @@ async function previewOptimization() {
   try {
     const { data } = await api.post(`/feeds-out/${feedOut.value.id}/optimize-titles`)
     titleComparisons.value = data.comparisons
-  } catch { }
+  } catch (e) {
+    toast.error(getApiError(e, 'Nie udało się wygenerować podglądu optymalizacji'))
+  }
   finally { optimizing.value = false }
 }
 

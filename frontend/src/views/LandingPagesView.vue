@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import api from '../api/client'
+import { useToast, getApiError } from '../composables/useToast'
+import SkeletonCard from '../components/SkeletonCard.vue'
+
+const toast = useToast()
 
 interface LandingPage {
   id: number
@@ -97,8 +101,8 @@ async function uploadImage(event: Event, target: 'hero' | 'gallery') {
         editing.value.gallery.push(data.url)
       }
     }
-  } catch {
-    alert('Błąd uploadu zdjęcia')
+  } catch (e) {
+    toast.error(getApiError(e, 'Nie udało się wgrać zdjęcia'))
   } finally {
     flag.value = false
     input.value = ''
@@ -139,8 +143,9 @@ async function deletePage(id: number) {
   try {
     await api.delete(`/landing-pages/${id}`)
     await load()
-  } catch (e: any) {
-    alert(e.response?.data?.detail || 'Błąd usuwania')
+    toast.success('Strona oferty usunięta')
+  } catch (e) {
+    toast.error(getApiError(e, 'Nie udało się usunąć strony'))
   }
 }
 </script>
@@ -285,7 +290,9 @@ async function deletePage(id: number) {
 
     <!-- List -->
     <section v-if="!editing">
-      <div v-if="loading" class="text-gray-400 text-sm">Ładowanie...</div>
+      <div v-if="loading" class="space-y-3">
+        <SkeletonCard v-for="i in 3" :key="i" variant="list" />
+      </div>
       <div v-else-if="pages.length === 0" class="text-gray-400 text-sm py-12 text-center border border-dashed border-gray-200 rounded-2xl">
         Jeszcze nie masz żadnych ofert. Kliknij „+ Nowa oferta" aby dodać pierwszą.
       </div>
